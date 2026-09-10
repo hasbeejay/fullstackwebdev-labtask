@@ -1,0 +1,600 @@
+/* ----------------------------------------------------
+   Aesthetic Glassmorphism Calculator CSS Stylesheet
+   Theme: Ultra-Modern Premium Light Glass (Pastel Scheme)
+   Created with Pure CSS Mode Toggles & High-Fidelity Details
+   ---------------------------------------------------- */
+
+/* --- Custom CSS Variables for Theme Consistency --- */
+:root {
+  --bg-color: #f4f6fa;
+  --font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  /* Glassmorphism Defaults - Light Frosted Glass */
+  --glass-bg: rgba(255, 255, 255, 0.42);
+  --glass-border: rgba(255, 255, 255, 0.35);
+  --glass-border-light: rgba(255, 255, 255, 0.7);
+  --glass-shadow: 0 30px 70px rgba(31, 38, 135, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  --glass-blur: blur(30px) saturate(200%);
+
+  /* Typography / General Text Colors */
+  --text-main: #1d1d24;
+  --text-muted: rgba(29, 29, 36, 0.45);
+  --text-active: #0c0b11;
+  --text-history-simple: rgba(29, 29, 36, 0.35);
+  --text-history-sci: #7b2cbf;
+
+  /* Interactive switches styles */
+  --switch-bg: rgba(0, 0, 0, 0.05);
+  --switch-border: rgba(0, 0, 0, 0.01);
+  --switch-pill-bg: rgba(255, 255, 255, 0.85);
+  --switch-pill-border: rgba(255, 255, 255, 0.7);
+  --switch-pill-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+
+  /* Display wrapper settings */
+  --display-bg: rgba(0, 0, 0, 0.03);
+  --display-border: rgba(255, 255, 255, 0.2);
+  --display-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.04), 0 1px 0 rgba(255, 255, 255, 0.4);
+  
+  /* Key Colors & Gradients */
+  --btn-num-bg: rgba(255, 255, 255, 0.35);
+  --btn-num-hover: rgba(255, 255, 255, 0.65);
+  --btn-num-active: rgba(255, 255, 255, 0.85);
+  --btn-num-text: #1d1d24;
+  --btn-num-border: rgba(255, 255, 255, 0.4);
+
+  --btn-action-bg: rgba(0, 0, 0, 0.04);
+  --btn-action-hover: rgba(0, 0, 0, 0.08);
+  --btn-action-active: rgba(0, 0, 0, 0.12);
+  --btn-action-text: #333340;
+  --btn-action-border: rgba(0, 0, 0, 0.01);
+
+  --btn-operator-bg: rgba(157, 78, 221, 0.12);
+  --btn-operator-hover: rgba(157, 78, 221, 0.22);
+  --btn-operator-active: rgba(157, 78, 221, 0.32);
+  --btn-operator-text: #7b2cbf;
+  --btn-operator-border: rgba(157, 78, 221, 0.1);
+
+  --btn-sci-bg: rgba(255, 255, 255, 0.15);
+  --btn-sci-hover: rgba(255, 255, 255, 0.45);
+  --btn-sci-active: rgba(255, 255, 255, 0.65);
+  --btn-sci-text: #555566;
+  --btn-sci-border: rgba(255, 255, 255, 0.2);
+
+  --btn-equal-grad: linear-gradient(135deg, #a251f2 0%, #7b2cbf 50%, #5a189a 100%);
+  --btn-equal-shadow: 0 8px 24px rgba(123, 44, 191, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  --btn-equal-hover-shadow: 0 12px 32px rgba(123, 44, 191, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+
+  /* Blobs settings */
+  --blob-purple-bg: radial-gradient(circle, rgba(157, 78, 221, 0.4) 0%, rgba(157, 78, 221, 0) 70%);
+  --blob-cyan-bg: radial-gradient(circle, rgba(72, 191, 227, 0.45) 0%, rgba(72, 191, 227, 0) 70%);
+  --blob-pink-bg: radial-gradient(circle, rgba(247, 37, 133, 0.3) 0%, rgba(247, 37, 133, 0) 70%);
+  --blob-blend-mode: normal;
+  --blob-opacity: 0.65;
+
+  /* Transition Timings */
+  --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* --- Basic CSS Reset & Centering Layout --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* --- Pure CSS Mode Switch Trigger Layouts --- */
+/* Hide the actual radio inputs at the top of the body */
+input[name="calc-mode"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* --- App Container & Moving Background Blobs --- */
+.app-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+  perspective: 1000px;
+}
+
+/* Giant background blobs with Gaussian blurs */
+.bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  z-index: 1;
+  opacity: var(--blob-opacity);
+  mix-blend-mode: var(--blob-blend-mode);
+  pointer-events: none;
+  animation: float-around 28s infinite alternate ease-in-out;
+}
+
+.blob-purple {
+  width: 480px;
+  height: 480px;
+  background: var(--blob-purple-bg);
+  top: -120px;
+  right: 15%;
+  animation-duration: 24s;
+}
+
+.blob-cyan {
+  width: 550px;
+  height: 550px;
+  background: var(--blob-cyan-bg);
+  bottom: -150px;
+  left: 10%;
+  animation-duration: 32s;
+  animation-delay: -6s;
+}
+
+.blob-pink {
+  width: 360px;
+  height: 360px;
+  background: var(--blob-pink-bg);
+  top: 40%;
+  left: 35%;
+  transform: translate(-50%, -50%);
+  animation-duration: 20s;
+  animation-delay: -12s;
+}
+
+/* Organic motion keyframes for background blobs */
+@keyframes float-around {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translate(60px, -40px) scale(1.1) rotate(45deg);
+  }
+  66% {
+    transform: translate(-50px, 50px) scale(0.95) rotate(-30deg);
+  }
+  100% {
+    transform: translate(30px, -20px) scale(1.05) rotate(15deg);
+  }
+}
+
+/* --- Main Glassmorphism Calculator Body --- */
+.calculator {
+  position: relative;
+  z-index: 10;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-top-color: var(--glass-border-light);
+  border-left-color: var(--glass-border-light);
+  border-radius: 28px;
+  box-shadow: var(--glass-shadow);
+  
+  /* Fluid width transition when switching between simple & scientific */
+  width: 380px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: var(--transition-smooth);
+  
+  /* Glass shine accent overlay */
+  overflow: hidden;
+}
+
+/* Subtle glass reflection stripe across top of calculator */
+.calculator::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0.05) 45%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.05) 55%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(-15deg);
+  pointer-events: none;
+  z-index: 12;
+}
+
+/* --- Header Section: macOS dots & Mode switcher --- */
+.calc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 32px;
+  margin-bottom: 4px;
+}
+
+/* Red, yellow, green operating system window control buttons */
+.window-controls {
+  display: flex;
+  gap: 7px;
+}
+
+.control-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  opacity: 0.85;
+  transition: var(--transition-fast);
+}
+
+.control-dot.close { background-color: #ff5f56; }
+.control-dot.minimize { background-color: #ffbd2e; }
+.control-dot.expand { background-color: #27c93f; }
+
+.calculator:hover .control-dot {
+  opacity: 1;
+}
+
+/* Pure CSS Toggle Switch */
+.mode-switch-container {
+  display: flex;
+  align-items: center;
+}
+
+.mode-switch {
+  position: relative;
+  display: flex;
+  background: var(--switch-bg);
+  padding: 3px;
+  border-radius: 12px;
+  border: 1px solid var(--switch-border);
+}
+
+.switch-tab {
+  position: relative;
+  z-index: 5;
+  padding: 6px 14px;
+  font-size: 11.5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: var(--transition-fast);
+}
+
+.switch-tab:hover {
+  color: var(--text-main);
+}
+
+/* Sliding pill background indicator */
+.switch-pill {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: calc(50% - 3px);
+  height: calc(100% - 6px);
+  background: var(--switch-pill-bg);
+  border: 1px solid var(--switch-pill-border);
+  border-radius: 9px;
+  box-shadow: var(--switch-pill-shadow);
+  z-index: 4;
+  transition: var(--transition-smooth);
+}
+
+/* --- Pure CSS Interactive Switching Mechanics --- */
+
+/* 1. Toggle switch pill position */
+#mode-simple:checked ~ .app-container .switch-pill {
+  transform: translateX(0);
+}
+#mode-scientific:checked ~ .app-container .switch-pill {
+  transform: translateX(100%);
+  width: calc(50% - 3px);
+}
+
+/* 2. Highlight selected tab text */
+#mode-simple:checked ~ .app-container .simple-tab {
+  color: var(--text-active);
+  font-weight: 600;
+}
+#mode-scientific:checked ~ .app-container .scientific-tab {
+  color: var(--text-active);
+  font-weight: 600;
+}
+
+/* 3. Adjust main Calculator container width */
+#mode-simple:checked ~ .app-container .calculator {
+  width: 380px;
+}
+#mode-scientific:checked ~ .app-container .calculator {
+  width: 660px;
+}
+
+/* 4. Display History and Label Indicators */
+.history-mode {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: var(--transition-fast);
+  display: none;
+}
+
+#mode-simple:checked ~ .app-container .simple-history {
+  display: inline-block;
+  color: var(--text-history-simple);
+}
+#mode-scientific:checked ~ .app-container .scientific-history {
+  display: inline-block;
+  color: var(--text-history-sci);
+}
+
+/* 5. Handle scientific keys expansion animation */
+#mode-simple:checked ~ .app-container .scientific-keys {
+  width: 0;
+  opacity: 0;
+  margin-right: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-25px) scale(0.95);
+}
+#mode-scientific:checked ~ .app-container .scientific-keys {
+  width: 248px;
+  opacity: 1;
+  margin-right: 20px;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(0) scale(1);
+}
+
+
+/* --- Calculator Display Screen --- */
+.calc-display-wrapper {
+  background: var(--display-bg);
+  border: 1px solid var(--display-border);
+  border-radius: 18px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  min-height: 104px;
+  box-shadow: var(--display-shadow);
+}
+
+.calc-display-history {
+  min-height: 16px;
+  display: flex;
+  align-items: center;
+}
+
+/* Style the text input display field */
+.calc-display {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 40px;
+  font-weight: 200;
+  text-align: right;
+  padding: 0;
+  margin-top: 4px;
+  caret-color: var(--text-history-sci);
+}
+
+.calc-display::placeholder {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* Glowing cursor focus effect on active display input */
+.calc-display:focus {
+  caret-color: var(--text-history-sci);
+}
+
+
+/* --- Keys Container & Responsive Flex-wrapper --- */
+.keys-wrapper {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Grid Layout for Scientific Keys */
+.scientific-keys {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  height: auto;
+  overflow: hidden;
+  transition: var(--transition-smooth);
+}
+
+/* Grid Layout for Simple Keys */
+.simple-keys {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+/* Symmetrical Row Heights for keys */
+.keys-wrapper button {
+  height: 54px;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: var(--transition-fast);
+  outline: none;
+}
+
+/* Special sizing for zero button (spans 2 columns) */
+.key-zero {
+  grid-column: span 2;
+  justify-content: flex-start !important;
+  padding-left: 24px !important;
+}
+
+
+/* --- Styling Individual Button Key Types --- */
+
+/* 1. Numeric Key Style */
+.key-num {
+  background-color: var(--btn-num-bg);
+  color: var(--btn-num-text);
+  border: 1px solid var(--btn-num-border) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+.key-num:hover {
+  background-color: var(--btn-num-hover);
+  border-color: rgba(255, 255, 255, 0.7) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.04);
+}
+.key-num:active {
+  background-color: var(--btn-num-active);
+  transform: scale(0.94);
+}
+
+/* 2. Top row actions style (AC, +/-, %) */
+.key-action {
+  background-color: var(--btn-action-bg);
+  color: var(--btn-action-text);
+  border: 1px solid var(--btn-action-border) !important;
+  font-weight: 600 !important;
+  font-size: 15px !important;
+}
+.key-action:hover {
+  background-color: var(--btn-action-hover);
+  border-color: rgba(0, 0, 0, 0.05) !important;
+}
+.key-action:active {
+  background-color: var(--btn-action-active);
+  transform: scale(0.94);
+}
+
+/* 3. Mathematical Operator keys style (+, -, ×, ÷) */
+.key-operator {
+  background-color: var(--btn-operator-bg);
+  color: var(--btn-operator-text);
+  font-size: 20px !important;
+  font-weight: 400 !important;
+  border: 1px solid var(--btn-operator-border) !important;
+}
+.key-operator:hover {
+  background-color: var(--btn-operator-hover);
+  box-shadow: 0 4px 12px rgba(157, 78, 221, 0.15);
+}
+.key-operator:active {
+  background-color: var(--btn-operator-active);
+  transform: scale(0.94);
+}
+
+/* 4. Scientific Function Keys style */
+.key-sci {
+  background-color: var(--btn-sci-bg);
+  color: var(--btn-sci-text);
+  font-size: 13.5px !important;
+  font-weight: 400 !important;
+  border: 1px solid var(--btn-sci-border) !important;
+  letter-spacing: 0.3px;
+}
+.key-sci:hover {
+  background-color: var(--btn-sci-hover);
+  color: var(--text-main);
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+.key-sci:active {
+  background-color: var(--btn-sci-active);
+  transform: scale(0.94);
+}
+
+/* 5. Glowing Equal Key Style */
+.key-equal {
+  background: var(--btn-equal-grad);
+  color: #fff !important;
+  border: none !important;
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  box-shadow: var(--btn-equal-shadow);
+}
+.key-equal:hover {
+  box-shadow: var(--btn-equal-hover-shadow);
+  filter: brightness(1.1);
+}
+.key-equal:active {
+  transform: scale(0.94);
+  filter: brightness(0.9);
+}
+
+
+/* --- Calculator Footer User Tip --- */
+.calc-footer {
+  text-align: center;
+  margin-top: -4px;
+}
+
+.footer-tip {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.4px;
+}
+
+/* Custom Scrollbar in case view shrinks */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.02);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* --- Mobile / Small Screens Responsiveness --- */
+@media (max-width: 680px) {
+  /* Override Scientific view on tiny screens to avoid layout overflow */
+  #mode-scientific:checked ~ .app-container .calculator {
+    width: 90%;
+    max-width: 380px;
+    padding: 20px;
+  }
+  
+  #mode-scientific:checked ~ .app-container .scientific-keys {
+    display: none; /* Hide scientific part on portrait phones to preserve grid integrity */
+  }
+  
+  .calculator {
+    width: 90%;
+    max-width: 380px;
+  }
+}

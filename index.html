@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aesthetic Glassmorphism Calculator</title>
+  <!-- Google Fonts: Inter for clean geometric sans-serif UI typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Hidden radio buttons for pure CSS mode switching -->
+  <input type="radio" id="mode-simple" name="calc-mode" checked>
+  <input type="radio" id="mode-scientific" name="calc-mode">
+
+  <div class="app-container">
+    <!-- Gaussian Blurred Organic Gradient Blobs in the Background -->
+    <div class="bg-blob blob-purple"></div>
+    <div class="bg-blob blob-cyan"></div>
+    <div class="bg-blob blob-pink"></div>
+
+    <!-- Main Glassmorphism Calculator -->
+    <div class="calculator">
+      
+      <!-- Top Window Header: Mimics macOS/Desktop style -->
+      <div class="calc-header">
+        <div class="window-controls">
+          <span class="control-dot close"></span>
+          <span class="control-dot minimize"></span>
+          <span class="control-dot expand"></span>
+        </div>
+        
+        <!-- Pure CSS Toggle Switch -->
+        <div class="mode-switch-container">
+          <div class="mode-switch">
+            <label for="mode-simple" class="switch-tab simple-tab">Simple</label>
+            <label for="mode-scientific" class="switch-tab scientific-tab">Scientific</label>
+            <div class="switch-pill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wrapper form to support HTML-only AC reset functionality -->
+      <form class="calc-form" onsubmit="return false;">
+        <!-- Calculator Display Screen -->
+        <div class="calc-display-wrapper">
+          <div class="calc-display-history">
+            <!-- Dynamic styling shown based on checked mode -->
+            <span class="history-mode simple-history">Simple Mode Active</span>
+            <span class="history-mode scientific-history">Scientific (Rad) Active</span>
+          </div>
+          <input 
+            type="text" 
+            class="calc-display" 
+            placeholder="0" 
+            autofocus 
+            autocomplete="off" 
+            spellcheck="false"
+          >
+        </div>
+
+        <!-- Keys Layout -->
+        <div class="keys-wrapper">
+          
+          <!-- Scientific Function Keys (Left Section - Hidden in Simple Mode) -->
+          <div class="scientific-keys">
+            <button type="button" class="key key-sci">2nd</button>
+            <button type="button" class="key key-sci">deg</button>
+            <button type="button" class="key key-sci">sin</button>
+            
+            <button type="button" class="key key-sci">cos</button>
+            <button type="button" class="key key-sci">tan</button>
+            <button type="button" class="key key-sci">xʸ</button>
+            
+            <button type="button" class="key key-sci">lg</button>
+            <button type="button" class="key key-sci">ln</button>
+            <button type="button" class="key key-sci">(</button>
+            
+            <button type="button" class="key key-sci">)</button>
+            <button type="button" class="key key-sci">√</button>
+            <button type="button" class="key key-sci">x!</button>
+            
+            <button type="button" class="key key-sci">π</button>
+            <button type="button" class="key key-sci">e</button>
+            <button type="button" class="key key-sci">EE</button>
+          </div>
+
+          <!-- Standard Simple Keys (Right Section - Always Visible) -->
+          <div class="simple-keys">
+            <!-- AC Button is configured as reset to clear the form input naturally -->
+            <button type="reset" class="key key-action" title="Clear Screen (AC)">AC</button>
+            <button type="button" class="key key-action">±</button>
+            <button type="button" class="key key-action">%</button>
+            <button type="button" class="key key-operator">÷</button>
+
+            <button type="button" class="key key-num">7</button>
+            <button type="button" class="key key-num">8</button>
+            <button type="button" class="key key-num">9</button>
+            <button type="button" class="key key-operator">×</button>
+
+            <button type="button" class="key key-num">4</button>
+            <button type="button" class="key key-num">5</button>
+            <button type="button" class="key key-num">6</button>
+            <button type="button" class="key key-operator">−</button>
+
+            <button type="button" class="key key-num">1</button>
+            <button type="button" class="key key-num">2</button>
+            <button type="button" class="key key-num">3</button>
+            <button type="button" class="key key-operator">+</button>
+
+            <button type="button" class="key key-num key-zero">0</button>
+            <button type="button" class="key key-num">.</button>
+            <button type="button" class="key key-equal">=</button>
+          </div>
+
+        </div>
+      </form>
+      
+      <!-- Footer details for user guidance -->
+      <div class="calc-footer">
+        <p class="footer-tip">Keyboard input enabled. Click any key to simulate haptic feel.</p>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
