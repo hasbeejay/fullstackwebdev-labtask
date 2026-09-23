@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Full Stack Web Development Labs | Haseeb Jalil</title>
-  <meta name="description" content="Full Stack Web Development lab tasks by Haseeb Jalil (241908, BSCS V-A), submitted to Hafiz Obaid Ullah.">
+  <meta name="description"
+    content="Full Stack Web Development lab tasks by Haseeb Jalil (241908, BSCS V-A), submitted to Hafiz Obaid Ullah.">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#f5f5f7">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230a84ff'/%3E%3Cstop offset='1' stop-color='%235e5ce6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='Arial' font-size='28' font-weight='700' fill='white' text-anchor='middle'%3EHJ%3C/text%3E%3C/svg%3E">
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230a84ff'/%3E%3Cstop offset='1' stop-color='%235e5ce6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='Arial' font-size='28' font-weight='700' fill='white' text-anchor='middle'%3EHJ%3C/text%3E%3C/svg%3E">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,30 +18,54 @@
   <link rel="stylesheet" href="style.css">
   <script src="script.js" defer></script>
 </head>
+
 <body>
 
   <!-- Icon sprite -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
     <symbol id="i-github" viewBox="0 0 16 16">
-      <path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+      <path fill="currentColor"
+        d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
     </symbol>
     <symbol id="i-chevron" viewBox="0 0 24 24">
-      <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></g>
+      <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6" />
+      </g>
     </symbol>
     <symbol id="i-back" viewBox="0 0 24 24">
-      <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></g>
+      <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6" />
+      </g>
     </symbol>
     <symbol id="i-check" viewBox="0 0 24 24">
-      <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></g>
+      <g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12" />
+      </g>
     </symbol>
     <symbol id="i-sun" viewBox="0 0 24 24">
       <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="4.5"/>
-        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+        <circle cx="12" cy="12" r="4.5" />
+        <path
+          d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
       </g>
     </symbol>
     <symbol id="i-moon" viewBox="0 0 24 24">
-      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></g>
+      <g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+      </g>
+    </symbol>
+    <symbol id="i-external" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+        <polyline points="15 3 21 3 21 9" />
+        <line x1="10" y1="14" x2="21" y2="3" />
+      </g>
+    </symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24">
+      <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+        <circle cx="12" cy="12" r="3" />
+      </g>
     </symbol>
   </svg>
 
@@ -58,12 +85,19 @@
         </ul>
       </nav>
       <div class="nav-actions">
-        <a class="icon-btn" data-github href="https://github.com/hasbeejay" target="_blank" rel="noopener noreferrer" aria-label="Haseeb's GitHub profile">
-          <svg class="ico" aria-hidden="true"><use href="#i-github"/></svg>
+        <a class="icon-btn" data-github href="https://github.com/hasbeejay" target="_blank" rel="noopener noreferrer"
+          aria-label="Haseeb's GitHub profile">
+          <svg class="ico" aria-hidden="true">
+            <use href="#i-github" />
+          </svg>
         </a>
         <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch to dark mode">
-          <svg class="ico i-moon" aria-hidden="true"><use href="#i-moon"/></svg>
-          <svg class="ico i-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+          <svg class="ico i-moon" aria-hidden="true">
+            <use href="#i-moon" />
+          </svg>
+          <svg class="ico i-sun" aria-hidden="true">
+            <use href="#i-sun" />
+          </svg>
         </button>
       </div>
     </div>
@@ -77,13 +111,18 @@
         <h1>Full Stack Web Development</h1>
         <p class="hero-sub">Lab tasks by Haseeb Jalil, submitted to Hafiz Obaid Ullah.</p>
         <div class="hero-actions">
-          <a class="btn btn-primary" data-github href="https://github.com/hasbeejay" target="_blank" rel="noopener noreferrer">
-            <svg class="ico" aria-hidden="true"><use href="#i-github"/></svg>
-            View GitHub profile
+          <a class="btn btn-primary" data-github href="https://github.com/hasbeejay/fullstackwebdev-labtask"
+            target="_blank" rel="noopener noreferrer">
+            <svg class="ico" aria-hidden="true">
+              <use href="#i-github" />
+            </svg>
+            View GitHub Repo of these Tasks
           </a>
           <a class="btn btn-link" href="#labs">
             Browse labs
-            <svg class="ico ico-sm" aria-hidden="true"><use href="#i-chevron"/></svg>
+            <svg class="ico ico-sm" aria-hidden="true">
+              <use href="#i-chevron" />
+            </svg>
           </a>
         </div>
       </section>
@@ -94,19 +133,20 @@
         <article class="widget w-welcome w-wide">
           <p class="welcome-time" id="greeting-time">Welcome</p>
           <h2 class="welcome-title">Hello, Sir Obaid <span class="wave" aria-hidden="true">👋</span></h2>
-          <p class="welcome-text">Assalam-o-Alaikum, and thank you for reviewing my work. Each lab below opens its own page, with the code on GitHub.</p>
+          <p class="welcome-text">Assalam-o-Alaikum, and thank you for reviewing my work. Each lab below opens its own
+            page, with the code on GitHub.</p>
           <a class="btn btn-light" href="#labs">Open lab tasks</a>
         </article>
 
         <article class="widget w-clock w-wide" aria-label="Clock">
           <svg class="analog" viewBox="0 0 200 200" role="img" aria-label="Analog clock">
-            <circle class="clock-face" cx="100" cy="100" r="96"/>
+            <circle class="clock-face" cx="100" cy="100" r="96" />
             <g id="clock-ticks"></g>
-            <line id="hand-h" class="hand hand-h" x1="100" y1="100" x2="100" y2="58"/>
-            <line id="hand-m" class="hand hand-m" x1="100" y1="100" x2="100" y2="30"/>
-            <line id="hand-s" class="hand hand-s" x1="100" y1="114" x2="100" y2="24"/>
-            <circle class="pivot" cx="100" cy="100" r="5.5"/>
-            <circle class="pivot-dot" cx="100" cy="100" r="2"/>
+            <line id="hand-h" class="hand hand-h" x1="100" y1="100" x2="100" y2="58" />
+            <line id="hand-m" class="hand hand-m" x1="100" y1="100" x2="100" y2="30" />
+            <line id="hand-s" class="hand hand-s" x1="100" y1="114" x2="100" y2="24" />
+            <circle class="pivot" cx="100" cy="100" r="5.5" />
+            <circle class="pivot-dot" cx="100" cy="100" r="2" />
           </svg>
           <div class="digital">
             <time id="clock-time" class="digital-time">--:--</time>
@@ -124,10 +164,22 @@
             </div>
           </div>
           <dl class="facts">
-            <div><dt>Roll number</dt><dd>241908</dd></div>
-            <div><dt>Class</dt><dd>BSCS V-A</dd></div>
-            <div><dt>Instructor</dt><dd>Hafiz Obaid Ullah</dd></div>
-            <div><dt>University</dt><dd>Air University, Islamabad</dd></div>
+            <div>
+              <dt>Roll number</dt>
+              <dd>241908</dd>
+            </div>
+            <div>
+              <dt>Class</dt>
+              <dd>BSCS V-A</dd>
+            </div>
+            <div>
+              <dt>Instructor</dt>
+              <dd>Hafiz Obaid Ullah</dd>
+            </div>
+            <div>
+              <dt>University</dt>
+              <dd>Air University, Islamabad</dd>
+            </div>
           </dl>
         </article>
 
@@ -139,8 +191,11 @@
           </div>
         </article>
 
-        <a class="widget w-github" data-github href="https://github.com/hasbeejay" target="_blank" rel="noopener noreferrer">
-          <svg class="gh-logo" aria-hidden="true"><use href="#i-github"/></svg>
+        <a class="widget w-github" data-github href="https://github.com/hasbeejay" target="_blank"
+          rel="noopener noreferrer">
+          <svg class="gh-logo" aria-hidden="true">
+            <use href="#i-github" />
+          </svg>
           <span class="gh-text">
             <span class="gh-title">GitHub</span>
             <span class="gh-handle" data-github-handle>@hasbeejay</span>
@@ -156,7 +211,11 @@
           <p>Select a lab to open its page.</p>
         </div>
         <div class="lab-grid" id="lab-grid">
-          <noscript><p class="empty">Turn on JavaScript to see the lab cards, or open <a href="Lab%201%20Tasks/index.html">Lab 1 Tasks</a> | <a href="Lab%202%20Tasks/index.html">Lab 2 Tasks</a> directly.</p></noscript>
+          <noscript>
+            <p class="empty">Turn on JavaScript to see the lab cards, or open <a
+                href="Lab%201%20Tasks/index.html">Simple Static CSS Calculator</a> | <a
+                href="Lab%202%20Tasks/index.html">Multiple designed pages in CSS</a> directly.</p>
+          </noscript>
         </div>
       </section>
     </div>
@@ -174,4 +233,5 @@
   </footer>
 
 </body>
+
 </html>

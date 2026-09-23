@@ -440,42 +440,77 @@ ul { list-style: none; padding: 0; }
 .lab-icon.xl { width: 96px; height: 96px; font-size: 48px; }
 
 /* ---------- Lab cards ---------- */
-.lab-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 20px; }
+.lab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: 24px;
+}
 
 .lab-card {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
   padding: 28px;
   border-radius: var(--radius-xl);
   background: var(--surface);
   box-shadow: var(--shadow);
   transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease), background-color 0.4s var(--ease);
 }
-.lab-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
-.lab-card:has(.card-link:focus-visible) { outline: 3px solid var(--accent); outline-offset: 3px; }
 
-.lab-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.lab-label { font-size: 15px; font-weight: 600; color: var(--muted); }
-
-.lab-card h3 { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
-.card-link { color: var(--text); }
-.card-link:hover { text-decoration: none; }
-.card-link:focus-visible { outline: none; }
-.card-link::after { content: ""; position: absolute; inset: 0; border-radius: var(--radius-xl); }
-
-.lab-desc {
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--muted);
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.lab-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
 }
 
-.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.lab-card:has(.card-link:focus-visible) {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.lab-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lab-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.lab-card h3 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.card-link {
+  color: var(--text);
+}
+.card-link:hover {
+  text-decoration: none;
+}
+.card-link:focus-visible {
+  outline: none;
+}
+.card-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-xl);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .chip {
   padding: 4px 12px;
   border-radius: 980px;
@@ -485,30 +520,59 @@ ul { list-style: none; padding: 0; }
   background: var(--surface-2);
 }
 
-.lab-foot {
+.lab-actions {
+  position: relative;
+  z-index: 2;
   margin-top: auto;
   padding-top: 16px;
   border-top: 1px solid var(--line);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  justify-content: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-.gh-link {
-  position: relative;
-  z-index: 2;
+.btn-card-action {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--accent);
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 980px;
+  text-decoration: none;
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), background 0.2s var(--ease), color 0.2s var(--ease);
 }
-.gh-link:hover { text-decoration: underline; }
 
-.open-hint { display: inline-flex; align-items: center; gap: 2px; font-size: 15px; font-weight: 500; color: var(--muted); }
-.lab-card:hover .open-hint { color: var(--accent); }
+.btn-card-action .ico {
+  width: 16px;
+  height: 16px;
+}
+
+.btn-card-action.primary {
+  background: linear-gradient(135deg, var(--c1), var(--c2));
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+.btn-card-action.primary:hover {
+  opacity: 0.92;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+  text-decoration: none;
+}
+
+.btn-card-action.secondary {
+  background: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--line);
+}
+.btn-card-action.secondary:hover {
+  background: var(--line);
+  color: var(--accent);
+  transform: translateY(-2px);
+  text-decoration: none;
+}
 
 .empty { padding: 32px; text-align: center; color: var(--muted); }
 
@@ -594,6 +658,7 @@ ul { list-style: none; padding: 0; }
   .pager .next, .pager .prev { grid-column: 1; }
   .section { padding-top: 64px; }
   .hero { padding-top: 48px; }
+  .lab-card { padding: 22px; }
 }
 
 /* ---------- Footer ---------- */

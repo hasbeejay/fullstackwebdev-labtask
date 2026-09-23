@@ -32,7 +32,7 @@ const CONFIG = {
 const LABS = [
   {
     id: 1,
-    title: 'Lab Task 1',
+    title: 'Simple Static CSS Calculator',
     description: 'Aesthetic Glassmorphism Calculator with simple and scientific modes, built with pure HTML5 and CSS3.',
     repo: 'https://github.com/hasbeejay/fullstackwebdev-labtask/tree/main/Lab%201%20Tasks',
     objectives: [
@@ -49,7 +49,7 @@ const LABS = [
   },
   {
     id: 2,
-    title: 'Lab Task 2',
+    title: 'Multiple designed pages in CSS',
     description: 'Full Stack Web Development, lab task 2. The complete source code is available on GitHub.',
     repo: 'https://github.com/hasbeejay/fullstackwebdev-labtask/tree/main/Lab%202%20Tasks',
     objectives: [],
@@ -205,8 +205,8 @@ function initClock() {
 
 function cardTarget(lab) {
   return lab.liveUrl
-    ? { href: encodeURI(lab.liveUrl), ext: ' target="_blank" rel="noopener noreferrer"', label: 'Open lab page' }
-    : { href: `#/lab/${lab.id}`, ext: '', label: 'Open task' };
+    ? { href: encodeURI(lab.liveUrl), ext: ' target="_blank" rel="noopener noreferrer"', label: 'Live Preview' }
+    : { href: `#/lab/${lab.id}`, ext: '', label: 'Live Preview' };
 }
 
 function labCard(lab) {
@@ -219,13 +219,14 @@ function labCard(lab) {
         <span class="lab-label">Lab ${lab.id}</span>
       </div>
       <h3><a class="card-link" href="${esc(go.href)}"${go.ext}>${esc(lab.title)}${lab.liveUrl ? '<span class="sr-only"> (opens in a new tab)</span>' : ''}</a></h3>
-      <p class="lab-desc">${esc(lab.description)}</p>
       ${chips ? `<ul class="chips" aria-label="Technologies">${chips}</ul>` : ''}
-      <div class="lab-foot">
-        <a class="gh-link" href="${esc(repoUrl(lab))}" target="_blank" rel="noopener noreferrer" aria-label="Lab ${lab.id} on GitHub (opens in a new tab)">
-          ${icon('i-github')} GitHub
+      <div class="lab-actions">
+        <a class="btn-card-action secondary" href="${esc(repoUrl(lab))}" target="_blank" rel="noopener noreferrer" aria-label="View code for Lab ${lab.id} on GitHub">
+          ${icon('i-github')} View Code
         </a>
-        <span class="open-hint" aria-hidden="true">${go.label} ${icon('i-chevron', 'ico ico-sm')}</span>
+        <a class="btn-card-action primary" href="${esc(go.href)}"${go.ext} aria-label="Live preview for Lab ${lab.id}">
+          ${icon('i-external')} Live Preview
+        </a>
       </div>
     </article>`;
 }
