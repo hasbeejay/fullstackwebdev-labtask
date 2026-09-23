@@ -13,6 +13,7 @@ const CONFIG = {
   github: {
     username: 'hasbeejay',
     url: 'https://github.com/hasbeejay',
+    repoUrl: 'https://github.com/hasbeejay/fullstackwebdev-labtask',
   },
   student: 'Haseeb Jalil',
   rollNo: '241908',
@@ -55,7 +56,7 @@ const LABS = [
     objectives: [],
     outcome: '',
     tech: ['HTML5', 'CSS3'],
-    liveUrl: 'Lab 2 Tasks/index.html',
+    liveUrl: 'Lab 2 Tasks/custom_ui.html',
     date: '',
     status: 'Completed',
     colors: ['#ffb340', '#ff453a'],
@@ -83,6 +84,7 @@ const gradient = (lab) => `--c1:${lab.colors[0]};--c2:${lab.colors[1]}`;
 
 function applyGithubConfig() {
   $$('[data-github]').forEach((a) => { a.href = CONFIG.github.url; });
+  $$('[data-github-repo]').forEach((a) => { a.href = CONFIG.github.repoUrl; });
   $$('[data-github-handle]').forEach((el) => { el.textContent = '@' + CONFIG.github.username; });
 }
 
