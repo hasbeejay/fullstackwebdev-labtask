@@ -33,12 +33,16 @@ const LABS = [
   {
     id: 1,
     title: 'Lab Task 1',
-    description: 'Full Stack Web Development, lab task 1. The complete source code is available on GitHub.',
-    repo: '',                    // e.g. 'https://github.com/hasbeejay/your-lab-1-repo'
-    objectives: [],              // e.g. ['Structure a page with semantic HTML']
-    outcome: '',
-    tech: [],                    // e.g. ['HTML5', 'CSS3']
-    liveUrl: '',                 // e.g. 'https://your-lab-1-page.example.com'
+    description: 'Aesthetic Glassmorphism Calculator with simple and scientific modes, built with pure HTML5 and CSS3.',
+    repo: 'https://github.com/hasbeejay/fullstackwebdev-labtask/tree/main/Lab%201%20Tasks',
+    objectives: [
+      'Design an ultra-modern glassmorphic UI using CSS backdrop-filter and blurred organic gradient meshes',
+      'Implement pure CSS simple and scientific calculator mode toggles using radio buttons',
+      'Structure accessible keypad layouts with macOS-style window controls and form reset'
+    ],
+    outcome: 'A responsive, high-fidelity glassmorphism calculator supporting simple and scientific layouts with zero JavaScript dependencies.',
+    tech: ['HTML5', 'CSS3'],
+    liveUrl: 'Lab 1 Tasks/index.html',
     date: '',
     status: 'Completed',
     colors: ['#5ac8fa', '#0a84ff'],
@@ -47,11 +51,11 @@ const LABS = [
     id: 2,
     title: 'Lab Task 2',
     description: 'Full Stack Web Development, lab task 2. The complete source code is available on GitHub.',
-    repo: '',
+    repo: 'https://github.com/hasbeejay/fullstackwebdev-labtask/tree/main/Lab%202%20Tasks',
     objectives: [],
     outcome: '',
-    tech: [],
-    liveUrl: '',
+    tech: ['HTML5', 'CSS3'],
+    liveUrl: 'Lab 2 Tasks/index.html',
     date: '',
     status: 'Completed',
     colors: ['#ffb340', '#ff453a'],
@@ -201,7 +205,7 @@ function initClock() {
 
 function cardTarget(lab) {
   return lab.liveUrl
-    ? { href: lab.liveUrl, ext: ' target="_blank" rel="noopener noreferrer"', label: 'Open lab page' }
+    ? { href: encodeURI(lab.liveUrl), ext: ' target="_blank" rel="noopener noreferrer"', label: 'Open lab page' }
     : { href: `#/lab/${lab.id}`, ext: '', label: 'Open task' };
 }
 
@@ -279,7 +283,7 @@ function taskHTML(lab) {
             <a class="btn btn-primary" href="${esc(repoUrl(lab))}" target="_blank" rel="noopener noreferrer">
               ${icon('i-github')} View code on GitHub
             </a>
-            ${lab.liveUrl ? `<a class="btn btn-ghost" href="${esc(lab.liveUrl)}" target="_blank" rel="noopener noreferrer">Open live demo</a>` : ''}
+            ${lab.liveUrl ? `<a class="btn btn-ghost" href="${esc(encodeURI(lab.liveUrl))}" target="_blank" rel="noopener noreferrer">Open live demo</a>` : ''}
             <a class="btn btn-ghost" href="#labs">Back to labs</a>
           </div>
         </div>
