@@ -61,6 +61,23 @@ const LABS = [
     status: 'Completed',
     colors: ['#ffb340', '#ff453a'],
   },
+   {
+    id: 3,
+    title: 'Bootstrap & E-Commerce Store',
+    description: 'Lab 3 focuses on converting the previous lab tasks to Bootstrap and building a responsive e-commerce store using Bootstrap components.',
+    repo: 'https://github.com/hasbeejay/fullstackwebdev-labtask/tree/main/Lab%203%20Tasks',
+    objectives: [
+      'Modify all Lab 2 tasks and implement them using Bootstrap',
+      'Build a responsive e-commerce store using Bootstrap',
+      'Apply Bootstrap components and responsive utilities to create structured web interfaces'
+    ],
+    outcome: 'A collection of Bootstrap-powered Lab 2 tasks together with a responsive e-commerce store interface.',
+    tech: ['HTML5', 'CSS3', 'Bootstrap'],
+    liveUrl: 'https://hasbeejay.github.io/fullstackwebdev-labtask/',
+    date: '',
+    status: 'Completed',
+    colors: ['#7952b3', '#563d7c'],
+  },
 ];
 
 /* ==========================================================
