@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Log in | hasbeejay's Marketplace</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/tailwind.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body id="top">
+    <nav class="navbar navbar-expand flex-wrap site-nav sticky-top py-3">
+      <div class="container">
+        <a class="navbar-brand brand" href="ecom.html">
+          <span class="brand-dot tw-inline-block tw-rounded-full"></span>hasbeejay's Marketplace
+        </a>
+        <ul class="navbar-nav ms-auto align-items-center gap-lg-1">
+          <li class="nav-item"><a class="nav-link" href="ecom.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="ecom.html#products">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="ecom.html#reviews">Reviews</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="cart.html">Cart <span class="badge rounded-pill text-bg-dark">3</span></a>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="login.html">Log in</a></li>
+          <li class="nav-item ms-2"><a class="btn btn-brand btn-sm px-3" href="signup.html">Sign up</a></li>
+        </ul>
+      </div>
+    </nav>
+    <main class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <div class="auth-shell row g-0 overflow-hidden">
+            <div class="col-md-5 auth-panel tw-bg-gradient-to-br tw-from-indigo-500 tw-to-blue-700 p-5 d-flex flex-column justify-content-end">
+              <p class="display-6 fw-bold mb-2">Welcome back.</p>
+              <p class="mb-0 opacity-75">Pick up your cart and orders right where you left them.</p>
+            </div>
+            <div class="col-md-7 bg-white p-4 p-md-5">
+              <h1 class="h3 fw-bold mb-4">Log in</h1>
+              <form action="ecom.html" method="get">
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email address</label>
+                  <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="you@example.com" required>
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">Password</label>
+                  <input type="password" class="form-control form-control-lg" id="password" name="password" minlength="8" required>
+                </div>
+                <div class="form-check mb-4">
+                  <input class="form-check-input" type="checkbox" id="remember" name="remember">
+                  <label class="form-check-label" for="remember">Keep me logged in</label>
+                </div>
+                <button type="submit" class="btn btn-brand btn-lg w-100">Log in</button>
+              </form>
+              <p class="text-center text-secondary mt-4 mb-0">New here? <a href="signup.html">Create an account</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer mt-5 py-5">
+      <div class="container">
+        <div class="row g-4">
+          <div class="col-md-5">
+            <p class="h5 mb-2">hasbeejay's Marketplace</p>
+            <p class="mb-0 opacity-75">Small-batch goods for desks, kitchens and trails, shipped in three days or less.</p>
+          </div>
+          <div class="col-6 col-md-3">
+            <p class="fw-semibold mb-2">Shop</p>
+            <ul class="list-unstyled mb-0">
+              <li><a href="ecom.html#products">All products</a></li>
+              <li><a href="ecom.html#reviews">Customer reviews</a></li>
+              <li><a href="cart.html">Your cart</a></li>
+            </ul>
+          </div>
+          <div class="col-6 col-md-4">
+            <p class="fw-semibold mb-2">Account</p>
+            <ul class="list-unstyled mb-0">
+              <li><a href="login.html">Log in</a></li>
+              <li><a href="signup.html">Create an account</a></li>
+              <li><a href="checkout.html">Checkout</a></li>
+            </ul>
+          </div>
+        </div>
+        <hr class="border-light opacity-25 my-4">
+        <p class="small mb-0 opacity-75">&copy; 2026 hasbeejay's Marketplace. Built with Bootstrap and Tailwind CSS.</p>
+      </div>
+    </footer>
+  </body>
+</html>

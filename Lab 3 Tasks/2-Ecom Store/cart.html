@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cart | hasbeejay's Marketplace</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/tailwind.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body id="top">
+    <nav class="navbar navbar-expand flex-wrap site-nav sticky-top py-3">
+      <div class="container">
+        <a class="navbar-brand brand" href="ecom.html">
+          <span class="brand-dot tw-inline-block tw-rounded-full"></span>hasbeejay's Marketplace
+        </a>
+        <ul class="navbar-nav ms-auto align-items-center gap-lg-1">
+          <li class="nav-item"><a class="nav-link" href="ecom.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="ecom.html#products">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="ecom.html#reviews">Reviews</a></li>
+          <li class="nav-item">
+            <a class="nav-link active" href="cart.html">Cart <span class="badge rounded-pill text-bg-dark">3</span></a>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="login.html">Log in</a></li>
+          <li class="nav-item ms-2"><a class="btn btn-brand btn-sm px-3" href="signup.html">Sign up</a></li>
+        </ul>
+      </div>
+    </nav>
+    <main class="container py-5">
+      <h1 class="section-title mb-4">Your cart</h1>
+      <div id="added-1" class="added-toast alert alert-success" role="status">
+        <span><strong>Aurora Wireless Headphones</strong> was added to your cart.</span>
+        <a class="btn-close" href="#top" aria-label="Dismiss"></a>
+      </div>
+      <span id="rm-1"></span>
+
+      <div id="added-2" class="added-toast alert alert-success" role="status">
+        <span><strong>Linen Lounge Chair</strong> was added to your cart.</span>
+        <a class="btn-close" href="#top" aria-label="Dismiss"></a>
+      </div>
+      <span id="rm-2"></span>
+
+      <div id="added-3" class="added-toast alert alert-success" role="status">
+        <span><strong>Trailblazer Backpack</strong> was added to your cart.</span>
+        <a class="btn-close" href="#top" aria-label="Dismiss"></a>
+      </div>
+      <span id="rm-3"></span>
+
+      <div id="added-4" class="added-toast alert alert-success" role="status">
+        <span><strong>Ceramic Pour-Over Set</strong> was added to your cart.</span>
+        <a class="btn-close" href="#top" aria-label="Dismiss"></a>
+      </div>
+      <span id="rm-4"></span>
+
+      <div id="added-5" class="added-toast alert alert-success" role="status">
+        <span><strong>Chrono Smartwatch</strong> was added to your cart.</span>
+        <a class="btn-close" href="#top" aria-label="Dismiss"></a>
+      </div>
+      <span id="rm-5"></span>
+
+      <div id="added-6" class="added-toast alert alert-success" role="status">
+        <span><strong>Sunset Sneakers</strong> was added to your cart.</span>
+        <a class="btn-close" href="#top" aria-label="Dismiss"></a>
+      </div>
+      <span id="rm-6"></span>
+
+      <div id="added-7" class="added-toast alert alert-success" role="status">
+        <span><strong>Botanica Plant Trio</strong> was added to your cart.</span>
+        <a class="btn-close" href="#top" aria-label="Dismiss"></a>
+      </div>
+      <span id="rm-7"></span>
+
+      <div id="added-8" class="added-toast alert alert-success" role="status">
+        <span><strong>Lumen Desk Lamp</strong> was added to your cart.</span>
+        <a class="btn-close" href="#top" aria-label="Dismiss"></a>
+      </div>
+      <span id="rm-8"></span>
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <form action="cart.html" method="get" class="bg-white rounded-4 p-3 p-md-4 shadow-sm">
+            <div class="d-none d-md-flex row g-3 small text-secondary pb-2 border-bottom">
+              <div class="col-md-6">Item</div>
+              <div class="col-md-2">Quantity</div>
+              <div class="col-md-2 text-end">Total</div>
+              <div class="col-md-2"></div>
+            </div>        <div id="row-1" class="cart-item row align-items-center g-3 py-3 border-bottom">
+              <div class="col-3 col-md-2">
+                <div class="tw-h-20 tw-rounded-2xl tw-bg-gradient-to-br tw-from-indigo-300 tw-to-blue-500 tw-flex tw-items-center tw-justify-center tw-text-7xl">🎧</div>
+              </div>
+              <div class="col-9 col-md-4">
+                <p class="fw-bold mb-0">Aurora Wireless Headphones</p>
+                <p class="small text-secondary mb-0">Audio &middot; $129 each</p>
+              </div>
+              <div class="col-5 col-md-2">
+                <label class="visually-hidden" for="qty-1">Quantity for Aurora Wireless Headphones</label>
+                <input type="number" class="form-control form-control-sm" id="qty-1" name="qty-1" value="1" min="1" max="9">
+              </div>
+              <div class="col-4 col-md-2 fw-semibold text-md-end">$129</div>
+              <div class="col-3 col-md-2 text-end"><a class="btn btn-sm btn-outline-danger" href="#rm-1">Remove</a></div>
+            </div>
+
+            <div id="row-2" class="cart-item row align-items-center g-3 py-3 border-bottom is-extra">
+              <div class="col-3 col-md-2">
+                <div class="tw-h-20 tw-rounded-2xl tw-bg-gradient-to-br tw-from-amber-200 tw-to-orange-400 tw-flex tw-items-center tw-justify-center tw-text-7xl">🪑</div>
+              </div>
+              <div class="col-9 col-md-4">
+                <p class="fw-bold mb-0">Linen Lounge Chair</p>
+                <p class="small text-secondary mb-0">Home &middot; $249 each</p>
+              </div>
+              <div class="col-5 col-md-2">
+                <label class="visually-hidden" for="qty-2">Quantity for Linen Lounge Chair</label>
+                <input type="number" class="form-control form-control-sm" id="qty-2" name="qty-2" value="1" min="1" max="9">
+              </div>
+              <div class="col-4 col-md-2 fw-semibold text-md-end">$249</div>
+              <div class="col-3 col-md-2 text-end"><a class="btn btn-sm btn-outline-danger" href="#rm-2">Remove</a></div>
+            </div>
+
+            <div id="row-3" class="cart-item row align-items-center g-3 py-3 border-bottom">
+              <div class="col-3 col-md-2">
+                <div class="tw-h-20 tw-rounded-2xl tw-bg-gradient-to-br tw-from-emerald-300 tw-to-teal-500 tw-flex tw-items-center tw-justify-center tw-text-7xl">🎒</div>
+              </div>
+              <div class="col-9 col-md-4">
+                <p class="fw-bold mb-0">Trailblazer Backpack</p>
+                <p class="small text-secondary mb-0">Outdoor &middot; $89 each</p>
+              </div>
+              <div class="col-5 col-md-2">
+                <label class="visually-hidden" for="qty-3">Quantity for Trailblazer Backpack</label>
+                <input type="number" class="form-control form-control-sm" id="qty-3" name="qty-3" value="2" min="1" max="9">
+              </div>
+              <div class="col-4 col-md-2 fw-semibold text-md-end">$178</div>
+              <div class="col-3 col-md-2 text-end"><a class="btn btn-sm btn-outline-danger" href="#rm-3">Remove</a></div>
+            </div>
+
+            <div id="row-4" class="cart-item row align-items-center g-3 py-3 border-bottom">
+              <div class="col-3 col-md-2">
+                <div class="tw-h-20 tw-rounded-2xl tw-bg-gradient-to-br tw-from-rose-200 tw-to-pink-400 tw-flex tw-items-center tw-justify-center tw-text-7xl">☕</div>
+              </div>
+              <div class="col-9 col-md-4">
+                <p class="fw-bold mb-0">Ceramic Pour-Over Set</p>
+                <p class="small text-secondary mb-0">Kitchen &middot; $54 each</p>
+              </div>
+              <div class="col-5 col-md-2">
+                <label class="visually-hidden" for="qty-4">Quantity for Ceramic Pour-Over Set</label>
+                <input type="number" class="form-control form-control-sm" id="qty-4" name="qty-4" value="1" min="1" max="9">
+              </div>
+              <div class="col-4 col-md-2 fw-semibold text-md-end">$54</div>
+              <div class="col-3 col-md-2 text-end"><a class="btn btn-sm btn-outline-danger" href="#rm-4">Remove</a></div>
+            </div>
+
+            <div id="row-5" class="cart-item row align-items-center g-3 py-3 border-bottom is-extra">
+              <div class="col-3 col-md-2">
+                <div class="tw-h-20 tw-rounded-2xl tw-bg-gradient-to-br tw-from-sky-300 tw-to-indigo-500 tw-flex tw-items-center tw-justify-center tw-text-7xl">⌚</div>
+              </div>
+              <div class="col-9 col-md-4">
+                <p class="fw-bold mb-0">Chrono Smartwatch</p>
+                <p class="small text-secondary mb-0">Tech &middot; $199 each</p>
+              </div>
+              <div class="col-5 col-md-2">
+                <label class="visually-hidden" for="qty-5">Quantity for Chrono Smartwatch</label>
+                <input type="number" class="form-control form-control-sm" id="qty-5" name="qty-5" value="1" min="1" max="9">
+              </div>
+              <div class="col-4 col-md-2 fw-semibold text-md-end">$199</div>
+              <div class="col-3 col-md-2 text-end"><a class="btn btn-sm btn-outline-danger" href="#rm-5">Remove</a></div>
+            </div>
+
+            <div id="row-6" class="cart-item row align-items-center g-3 py-3 border-bottom is-extra">
+              <div class="col-3 col-md-2">
+                <div class="tw-h-20 tw-rounded-2xl tw-bg-gradient-to-br tw-from-yellow-200 tw-to-red-400 tw-flex tw-items-center tw-justify-center tw-text-7xl">👟</div>
+              </div>
+              <div class="col-9 col-md-4">
+                <p class="fw-bold mb-0">Sunset Sneakers</p>
+                <p class="small text-secondary mb-0">Fashion &middot; $119 each</p>
+              </div>
+              <div class="col-5 col-md-2">
+                <label class="visually-hidden" for="qty-6">Quantity for Sunset Sneakers</label>
+                <input type="number" class="form-control form-control-sm" id="qty-6" name="qty-6" value="1" min="1" max="9">
+              </div>
+              <div class="col-4 col-md-2 fw-semibold text-md-end">$119</div>
+              <div class="col-3 col-md-2 text-end"><a class="btn btn-sm btn-outline-danger" href="#rm-6">Remove</a></div>
+            </div>
+
+            <div id="row-7" class="cart-item row align-items-center g-3 py-3 border-bottom is-extra">
+              <div class="col-3 col-md-2">
+                <div class="tw-h-20 tw-rounded-2xl tw-bg-gradient-to-br tw-from-lime-200 tw-to-green-500 tw-flex tw-items-center tw-justify-center tw-text-7xl">🪴</div>
+              </div>
+              <div class="col-9 col-md-4">
+                <p class="fw-bold mb-0">Botanica Plant Trio</p>
+                <p class="small text-secondary mb-0">Home &middot; $39 each</p>
+              </div>
+              <div class="col-5 col-md-2">
+                <label class="visually-hidden" for="qty-7">Quantity for Botanica Plant Trio</label>
+                <input type="number" class="form-control form-control-sm" id="qty-7" name="qty-7" value="1" min="1" max="9">
+              </div>
+              <div class="col-4 col-md-2 fw-semibold text-md-end">$39</div>
+              <div class="col-3 col-md-2 text-end"><a class="btn btn-sm btn-outline-danger" href="#rm-7">Remove</a></div>
+            </div>
+
+            <div id="row-8" class="cart-item row align-items-center g-3 py-3 border-bottom is-extra">
+              <div class="col-3 col-md-2">
+                <div class="tw-h-20 tw-rounded-2xl tw-bg-gradient-to-br tw-from-violet-300 tw-to-fuchsia-500 tw-flex tw-items-center tw-justify-center tw-text-7xl">💡</div>
+              </div>
+              <div class="col-9 col-md-4">
+                <p class="fw-bold mb-0">Lumen Desk Lamp</p>
+                <p class="small text-secondary mb-0">Home &middot; $45 each</p>
+              </div>
+              <div class="col-5 col-md-2">
+                <label class="visually-hidden" for="qty-8">Quantity for Lumen Desk Lamp</label>
+                <input type="number" class="form-control form-control-sm" id="qty-8" name="qty-8" value="1" min="1" max="9">
+              </div>
+              <div class="col-4 col-md-2 fw-semibold text-md-end">$45</div>
+              <div class="col-3 col-md-2 text-end"><a class="btn btn-sm btn-outline-danger" href="#rm-8">Remove</a></div>
+            </div>
+            <div class="d-flex flex-wrap justify-content-between gap-2 pt-4">
+              <a class="btn btn-outline-dark" href="ecom.html#products">Continue shopping</a>
+              <button type="submit" class="btn btn-dark">Update quantities</button>
+            </div>
+          </form>
+        </div>
+        <div class="col-lg-4">
+          <aside class="summary-card bg-white rounded-4 p-4 shadow-sm">
+            <h2 class="h5 fw-bold mb-3">Order summary</h2>
+            <dl class="row mb-0">
+              <dt class="col-6 fw-normal text-secondary">Subtotal</dt><dd class="col-6 text-end">$361.00</dd>
+              <dt class="col-6 fw-normal text-secondary">Shipping</dt><dd class="col-6 text-end">Free</dd>
+              <dt class="col-6 fw-normal text-secondary">Tax (8%)</dt><dd class="col-6 text-end">$28.88</dd>
+              <dt class="col-6 pt-3 border-top">Total</dt><dd class="col-6 text-end pt-3 border-top fw-bold">$389.88</dd>
+            </dl>
+            <a class="btn btn-brand btn-lg w-100 mt-4" href="checkout.html">Proceed to checkout</a>
+          </aside>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer mt-5 py-5">
+      <div class="container">
+        <div class="row g-4">
+          <div class="col-md-5">
+            <p class="h5 mb-2">hasbeejay's Marketplace</p>
+            <p class="mb-0 opacity-75">Small-batch goods for desks, kitchens and trails, shipped in three days or less.</p>
+          </div>
+          <div class="col-6 col-md-3">
+            <p class="fw-semibold mb-2">Shop</p>
+            <ul class="list-unstyled mb-0">
+              <li><a href="ecom.html#products">All products</a></li>
+              <li><a href="ecom.html#reviews">Customer reviews</a></li>
+              <li><a href="cart.html">Your cart</a></li>
+            </ul>
+          </div>
+          <div class="col-6 col-md-4">
+            <p class="fw-semibold mb-2">Account</p>
+            <ul class="list-unstyled mb-0">
+              <li><a href="login.html">Log in</a></li>
+              <li><a href="signup.html">Create an account</a></li>
+              <li><a href="checkout.html">Checkout</a></li>
+            </ul>
+          </div>
+        </div>
+        <hr class="border-light opacity-25 my-4">
+        <p class="small mb-0 opacity-75">&copy; 2026 hasbeejay's Marketplace. Built with Bootstrap and Tailwind CSS.</p>
+      </div>
+    </footer>
+  </body>
+</html>
