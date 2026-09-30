@@ -73,7 +73,7 @@ const LABS = [
     ],
     outcome: 'A collection of Bootstrap-powered Lab 2 tasks together with a responsive e-commerce store interface.',
     tech: ['HTML5', 'CSS3', 'Bootstrap'],
-    liveUrl: 'https://hasbeejay.github.io/fullstackwebdev-labtask/',
+    liveUrl: 'https://hasbeejay.github.io/fullstackwebdev-labtask/Lab%203%20Tasks/',
     date: '',
     status: 'Completed',
     colors: ['#7952b3', '#563d7c'],
