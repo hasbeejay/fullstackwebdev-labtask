@@ -1,0 +1,461 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+:root {
+    --background: #0b0d11;
+    --surface: #11141a;
+    --surface-hover: #161a21;
+    --border: rgba(255, 255, 255, 0.09);
+    --border-hover: rgba(255, 255, 255, 0.16);
+
+    --text: #f5f5f7;
+    --secondary: #a5a9b2;
+    --muted: #6f747e;
+
+    --blue: #2997ff;
+    --purple: #9b7cff;
+}
+
+
+body {
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            rgba(41, 151, 255, 0.09),
+            transparent 35%
+        ),
+        var(--background);
+
+    color: var(--text);
+
+    font-family: "Inter", -apple-system, BlinkMacSystemFont,
+        "SF Pro Display", "Segoe UI", sans-serif;
+
+    -webkit-font-smoothing: antialiased;
+}
+
+
+/* -------------------------
+   PAGE
+------------------------- */
+
+.page {
+    width: min(1050px, 92%);
+    min-height: 100vh;
+
+    margin: auto;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* -------------------------
+   HERO
+------------------------- */
+
+.hero {
+    padding-top: 90px;
+    max-width: 720px;
+}
+
+
+.lab-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+
+    padding: 8px 13px;
+
+    border: 1px solid var(--border);
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.035);
+
+    color: #bfc3ca;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    letter-spacing: 0.01em;
+}
+
+
+.badge-dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: var(--blue);
+
+    box-shadow: 0 0 12px rgba(41, 151, 255, 0.7);
+}
+
+
+.hero h1 {
+    margin-top: 25px;
+
+    font-size: clamp(54px, 7vw, 82px);
+
+    line-height: 0.95;
+
+    letter-spacing: -0.065em;
+
+    font-weight: 700;
+}
+
+
+.hero h1 span {
+    color: #777d88;
+}
+
+
+.subtitle {
+    margin-top: 17px;
+
+    font-size: 20px;
+    font-weight: 500;
+
+    color: #d8d9dc;
+
+    letter-spacing: -0.02em;
+}
+
+
+.description {
+    max-width: 610px;
+
+    margin-top: 13px;
+
+    color: var(--secondary);
+
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+
+/* -------------------------
+   TASKS
+------------------------- */
+
+.tasks {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 18px;
+
+    margin-top: 55px;
+}
+
+
+.task-card {
+    min-height: 400px;
+
+    padding: 25px;
+
+    display: flex;
+    flex-direction: column;
+
+    text-decoration: none;
+    color: inherit;
+
+    border: 1px solid var(--border);
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.045),
+            rgba(255,255,255,0.018)
+        );
+
+    transition:
+        transform 0.3s ease,
+        border-color 0.3s ease,
+        background 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.task-card:hover {
+    transform: translateY(-5px);
+
+    border-color: var(--border-hover);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.07),
+            rgba(255,255,255,0.025)
+        );
+
+    box-shadow:
+        0 22px 60px rgba(0, 0, 0, 0.35);
+}
+
+
+/* -------------------------
+   CARD TOP
+------------------------- */
+
+.card-top {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+.task-number {
+    color: #676d77;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    letter-spacing: 0.08em;
+}
+
+
+.icon-box {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    background: rgba(255,255,255,0.045);
+}
+
+
+.icon-box svg {
+    width: 24px;
+    height: 24px;
+
+    stroke-width: 1.6;
+
+    stroke: currentColor;
+}
+
+
+.bootstrap-icon {
+    color: #9b7cff;
+}
+
+
+.store-icon {
+    color: #2997ff;
+}
+
+
+/* -------------------------
+   CARD CONTENT
+------------------------- */
+
+.card-content {
+    margin-top: auto;
+}
+
+
+.eyebrow {
+    display: block;
+
+    margin-bottom: 11px;
+
+    color: #777d87;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    letter-spacing: 0.09em;
+
+    text-transform: uppercase;
+}
+
+
+.card-content h2 {
+    font-size: 29px;
+
+    line-height: 1.1;
+
+    letter-spacing: -0.045em;
+
+    font-weight: 600;
+}
+
+
+.card-content p {
+    max-width: 420px;
+
+    margin-top: 17px;
+
+    color: var(--secondary);
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+
+/* -------------------------
+   CARD FOOTER
+------------------------- */
+
+.card-footer {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-top: 30px;
+
+    padding-top: 18px;
+
+    border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+
+.explore {
+    color: #d7d9dd;
+
+    font-size: 12px;
+    font-weight: 500;
+}
+
+
+.arrow {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.06);
+
+    color: #d8d9dc;
+
+    font-size: 16px;
+
+    transition:
+        transform 0.25s ease,
+        background 0.25s ease;
+}
+
+
+.task-card:hover .arrow {
+    transform: translateX(3px);
+
+    background: rgba(255,255,255,0.11);
+}
+
+
+/* -------------------------
+   FOOTER
+------------------------- */
+
+footer {
+    margin-top: auto;
+
+    padding: 45px 0 28px;
+
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    color: #555b65;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    letter-spacing: 0.08em;
+}
+
+
+.footer-line {
+    width: 35px;
+    height: 1px;
+
+    background: #343840;
+}
+
+
+/* -------------------------
+   RESPONSIVE
+------------------------- */
+
+@media (max-width: 700px) {
+
+    .hero {
+        padding-top: 55px;
+    }
+
+    .hero h1 {
+        font-size: 58px;
+    }
+
+    .tasks {
+        grid-template-columns: 1fr;
+
+        margin-top: 40px;
+    }
+
+    .task-card {
+        min-height: 350px;
+    }
+
+    footer {
+        margin-top: 40px;
+
+        flex-wrap: wrap;
+    }
+}
+
+
+@media (max-width: 450px) {
+
+    .page {
+        width: 90%;
+    }
+
+    .hero h1 {
+        font-size: 50px;
+    }
+
+    .subtitle {
+        font-size: 17px;
+    }
+
+    .description {
+        font-size: 13px;
+    }
+
+    .task-card {
+        padding: 21px;
+
+        border-radius: 20px;
+    }
+
+    .card-content h2 {
+        font-size: 26px;
+    }
+}
