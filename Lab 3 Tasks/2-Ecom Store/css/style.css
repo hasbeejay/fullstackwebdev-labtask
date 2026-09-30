@@ -1,0 +1,118 @@
+/* hasbeejay's Marketplace - custom layer on top of Bootstrap and Tailwind */
+:root {
+  --ink: #0b1533;
+  --paper: #f3f6fb;
+  --cobalt: #2f4bff;
+  --cobalt-dark: #2237d6;
+  --bs-body-bg: var(--paper);
+  --bs-body-color: var(--ink);
+  --bs-link-color: var(--cobalt);
+  --bs-link-hover-color: var(--cobalt-dark);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background: var(--paper);
+}
+
+h1, h2, h3, .brand, .section-title {
+  letter-spacing: -0.02em;
+}
+
+.section-title { font-size: 1.9rem; font-weight: 800; }
+
+/* Buttons */
+.btn-brand {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--cobalt);
+  --bs-btn-border-color: var(--cobalt);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--cobalt-dark);
+  --bs-btn-hover-border-color: var(--cobalt-dark);
+  --bs-btn-active-bg: var(--cobalt-dark);
+  --bs-btn-active-border-color: var(--cobalt-dark);
+  --bs-btn-focus-shadow-rgb: 47, 75, 255;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.btn-outline-dark { border-radius: 999px; }
+
+/* Navbar */
+.site-nav {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #e3e8f3;
+}
+.brand { font-weight: 800; color: var(--ink); }
+.brand-dot { width: 0.8rem; height: 0.8rem; background: var(--cobalt); margin-right: 0.5rem; }
+.site-nav .nav-link { color: var(--ink); font-weight: 500; }
+.site-nav .nav-link.active { color: var(--cobalt); font-weight: 700; }
+
+/* Hero */
+.hero-title { line-height: 1.05; }
+.hero-stack { max-width: 30rem; height: 26rem; }
+.hero-tile { position: absolute; width: 68%; }
+.hero-tile-a { top: 0; right: 0; }
+.hero-tile-b { bottom: 0; left: 0; }
+
+/* Products */
+.product-card {
+  border-radius: 1rem;
+  box-shadow: 0 1px 2px rgba(11, 21, 51, 0.06), 0 8px 24px rgba(11, 21, 51, 0.06);
+  transition: transform 0.15s ease;
+}
+.product-card:hover { transform: translateY(-3px); }
+
+/* Reviews */
+.reviews-band { background: #fff; }
+.review-card {
+  background: var(--paper);
+  border-radius: 1rem;
+  border-left: 4px solid var(--cobalt);
+}
+.review-card blockquote { font-size: 1.05rem; line-height: 1.6; }
+
+/* Auth */
+.auth-shell { border-radius: 1.5rem; box-shadow: 0 20px 50px rgba(11, 21, 51, 0.12); }
+.auth-panel { color: #fff; min-height: 16rem; }
+.form-control:focus, .form-check-input:focus { border-color: var(--cobalt); box-shadow: 0 0 0 0.2rem rgba(47, 75, 255, 0.18); }
+.form-check-input:checked { background-color: var(--cobalt); border-color: var(--cobalt); }
+.form-control:user-invalid { border-color: #dc3545; }
+
+/* Cart: pure-CSS interactions driven by :target (no JavaScript) */
+.added-toast { display: none; }
+.added-toast:target { display: flex; align-items: center; justify-content: space-between; }
+.cart-item.is-extra { display: none; }
+.summary-card { position: sticky; top: 6rem; }
+
+/* Footer */
+.site-footer { background: var(--ink); color: #fff; }
+.site-footer a { color: #c9d3ff; text-decoration: none; }
+.site-footer a:hover { color: #fff; text-decoration: underline; }
+.site-footer li { margin-bottom: 0.35rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .product-card { transition: none; }
+}
+
+/* Per-product cart rules */
+body:has(#added-1:target) #row-1 { display: flex; }
+body:has(#rm-1:target) #row-1 { display: none; }
+body:has(#added-2:target) #row-2 { display: flex; }
+body:has(#rm-2:target) #row-2 { display: none; }
+body:has(#added-3:target) #row-3 { display: flex; }
+body:has(#rm-3:target) #row-3 { display: none; }
+body:has(#added-4:target) #row-4 { display: flex; }
+body:has(#rm-4:target) #row-4 { display: none; }
+body:has(#added-5:target) #row-5 { display: flex; }
+body:has(#rm-5:target) #row-5 { display: none; }
+body:has(#added-6:target) #row-6 { display: flex; }
+body:has(#rm-6:target) #row-6 { display: none; }
+body:has(#added-7:target) #row-7 { display: flex; }
+body:has(#rm-7:target) #row-7 { display: none; }
+body:has(#added-8:target) #row-8 { display: flex; }
+body:has(#rm-8:target) #row-8 { display: none; }
