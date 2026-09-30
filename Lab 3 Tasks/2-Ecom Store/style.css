@@ -1,0 +1,8 @@
+body{background:#f8f7ff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.brand{background:linear-gradient(90deg,#4f46e5,#a855f7);-webkit-background-clip:text;color:transparent}
+.hero{background:radial-gradient(circle at 80% 20%,#a855f7,transparent 40%),linear-gradient(135deg,#4338ca,#6d28d9)}
+.btn-grad{background:linear-gradient(90deg,#4f46e5,#a855f7);border:0}.btn-grad:hover{filter:brightness(1.1)}
+.lift{transition:transform .25s,box-shadow .25s}.lift:hover{transform:translateY(-6px)}
+.nav-check{display:none}.nav-menu{display:none}.nav-check:checked~.nav-menu{display:block}
+@media(min-width:992px){.nav-menu{display:flex!important}}
+.form-control:focus{border-color:#818cf8;box-shadow:0 0 0 .25rem rgba(99,102,241,.2)}
