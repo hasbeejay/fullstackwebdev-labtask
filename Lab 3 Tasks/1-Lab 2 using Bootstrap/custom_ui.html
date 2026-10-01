@@ -1,308 +1,222 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Lab 02 — HTML & CSS Showcase</title>
-
+    <title>Lab 02 | HTML & CSS Showcase</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="custom_ui.css">
 </head>
-
 <body>
-
-    <div class="background-grid"></div>
-
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="brand">
-            <span class="brand-mark">&lt;/&gt;</span>
-            <span>FULL STACK WEB DEV</span>
-        </div>
-
-        <div class="nav-meta">
-            <span>LAB_02</span>
-            <span class="status">
-                <i></i> COMPLETED
-            </span>
+    <nav class="navbar navbar-dark px-4 py-3">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <span class="brand-mark">&lt;/&gt;</span> FULL STACK WEB DEV
+            </a>
+            <div class="d-flex gap-3 align-items-center small">
+                <span>LAB_02</span>
+                <span class="status">● COMPLETED</span>
+            </div>
         </div>
     </nav>
 
-    <!-- Hero -->
-    <header class="hero">
-
-        <div class="hero-top">
+    <header class="hero container-fluid px-4 px-lg-5 py-5">
+        <div class="d-flex justify-content-between align-items-center">
             <span class="eyebrow">AIR UNIVERSITY / COMPUTER SCIENCE</span>
             <span class="lab-number">02</span>
         </div>
 
-        <div class="hero-content">
-            <h1>
+        <div class="hero-content py-5">
+            <h1 class="display-1 fw-bold">
                 HTML <span>&amp;</span><br>
                 CSS <em>LAB 2</em>
             </h1>
-
-            <p>
+            <p class="lead mt-4">
                 Five interfaces. One stylesheet playground.
-                A collection of practical implementations
-                exploring structure, layout, styling and creativity.
+                A collection of practical implementations exploring
+                structure, layout, styling and creativity.
             </p>
         </div>
 
-        <div class="hero-bottom">
+        <div class="hero-bottom d-flex flex-wrap justify-content-between gap-3">
             <span>05 TASKS</span>
-            <span>HTML + CSS ONLY</span>
-            <span>NO JAVASCRIPT</span>
+            <span>HTML + CSS</span>
+            <span>BOOTSTRAP 5</span>
             <span>SCROLL TO EXPLORE ↓</span>
         </div>
-
     </header>
 
-
-    <!-- Tasks -->
-    <main class="tasks-section">
-
-        <div class="section-heading">
-            <div>
+    <main class="container-fluid px-4 px-lg-5 py-5">
+        <div class="row align-items-end mb-5 g-4">
+            <div class="col-lg-6">
                 <span class="section-label">01 — TASK ARCHIVE</span>
-                <h2>What was <i>built.</i></h2>
+                <h2 class="display-5 fw-bold mt-2">What was <i>built.</i></h2>
+            </div>
+            <div class="col-lg-5 offset-lg-1">
+                <p class="text-secondary mb-0">
+                    Each task explores a different real-world interface,
+                    moving from structured documents to custom visual design.
+                </p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-xl-4">
+                <article class="card task-card h-100 featured">
+                    <div class="card-body p-3">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="task-number">01</span>
+                            <span class="task-type">PERSONAL / BRAND</span>
+                        </div>
+                        <div class="preview">
+                            <iframe src="portfolio.html" title="Portfolio Preview"></iframe>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <div>
+                                <small class="text-secondary">TASK 01</small>
+                                <h3 class="h5 fw-bold mb-0">Personal Portfolio</h3>
+                            </div>
+                            <a href="portfolio.html" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm">OPEN ↗</a>
+                        </div>
+                        <p class="text-secondary mt-3 mb-0">
+                            A personal portfolio combining typography, layout,
+                            spacing and visual hierarchy.
+                        </p>
+                    </div>
+                </article>
             </div>
 
-            <p>
-                Each task explores a different real-world interface,
-                progressively moving from structured documents to
-                completely custom visual design.
-            </p>
+            <div class="col-md-6 col-xl-4">
+                <article class="card task-card h-100">
+                    <div class="card-body p-3">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="task-number">02</span>
+                            <span class="task-type">SOCIAL / UI</span>
+                        </div>
+                        <div class="preview">
+                            <iframe src="facebook.html" title="AirConnect Preview"></iframe>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <div>
+                                <small class="text-secondary">TASK 02</small>
+                                <h3 class="h5 fw-bold mb-0">Facebook Home</h3>
+                            </div>
+                            <a href="facebook.html" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm">OPEN ↗</a>
+                        </div>
+                        <p class="text-secondary mt-3 mb-0">
+                            A Facebook-inspired homepage recreated for Air University students.
+                        </p>
+                    </div>
+                </article>
+            </div>
+
+            <div class="col-md-6 col-xl-4">
+                <article class="card task-card h-100">
+                    <div class="card-body p-3">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="task-number">03</span>
+                            <span class="task-type">GRID / TABLE</span>
+                        </div>
+                        <div class="preview">
+                            <iframe src="timetable.html" title="Timetable Preview"></iframe>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <div>
+                                <small class="text-secondary">TASK 03</small>
+                                <h3 class="h5 fw-bold mb-0">Class Timetable</h3>
+                            </div>
+                            <a href="timetable.html" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm">OPEN ↗</a>
+                        </div>
+                        <p class="text-secondary mt-3 mb-0">
+                            A weekly academic timetable using a responsive table.
+                        </p>
+                    </div>
+                </article>
+            </div>
+
+            <div class="col-md-6 col-xl-4">
+                <article class="card task-card h-100">
+                    <div class="card-body p-3">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="task-number">04</span>
+                            <span class="task-type">DOCUMENT / LAYOUT</span>
+                        </div>
+                        <div class="preview">
+                            <iframe src="iee_paper.html" title="IEEE Paper Preview"></iframe>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <div>
+                                <small class="text-secondary">TASK 04</small>
+                                <h3 class="h5 fw-bold mb-0">IEEE Paper</h3>
+                            </div>
+                            <a href="iee_paper.html" target="_blank" rel="noopener" class="btn btn-outline-light btn-sm">OPEN ↗</a>
+                        </div>
+                        <p class="text-secondary mt-3 mb-0">
+                            An IEEE-style research paper with a two-column layout.
+                        </p>
+                    </div>
+                </article>
+            </div>
+
+            <div class="col-md-6 col-xl-4">
+                <article class="card task-card h-100">
+                    <div class="card-body p-3">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span class="task-number">05</span>
+                            <span class="task-type">EXPERIMENTAL / CUSTOM</span>
+                        </div>
+                        <div class="custom-preview rounded-3">
+                            <div class="floating-shape shape-one"></div>
+                            <div class="floating-shape shape-two"></div>
+                            <div class="position-relative">
+                                <small>THE FINAL TASK</small>
+                                <h2 class="display-5 fw-bold mt-3">BUILD<br>YOUR OWN.</h2>
+                                <small>CSS AS A CREATIVE TOOL</small>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <div>
+                                <small class="text-secondary">TASK 05</small>
+                                <h3 class="h5 fw-bold mb-0">Custom UI</h3>
+                            </div>
+                            <span class="active-tag">YOU ARE HERE</span>
+                        </div>
+                        <p class="text-secondary mt-3 mb-0">
+                            An experimental interface exploring visual design and CSS effects.
+                        </p>
+                    </div>
+                </article>
+            </div>
         </div>
-
-        <div class="tasks-grid">
-
-            <!-- Task 01 — Portfolio -->
-            <article class="task-card featured">
-
-                <div class="card-top">
-                    <span class="task-number">01</span>
-                    <span class="task-type">PERSONAL / BRAND</span>
-                </div>
-
-                <div class="preview">
-                    <iframe src="portfolio.html" title="Portfolio Preview">
-                    </iframe>
-
-                    <div class="preview-overlay">
-                        <span>LIVE PREVIEW</span>
-                    </div>
-                </div>
-
-                <div class="card-info">
-                    <div>
-                        <span class="mini-label">TASK 01</span>
-                        <h3>Personal Portfolio</h3>
-                    </div>
-
-                    <a href="portfolio.html" target="_blank">
-                        OPEN ↗
-                    </a>
-                </div>
-
-                <p>
-                    A personal portfolio interface combining typography,
-                    layout, spacing and visual hierarchy.
-                </p>
-
-            </article>
-
-
-            <!-- Task 02 — Facebook -->
-            <article class="task-card">
-
-                <div class="card-top">
-                    <span class="task-number">02</span>
-                    <span class="task-type">SOCIAL / UI</span>
-                </div>
-
-                <div class="preview">
-                    <iframe src="facebook.html" title="Facebook Preview">
-                    </iframe>
-
-                    <div class="preview-overlay">
-                        <span>LIVE PREVIEW</span>
-                    </div>
-                </div>
-
-                <div class="card-info">
-                    <div>
-                        <span class="mini-label">TASK 02</span>
-                        <h3>Facebook Home</h3>
-                    </div>
-
-                    <a href="facebook.html" target="_blank">
-                        OPEN ↗
-                    </a>
-                </div>
-
-                <p>
-                    A Facebook-inspired homepage recreated entirely
-                    with HTML and CSS.
-                </p>
-
-            </article>
-
-
-            <!-- Task 03 — Timetable -->
-            <article class="task-card">
-
-                <div class="card-top">
-                    <span class="task-number">03</span>
-                    <span class="task-type">GRID / TABLE</span>
-                </div>
-
-                <div class="preview">
-                    <iframe src="timetable.html" title="Timetable Preview">
-                    </iframe>
-
-                    <div class="preview-overlay">
-                        <span>LIVE PREVIEW</span>
-                    </div>
-                </div>
-
-                <div class="card-info">
-                    <div>
-                        <span class="mini-label">TASK 03</span>
-                        <h3>Class Timetable</h3>
-                    </div>
-
-                    <a href="timetable.html" target="_blank">
-                        OPEN ↗
-                    </a>
-                </div>
-
-                <p>
-                    A weekly academic timetable designed using
-                    HTML tables and CSS styling.
-                </p>
-
-            </article>
-
-
-            <!-- Task 04 — IEEE -->
-            <article class="task-card">
-
-                <div class="card-top">
-                    <span class="task-number">04</span>
-                    <span class="task-type">DOCUMENT / LAYOUT</span>
-                </div>
-
-                <div class="preview">
-                    <iframe src="iee_paper.html" title="IEEE Paper Preview">
-                    </iframe>
-
-                    <div class="preview-overlay">
-                        <span>LIVE PREVIEW</span>
-                    </div>
-                </div>
-
-                <div class="card-info">
-                    <div>
-                        <span class="mini-label">TASK 04</span>
-                        <h3>IEEE Paper Template</h3>
-                    </div>
-
-                    <a href="iee_paper.html" target="_blank">
-                        OPEN ↗
-                    </a>
-                </div>
-
-                <p>
-                    A structured IEEE-style research paper layout
-                    recreated using HTML and CSS.
-                </p>
-
-            </article>
-
-
-            <!-- Task 05 — Custom UI -->
-            <article class="task-card custom-card">
-
-                <div class="card-top">
-                    <span class="task-number">05</span>
-                    <span class="task-type">EXPERIMENTAL / CUSTOM</span>
-                </div>
-
-                <div class="custom-preview">
-
-                    <div class="floating-shape shape-one"></div>
-                    <div class="floating-shape shape-two"></div>
-
-                    <div class="custom-preview-content">
-                        <span>THE FINAL TASK</span>
-
-                        <strong>
-                            BUILD<br>
-                            YOUR OWN.
-                        </strong>
-
-                        <small>
-                            CSS AS A CREATIVE TOOL
-                        </small>
-                    </div>
-
-                </div>
-
-                <div class="card-info">
-                    <div>
-                        <span class="mini-label">TASK 05</span>
-                        <h3>Custom UI</h3>
-                    </div>
-
-                    <span class="active-tag">YOU ARE HERE</span>
-                </div>
-
-                <p>
-                    An experimental interface built from the CSS
-                    concepts studied throughout the laboratory.
-                </p>
-
-            </article>
-
-        </div>
-
     </main>
 
-
-    <!-- Bottom Section -->
-    <section class="closing">
-
-        <div class="closing-number">05</div>
-
-        <div class="closing-content">
-            <span>LAB 02 / END OF FILE</span>
-
-            <h2>
-                Code is the<br>
-                <i>canvas.</i>
-            </h2>
-
-            <p>
-                Designed with HTML & CSS.
-                Built as part of Full Stack Web Development Lab 02.
-            </p>
+    <section class="closing container-fluid px-4 px-lg-5 py-5">
+        <div class="row align-items-center g-4">
+            <div class="col-md-2">
+                <span class="closing-number">05</span>
+            </div>
+            <div class="col-md-8">
+                <span class="section-label">END OF ARCHIVE</span>
+                <h2 class="display-4 fw-bold mt-3">
+                    Structure first.<br><i>Style follows.</i>
+                </h2>
+                <p class="text-secondary mt-3">
+                    Five exercises completed. One more step toward building
+                    better interfaces for the web.
+                </p>
+            </div>
+            <div class="col-md-2 text-md-end">
+                <span class="closing-mark">&lt;/&gt;</span>
+            </div>
         </div>
-
-        <div class="closing-mark">
-            &lt;/&gt;
-        </div>
-
     </section>
 
-
-    <footer>
-        <span>FULL STACK WEB DEV LAB</span>
-        <span>HTML · CSS</span>
-        <span>2026</span>
+    <footer class="container-fluid px-4 px-lg-5 py-4">
+        <div class="d-flex flex-wrap justify-content-between gap-2">
+            <span>FULL STACK WEB DEV · LAB 02</span>
+            <span>HTML + CSS + BOOTSTRAP</span>
+        </div>
     </footer>
-
 </body>
-
 </html>
