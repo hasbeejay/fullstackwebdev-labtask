@@ -1,226 +1,226 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-        content="Portfolio of Haseeb Jalil — software engineering student, builder, developer and creative problem solver.">
-    <title>hasbeejay — Software Engineer & Builder</title>
+    <meta name="description" content="Portfolio of Haseeb Jalil — software engineering student, developer and creative problem solver.">
+    <title>hasbeejay | Software Engineer & Builder</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="portfolio.css">
 </head>
-
 <body>
-
-    <nav>
-        <div class="container nav-inner">
-            <a href="#" class="logo">hasbeejay</a>
-            <ul class="nav-links">
-                <li><a href="#about">About</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#stack">Stack</a></li>
-                <li><a href="#experience">Journey</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a href="#" class="navbar-brand logo">hasbeejay</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#portfolioNav" aria-controls="portfolioNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="portfolioNav">
+                <ul class="navbar-nav ms-auto gap-lg-3">
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#stack">Stack</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#experience">Journey</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                </ul>
+            </div>
         </div>
     </nav>
 
     <main>
-        <section class="hero">
-            <div class="container hero-grid">
-                <div>
-                    <div class="eyebrow"><span class="dot"></span> Available for interesting problems</div>
-                    <h1>Haseeb<br><span class="outline">Jalil</span></h1>
-                    <p class="hero-description">
-                        Software engineering student, developer and
-                        <strong>builder of things that probably didn't need to exist — but now absolutely
-                            should.</strong>
-                    </p>
-                    <div class="hero-actions">
-                        <a href="#projects" class="button primary">View my work</a>
-                        <a href="#contact" class="button">Let's talk →</a>
+        <section class="hero py-5">
+            <div class="container py-lg-5">
+                <div class="row align-items-center g-5">
+                    <div class="col-lg-7">
+                        <div class="eyebrow mb-4"><span class="dot"></span> Available for interesting problems</div>
+                        <h1 class="display-1 fw-bold">Haseeb<br><span class="outline">Jalil</span></h1>
+                        <p class="hero-description mt-4">
+                            Software engineering student, developer and
+                            <strong>builder of things that probably didn't need to exist — but now absolutely should.</strong>
+                        </p>
+                        <div class="d-flex flex-wrap gap-3 mt-4">
+                            <a href="#projects" class="btn btn-accent">View my work</a>
+                            <a href="#contact" class="btn btn-outline-light">Let's talk →</a>
+                        </div>
                     </div>
-                </div>
 
-                <div class="hero-card">
-                    <div class="terminal">
-                        <div class="terminal-top"><i></i><i></i><i></i></div>
-                        <div class="terminal-line"><span class="key">const</span> developer = {</div>
-                        <div class="terminal-line">&nbsp;&nbsp;name: <span class="value">"haseeb"</span>,</div>
-                        <div class="terminal-line">&nbsp;&nbsp;role: <span class="value">"builder"</span>,</div>
-                        <div class="terminal-line">&nbsp;&nbsp;stack: <span class="value">"full-stack"</span>,</div>
-                        <div class="terminal-line">&nbsp;&nbsp;mode: <span class="value">"zero → one"</span></div>
-                        <div class="terminal-line">};</div>
+                    <div class="col-lg-5">
+                        <div class="hero-card">
+                            <div class="terminal">
+                                <div class="terminal-top"><i></i><i></i><i></i></div>
+                                <div><span class="key">const</span> developer = {</div>
+                                <div>&nbsp;&nbsp;name: <span class="value">"haseeb"</span>,</div>
+                                <div>&nbsp;&nbsp;role: <span class="value">"builder"</span>,</div>
+                                <div>&nbsp;&nbsp;stack: <span class="value">"full-stack"</span>,</div>
+                                <div>&nbsp;&nbsp;mode: <span class="value">"zero → one"</span></div>
+                                <div>};</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="about">
+        <section id="about" class="section-space">
             <div class="container">
-                <div class="section-heading">
-                    <div>
+                <div class="row align-items-end g-4 section-heading mb-5">
+                    <div class="col-lg-6">
                         <div class="section-number">01 / ABOUT</div>
-                        <h2>A little context.</h2>
+                        <h2 class="display-5 fw-bold">A little context.</h2>
                     </div>
-                    <p class="section-description">
-                        Not just writing code. Understanding the problem, designing the solution and making the whole
-                        thing actually work.
-                    </p>
+                    <div class="col-lg-5 offset-lg-1">
+                        <p class="section-description">Not just writing code. Understanding the problem, designing the solution and making the whole thing actually work.</p>
+                    </div>
                 </div>
 
-                <div class="about-grid">
-                    <p class="about-text">
-                        I'm Haseeb — a Computer Science student at
-                        <span>Air University Islamabad</span> who enjoys turning messy ideas into working software.
-                        <br><br>
-                        I move between <span>web, mobile, databases, AI and system design</span>,
-                        usually learning whatever the problem demands.
-                    </p>
-
-                    <div class="facts">
-                        <div class="fact"><small>BASED IN</small><strong>Islamabad, Pakistan</strong></div>
-                        <div class="fact"><small>FIELD</small><strong>Software Engineering</strong></div>
-                        <div class="fact"><small>FOCUS</small><strong>Web + Mobile + AI</strong></div>
-                        <div class="fact"><small>APPROACH</small><strong>Zero → One</strong></div>
+                <div class="row g-5">
+                    <div class="col-lg-6">
+                        <p class="about-text">
+                            I'm Haseeb — a Computer Science student at
+                            <span>Air University Islamabad</span> who enjoys turning messy ideas into working software.
+                            <br><br>
+                            I move between <span>web, mobile, databases, AI and system design</span>,
+                            usually learning whatever the problem demands.
+                        </p>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="row g-3 facts">
+                            <div class="col-sm-6"><div class="fact"><small>BASED IN</small><strong>Islamabad, Pakistan</strong></div></div>
+                            <div class="col-sm-6"><div class="fact"><small>FIELD</small><strong>Software Engineering</strong></div></div>
+                            <div class="col-sm-6"><div class="fact"><small>FOCUS</small><strong>Web + Mobile + AI</strong></div></div>
+                            <div class="col-sm-6"><div class="fact"><small>APPROACH</small><strong>Zero → One</strong></div></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="projects">
+        <section id="projects" class="section-space">
             <div class="container">
-                <div class="section-heading">
-                    <div>
+                <div class="row align-items-end g-4 section-heading mb-5">
+                    <div class="col-lg-6">
                         <div class="section-number">02 / PROJECTS</div>
-                        <h2>Things I've built.</h2>
+                        <h2 class="display-5 fw-bold">Things I've built.</h2>
                     </div>
-                    <p class="section-description">
-                        A collection of academic projects, experiments and products built because the idea sounded
-                        interesting.
-                    </p>
+                    <div class="col-lg-5 offset-lg-1">
+                        <p class="section-description">A collection of academic projects, experiments and products built because the idea sounded interesting.</p>
+                    </div>
                 </div>
 
-                <div class="projects">
-                    <article class="project">
-                        <div class="project-top"><span class="project-number">01</span><span
-                                class="project-icon">GL</span></div>
-                        <div>
-                            <h3>GhoomLo</h3>
-                            <p>A lightweight travel companion for Islamabad that combines discovery, itinerary planning,
-                                live context and bookings into one experience.</p>
-                            <div class="tags"><span class="tag">Next.js</span><span class="tag">React</span><span
-                                    class="tag">TypeScript</span><span class="tag">Fastn</span><span
-                                    class="tag">Supabase</span></div>
-                        </div>
-                    </article>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <article class="project card h-100">
+                            <div class="card-body">
+                                <div class="project-top"><span>01</span><span class="project-icon">GL</span></div>
+                                <h3>GhoomLo</h3>
+                                <p>A lightweight travel companion for Islamabad that combines discovery, itinerary planning, live context and bookings into one experience.</p>
+                                <div class="tags"><span>Next.js</span><span>React</span><span>TypeScript</span><span>Fastn</span><span>Supabase</span></div>
+                            </div>
+                        </article>
+                    </div>
 
-                    <article class="project">
-                        <div class="project-top"><span class="project-number">02</span><span
-                                class="project-icon">LF</span></div>
-                        <div>
-                            <h3>LawFlow</h3>
-                            <p>A smart judicial case management system designed around Pakistan's judicial workflow,
-                                with role-based communication and case lifecycle management.</p>
-                            <div class="tags"><span class="tag">.NET 10</span><span class="tag">Blazor</span><span
-                                    class="tag">EF Core</span><span class="tag">SignalR</span><span
-                                    class="tag">PostgreSQL</span></div>
-                        </div>
-                    </article>
+                    <div class="col-md-6">
+                        <article class="project card h-100">
+                            <div class="card-body">
+                                <div class="project-top"><span>02</span><span class="project-icon">LF</span></div>
+                                <h3>LawFlow</h3>
+                                <p>A smart judicial case management system designed around Pakistan's judicial workflow, with role-based communication and case lifecycle management.</p>
+                                <div class="tags"><span>.NET 10</span><span>Blazor</span><span>EF Core</span><span>SignalR</span><span>PostgreSQL</span></div>
+                            </div>
+                        </article>
+                    </div>
 
-                    <article class="project">
-                        <div class="project-top"><span class="project-number">03</span><span
-                                class="project-icon">SV</span></div>
-                        <div>
-                            <h3>Savour</h3>
-                            <p>A mobile food and diet companion featuring recipe discovery, Firebase-powered user data
-                                and an AI conversational layer.</p>
-                            <div class="tags"><span class="tag">Flutter</span><span class="tag">Dart</span><span
-                                    class="tag">Firebase</span><span class="tag">LLaMA</span><span
-                                    class="tag">API</span></div>
-                        </div>
-                    </article>
+                    <div class="col-md-6">
+                        <article class="project card h-100">
+                            <div class="card-body">
+                                <div class="project-top"><span>03</span><span class="project-icon">SV</span></div>
+                                <h3>Savour</h3>
+                                <p>A mobile food and diet companion featuring recipe discovery, Firebase-powered user data and an AI conversational layer.</p>
+                                <div class="tags"><span>Flutter</span><span>Dart</span><span>Firebase</span><span>LLaMA</span><span>API</span></div>
+                            </div>
+                        </article>
+                    </div>
 
-                    <article class="project">
-                        <div class="project-top"><span class="project-number">04</span><span
-                                class="project-icon">NL</span></div>
-                        <div>
-                            <h3>NexaLAN</h3>
-                            <p>A LAN-first collaboration platform inspired by modern communication and code-hosting
-                                tools, designed for software-house networks.</p>
-                            <div class="tags"><span class="tag">.NET</span><span class="tag">Blazor</span><span
-                                    class="tag">SignalR</span><span class="tag">SQLite</span><span
-                                    class="tag">Networking</span></div>
-                        </div>
-                    </article>
+                    <div class="col-md-6">
+                        <article class="project card h-100">
+                            <div class="card-body">
+                                <div class="project-top"><span>04</span><span class="project-icon">NL</span></div>
+                                <h3>NexaLAN</h3>
+                                <p>A LAN-first collaboration platform inspired by modern communication and code-hosting tools, designed for software-house networks.</p>
+                                <div class="tags"><span>.NET</span><span>Blazor</span><span>SignalR</span><span>SQLite</span><span>Networking</span></div>
+                            </div>
+                        </article>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section id="stack">
+        <section id="stack" class="section-space">
             <div class="container">
-                <div class="section-heading">
-                    <div>
+                <div class="row align-items-end g-4 section-heading mb-5">
+                    <div class="col-lg-6">
                         <div class="section-number">03 / TOOLBOX</div>
-                        <h2>My playground.</h2>
+                        <h2 class="display-5 fw-bold">My playground.</h2>
                     </div>
-                    <p class="section-description">Tools change. The ability to learn them quickly matters more.</p>
+                    <div class="col-lg-5 offset-lg-1">
+                        <p class="section-description">Tools change. The ability to learn them quickly matters more.</p>
+                    </div>
                 </div>
 
-                <div class="stack-grid">
-                    <div class="stack-item">C++</div>
-                    <div class="stack-item">C#</div>
-                    <div class="stack-item">.NET</div>
-                    <div class="stack-item">Blazor</div>
-                    <div class="stack-item">ASP.NET Core</div>
-                    <div class="stack-item">Flutter</div>
-                    <div class="stack-item">Dart</div>
-                    <div class="stack-item">HTML</div>
-                    <div class="stack-item">CSS</div>
-                    <div class="stack-item">JavaScript</div>
-                    <div class="stack-item">TypeScript</div>
-                    <div class="stack-item">React</div>
-                    <div class="stack-item">Next.js</div>
-                    <div class="stack-item">SQL</div>
-                    <div class="stack-item">PostgreSQL</div>
-                    <div class="stack-item">MongoDB</div>
-                    <div class="stack-item">Firebase</div>
-                    <div class="stack-item">Supabase</div>
-                    <div class="stack-item">Git</div>
-                    <div class="stack-item">Python</div>
-                    <div class="stack-item">AI / LLMs</div>
+                <div class="row g-2 stack-grid">
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">C++</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">C#</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">.NET</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">Blazor</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">ASP.NET Core</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">Flutter</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">Dart</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">HTML</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">CSS</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">JavaScript</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">TypeScript</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">React</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">Next.js</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">SQL</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">PostgreSQL</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">MongoDB</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">Firebase</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">Supabase</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">Git</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">Python</div></div>
+                    <div class="col-6 col-md-4 col-lg-3"><div class="stack-item">AI / LLMs</div></div>
                 </div>
             </div>
         </section>
 
-        <section id="experience">
+        <section id="experience" class="section-space">
             <div class="container">
-                <div class="section-heading">
-                    <div>
+                <div class="row align-items-end g-4 section-heading mb-5">
+                    <div class="col-lg-6">
                         <div class="section-number">04 / JOURNEY</div>
-                        <h2>Still building.</h2>
+                        <h2 class="display-5 fw-bold">Still building.</h2>
                     </div>
-                    <p class="section-description">A timeline that is very much still under construction.</p>
+                    <div class="col-lg-5 offset-lg-1">
+                        <p class="section-description">A timeline that is very much still under construction.</p>
+                    </div>
                 </div>
 
                 <div class="timeline">
                     <div class="timeline-item">
                         <div class="timeline-date">NOW</div>
                         <h3>Software Engineering Student</h3>
-                        <p>Studying Computer Science at Air University Islamabad while building increasingly ambitious
-                            software projects and experimenting with modern development workflows.</p>
+                        <p>Studying Computer Science at Air University Islamabad while building increasingly ambitious software projects and experimenting with modern development workflows.</p>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-date">2026</div>
                         <h3>Build with Fastn — DeadSec</h3>
-                        <p>Built GhoomLo as part of a hackathon project, integrating external services and Fastn
-                            workflows into a lightweight travel experience.</p>
+                        <p>Built GhoomLo as part of a hackathon project, integrating external services and Fastn workflows into a lightweight travel experience.</p>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-date">2025 — PRESENT</div>
                         <h3>Full-Stack & Product Experiments</h3>
-                        <p>Built projects across web, mobile, databases, networking and AI — gradually moving from
-                            assignments toward complete product experiences.</p>
+                        <p>Built projects across web, mobile, databases, networking and AI — gradually moving from assignments toward complete product experiences.</p>
                     </div>
                     <div class="timeline-item">
                         <div class="timeline-date">THE BEGINNING</div>
@@ -231,31 +231,31 @@
             </div>
         </section>
 
-        <section>
+        <section class="section-space">
             <div class="container">
-                <div class="manifesto">
-                    <p>"Don't just learn the technology. <span>Build something that makes you need it.</span>"</p>
+                <div class="manifesto p-4 p-lg-5">
+                    <p class="mb-0">"Don't just learn the technology. <span>Build something that makes you need it.</span>"</p>
                 </div>
             </div>
         </section>
 
-        <section id="contact" class="contact">
+        <section id="contact" class="contact section-space">
             <div class="container">
                 <div class="section-number">05 / CONTACT</div>
-                <h2>Got an idea?<br>Let's make it real.</h2>
-                <p>Whether it's a project, collaboration, internship or completely questionable software idea — I'm
-                    listening.</p>
+                <h2 class="display-3 fw-bold mt-3">Got an idea?<br>Let's make it real.</h2>
+                <p class="mt-4">Whether it's a project, collaboration, internship or completely questionable software idea — I'm listening.</p>
+                <a href="mailto:hello@example.com" class="btn btn-accent mt-3">Get in touch →</a>
             </div>
         </section>
     </main>
 
-    <footer>
-        <div class="container footer-inner">
+    <footer class="py-4">
+        <div class="container d-flex flex-wrap justify-content-between gap-2">
             <span>© 2026 hasbeejay</span>
             <span>built from zero → one</span>
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
