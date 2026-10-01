@@ -1,285 +1,244 @@
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AirConnect | Air University Students</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="facebook.css">
 </head>
-
 <body>
+    <header class="topbar sticky-top">
+        <div class="container-fluid d-flex align-items-center justify-content-between gap-3 px-3">
+            <a href="#" class="brand text-decoration-none">
+                <span class="brand-mark">A</span>
+                <span>AirConnect</span>
+            </a>
 
-    <header class="topbar">
-        <div class="brand">
-            <div class="brand-mark">A</div>
-            <span>AirConnect</span>
+            <div class="search-box d-none d-md-flex">
+                <span>⌕</span>
+                <input type="search" class="form-control" placeholder="Search AirConnect">
+            </div>
+
+            <nav class="top-actions d-flex align-items-center gap-2">
+                <a href="#" aria-label="Home">⌂</a>
+                <a href="#" aria-label="Friends">♧</a>
+                <a href="#" aria-label="Messages">✉</a>
+                <a href="#" aria-label="Notifications">♡</a>
+                <div class="profile-mini">H</div>
+            </nav>
         </div>
-
-        <div class="search-box">
-            <span>⌕</span>
-            <input type="text" placeholder="Search AirConnect">
-        </div>
-
-        <nav class="top-actions">
-            <a href="#">⌂</a>
-            <a href="#">♧</a>
-            <a href="#">✉</a>
-            <a href="#">♡</a>
-            <div class="profile-mini">H</div>
-        </nav>
     </header>
 
-    <main class="page-layout">
-
-        <aside class="left-sidebar">
-            <div class="profile-card">
-                <div class="profile-cover"></div>
-                <div class="avatar large">H</div>
-                <h3>Haseeb Jalil</h3>
-                <p>BSCS • Air University</p>
-            </div>
-
-            <nav class="side-nav">
-                <a class="active" href="#"><span>⌂</span> Home</a>
-                <a href="#"><span>♧</span> Friends</a>
-                <a href="#"><span>◈</span> Groups</a>
-                <a href="#"><span>▣</span> Events</a>
-                <a href="#"><span>★</span> Societies</a>
-                <a href="#"><span>▤</span> Academic Updates</a>
-            </nav>
-
-            <div class="campus-card">
-                <span class="online-dot"></span>
-                <div>
-                    <strong>Air University</strong>
-                    <small>Islamabad Campus</small>
-                </div>
-            </div>
-        </aside>
-
-        <section class="feed">
-
-            <div class="stories">
-                <div class="story create-story">
-                    <div class="story-plus">+</div>
-                    <strong>Create Story</strong>
-                </div>
-
-                <div class="story story-one">
-                    <div class="story-avatar">A</div>
-                    <span>Air University</span>
-                </div>
-
-                <div class="story story-two">
-                    <div class="story-avatar">C</div>
-                    <span>Cyber Security</span>
-                </div>
-
-                <div class="story story-three">
-                    <div class="story-avatar">S</div>
-                    <span>Student Life</span>
-                </div>
-            </div>
-
-            <div class="composer card">
-                <div class="composer-top">
-                    <div class="avatar">H</div>
-                    <div class="fake-input">What's happening on campus?</div>
-                </div>
-                <div class="composer-actions">
-                    <button>▣ Photo / Video</button>
-                    <button>☺ Feeling / Activity</button>
-                    <button>📍 Check in</button>
-                </div>
-            </div>
-
-            <article class="post card">
-                <div class="post-header">
-                    <div class="avatar">A</div>
-                    <div class="post-author">
-                        <strong>Air University</strong>
-                        <span>Yesterday · 🌐</span>
-                    </div>
-                    <button class="more">•••</button>
-                </div>
-
-                <p class="post-text">
-                    Inside the lab 💻 — learning by doing. Our computing students continue
-                    to turn classroom concepts into practical skills through hands-on lab work.
-                </p>
-
-                <img class="post-image" src="https://aack.au.edu.pk/Pages/CampusLife/Images/Labs_Images/lab1.jpeg"
-                    alt="Students working in an Air University computer lab">
-
-                <div class="post-stats">
-                    <span>👍 173</span>
-                    <span>27 comments · 9 shares</span>
-                </div>
-
-                <div class="post-buttons">
-                    <button>♡ Like</button>
-                    <button>◯ Comment</button>
-                    <button>↗ Share</button>
-                </div>
-            </article>
-
-            <article class="post card">
-                <div class="post-header">
-                    <div class="avatar">A</div>
-                    <div class="post-author">
-                        <strong>AirConnect Students</strong>
-                        <span>2 days · 🌐</span>
-                    </div>
-                    <button class="more">•••</button>
-                </div>
-
-                <p class="post-text">
-                    Graduation season hits different. 🎓 Congratulations to all Air University
-                    graduates and everyone who helped them reach this milestone!
-                </p>
-
-                <img class="post-image"
-                    src="https://www.thenews.pk/assets/uploads/akhbar/2025-11-23/1382276_1121781_image233ffg_akhbar.jpg"
-                    alt="Air University graduates celebrating convocation">
-
-                <div class="post-stats">
-                    <span>👍 391</span>
-                    <span>63 comments · 31 shares</span>
-                </div>
-
-                <div class="post-buttons">
-                    <button>♡ Like</button>
-                    <button>◯ Comment</button>
-                    <button>↗ Share</button>
-                </div>
-            </article>
-
-            <article class="post card">
-                <div class="post-header">
-                    <div class="avatar">S</div>
-                    <div class="post-author">
-                        <strong>Student Life at AirConnect</strong>
-                        <span>3 days · 🌐</span>
-                    </div>
-                    <button class="more">•••</button>
-                </div>
-
-                <p class="post-text">
-                    Study group + fresh air + good friends = productive afternoon. 📚
-                    Tag your study squad and share your favorite campus spot.
-                </p>
-
-                <img class="post-image" src="https://koala.sh/api/image/v2-xjr5a-xmbye.jpg?dream=&height=832&width=1216"
-                    alt="University students studying together outdoors">
-
-                <div class="post-stats">
-                    <span>👍 119</span>
-                    <span>21 comments · 6 shares</span>
-                </div>
-
-                <div class="post-buttons">
-                    <button>♡ Like</button>
-                    <button>◯ Comment</button>
-                    <button>↗ Share</button>
-                </div>
-            </article>
-
-        </section>
-
-        <aside class="right-sidebar">
-
-            <div class="right-card">
-                <div class="section-heading">
-                    <h3>AirConnect Events</h3>
-                    <a href="#">See all</a>
-                </div>
-
-                <div class="event">
-                    <div class="date-box">
-                        <strong>24</strong>
-                        <span>SEP</span>
-                    </div>
-                    <div>
-                        <strong>Tech Society Meetup</strong>
-                        <small>Forum & Library · 4:00 PM</small>
+    <main class="container-fluid px-3 px-lg-4 py-4">
+        <div class="row g-4">
+            <aside class="col-lg-3 col-xl-2 d-none d-lg-block">
+                <div class="profile-card card text-center mb-3">
+                    <div class="profile-cover"></div>
+                    <div class="avatar large mx-auto">H</div>
+                    <div class="card-body pt-2">
+                        <h3 class="h6 fw-bold mb-1">Haseeb Jalil</h3>
+                        <p class="small text-secondary mb-0">BSCS • Air University</p>
                     </div>
                 </div>
 
-                <div class="event">
-                    <div class="date-box">
-                        <strong>27</strong>
-                        <span>SEP</span>
+                <nav class="side-nav d-grid gap-1 mb-4">
+                    <a class="active" href="#"><span>⌂</span> Home</a>
+                    <a href="#"><span>♧</span> Friends</a>
+                    <a href="#"><span>◈</span> Groups</a>
+                    <a href="#"><span>▣</span> Events</a>
+                    <a href="#"><span>★</span> Societies</a>
+                    <a href="#"><span>▤</span> Academic Updates</a>
+                </nav>
+
+                <div class="campus-card card p-3">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="online-dot"></span>
+                        <div>
+                            <strong>Air University</strong>
+                            <small class="d-block text-secondary">Islamabad Campus</small>
+                        </div>
                     </div>
-                    <div>
-                        <strong>Student Innovation Expo</strong>
-                        <small>Air University · 11:00 AM</small>
+                </div>
+            </aside>
+
+            <section class="col-lg-6 col-xl-7 feed">
+                <div class="stories d-flex gap-3 mb-4">
+                    <div class="story create-story">
+                        <div class="story-plus">+</div>
+                        <strong>Create Story</strong>
+                    </div>
+                    <div class="story story-one">
+                        <div class="story-avatar">A</div>
+                        <span>Air University</span>
+                    </div>
+                    <div class="story story-two">
+                        <div class="story-avatar">C</div>
+                        <span>Cyber Security</span>
+                    </div>
+                    <div class="story story-three">
+                        <div class="story-avatar">S</div>
+                        <span>Society Life</span>
                     </div>
                 </div>
 
-                <div class="event">
-                    <div class="date-box">
-                        <strong>02</strong>
-                        <span>OCT</span>
+                <div class="composer card mb-4">
+                    <div class="card-body">
+                        <div class="composer-top d-flex align-items-center gap-3">
+                            <div class="avatar">H</div>
+                            <input class="form-control rounded-pill" type="text" placeholder="What's happening on campus?">
+                        </div>
+                        <hr>
+                        <div class="composer-actions d-flex flex-wrap justify-content-around gap-2">
+                            <button class="btn btn-light btn-sm">▣ Photo / Video</button>
+                            <button class="btn btn-light btn-sm">☺ Feeling / Activity</button>
+                            <button class="btn btn-light btn-sm">📍 Check in</button>
+                        </div>
                     </div>
-                    <div>
-                        <strong>Societies Fair</strong>
-                        <small>Main Campus · 1:00 PM</small>
+                </div>
+
+                <article class="post card mb-4">
+                    <div class="card-body">
+                        <div class="post-header d-flex align-items-center gap-3 mb-3">
+                            <div class="avatar">A</div>
+                            <div class="post-author">
+                                <strong>Air University</strong>
+                                <small class="d-block text-secondary">2 hours ago · Islamabad</small>
+                            </div>
+                            <button class="btn btn-light btn-sm ms-auto" aria-label="More options">•••</button>
+                        </div>
+                        <p class="post-text">
+                            Campus life is all about learning, collaboration, and discovering
+                            new opportunities. Make the most of your time at Air University!
+                        </p>
+                        <img class="post-image img-fluid rounded-3"
+                             src="https://aack.au.edu.pk/Pages/CampusLife/Images/Labs_Images/lab1.jpeg"
+                             alt="University computer laboratory">
+                        <div class="post-stats d-flex justify-content-between py-3">
+                            <span>👍 124 likes</span>
+                            <span>18 comments · 7 shares</span>
+                        </div>
+                        <div class="post-buttons d-flex border-top pt-2 gap-2">
+                            <button class="btn btn-light flex-fill">♡ Like</button>
+                            <button class="btn btn-light flex-fill">◯ Comment</button>
+                            <button class="btn btn-light flex-fill">↗ Share</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="post card mb-4">
+                    <div class="card-body">
+                        <div class="post-header d-flex align-items-center gap-3 mb-3">
+                            <div class="avatar">A</div>
+                            <div class="post-author">
+                                <strong>Air University Students</strong>
+                                <small class="d-block text-secondary">Yesterday · Student Community</small>
+                            </div>
+                            <button class="btn btn-light btn-sm ms-auto" aria-label="More options">•••</button>
+                        </div>
+                        <p class="post-text">
+                            Reminder to all students: prepare for your upcoming midterms
+                            and check your course portals for announcements. Good luck!
+                        </p>
+                        <img class="post-image img-fluid rounded-3"
+                             src="https://aack.au.edu.pk/Pages/CampusLife/Images/Labs_Images/lab1.jpeg"
+                             alt="Students' study environment">
+                        <div class="post-stats d-flex justify-content-between py-3">
+                            <span>👍 86 likes</span>
+                            <span>12 comments · 4 shares</span>
+                        </div>
+                        <div class="post-buttons d-flex border-top pt-2 gap-2">
+                            <button class="btn btn-light flex-fill">♡ Like</button>
+                            <button class="btn btn-light flex-fill">◯ Comment</button>
+                            <button class="btn btn-light flex-fill">↗ Share</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="post card mb-4">
+                    <div class="card-body">
+                        <div class="post-header d-flex align-items-center gap-3 mb-3">
+                            <div class="avatar">S</div>
+                            <div class="post-author">
+                                <strong>Society Life</strong>
+                                <small class="d-block text-secondary">2 days ago · Campus Events</small>
+                            </div>
+                            <button class="btn btn-light btn-sm ms-auto" aria-label="More options">•••</button>
+                        </div>
+                        <p class="post-text">
+                            Ready to meet new people, learn something new, and get involved?
+                            Keep an eye out for upcoming society events and activities on campus.
+                        </p>
+                        <img class="post-image img-fluid rounded-3"
+                             src="https://koala.sh/api/image/v2-xjr5a-xmbye.jpg?dream=&height=832&width=1216"
+                             alt="Student community event">
+                        <div class="post-stats d-flex justify-content-between py-3">
+                            <span>👍 103 likes</span>
+                            <span>21 comments · 9 shares</span>
+                        </div>
+                        <div class="post-buttons d-flex border-top pt-2 gap-2">
+                            <button class="btn btn-light flex-fill">♡ Like</button>
+                            <button class="btn btn-light flex-fill">◯ Comment</button>
+                            <button class="btn btn-light flex-fill">↗ Share</button>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <aside class="col-xl-3 d-none d-xl-block right-sidebar">
+                <div class="right-card card p-3 mb-3">
+                    <div class="section-heading d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="h6 fw-bold mb-0">AirConnect Events</h3>
+                        <a href="#">See all</a>
+                    </div>
+
+                    <div class="event d-flex gap-3 mb-3">
+                        <div class="date-box"><strong>15</strong><small>OCT</small></div>
+                        <div><strong>Tech Meetup</strong><small class="d-block text-secondary">Main Auditorium</small></div>
+                    </div>
+                    <div class="event d-flex gap-3 mb-3">
+                        <div class="date-box"><strong>19</strong><small>OCT</small></div>
+                        <div><strong>Society Fair</strong><small class="d-block text-secondary">University Lawn</small></div>
+                    </div>
+                    <div class="event d-flex gap-3">
+                        <div class="date-box"><strong>24</strong><small>OCT</small></div>
+                        <div><strong>Career Session</strong><small class="d-block text-secondary">Seminar Hall</small></div>
                     </div>
                 </div>
-            </div>
 
-            <div class="right-card">
-                <div class="section-heading">
-                    <h3>People You May Know</h3>
-                </div>
-
-                <div class="person">
-                    <div class="avatar">O</div>
-                    <div>
-                        <strong>Obaid Khan</strong>
-                        <small>BSCS · 12 mutual friends</small>
+                <div class="right-card card p-3 mb-3">
+                    <h3 class="h6 fw-bold mb-3">People You May Know</h3>
+                    <div class="person d-flex align-items-center gap-2 mb-3">
+                        <div class="avatar">O</div>
+                        <div class="flex-grow-1"><strong>Obaid Khan</strong><small class="d-block text-secondary">Computer Science</small></div>
+                        <button class="btn btn-outline-primary btn-sm">+</button>
                     </div>
-                    <button>+</button>
-                </div>
-
-                <div class="person">
-                    <div class="avatar">U</div>
-                    <div>
-                        <strong>Uzair Ahmed</strong>
-                        <small>BSCS · 8 mutual friends</small>
+                    <div class="person d-flex align-items-center gap-2 mb-3">
+                        <div class="avatar">U</div>
+                        <div class="flex-grow-1"><strong>Uzair Ahmed</strong><small class="d-block text-secondary">Air University</small></div>
+                        <button class="btn btn-outline-primary btn-sm">+</button>
                     </div>
-                    <button>+</button>
-                </div>
-
-                <div class="person">
-                    <div class="avatar">A</div>
-                    <div>
-                        <strong>Ali Raza</strong>
-                        <small>BSSE · 6 mutual friends</small>
+                    <div class="person d-flex align-items-center gap-2">
+                        <div class="avatar">A</div>
+                        <div class="flex-grow-1"><strong>Ali Raza</strong><small class="d-block text-secondary">Computer Science</small></div>
+                        <button class="btn btn-outline-primary btn-sm">+</button>
                     </div>
-                    <button>+</button>
                 </div>
-            </div>
 
-            <div class="right-card trending">
-                <div class="section-heading">
-                    <h3>Trending on AirConnect</h3>
+                <div class="right-card card p-3 trending">
+                    <h3 class="h6 fw-bold mb-3">Trending on AirConnect</h3>
+                    <a href="#"># AirUniversity</a>
+                    <a href="#"># Midterms</a>
+                    <a href="#"># SocietyLife</a>
+                    <a href="#"># AirConnect</a>
                 </div>
-                <a href="#"><span>#</span> AirUniversity</a>
-                <a href="#"><span>#</span> Midterms</a>
-                <a href="#"><span>#</span> SocietyLife</a>
-                <a href="#"><span>#</span> AirConnect</a>
-            </div>
 
-            <footer>
-                AirConnect · Privacy · Terms · Help<br>
-                © 2026 AirConnect for Air University Students
-            </footer>
-
-        </aside>
+                <footer class="small text-secondary mt-3">
+                    About · Privacy · Terms<br>AirConnect © 2026
+                </footer>
+            </aside>
+        </div>
     </main>
-
 </body>
-
 </html>
