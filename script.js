@@ -78,6 +78,25 @@ const LABS = [
     status: 'Completed',
     colors: ['#7952b3', '#563d7c'],
   },
+   {
+  id: 4,
+  title: 'JavaScript Hands-on Practice',
+  description: 'Lab 4 focuses on JavaScript fundamentals through hands-on practice tasks involving variables, data types, objects, arrays, functions, operators, and console-based programming.',
+  repo: 'https://github.com/hasbeejay/fullstackwebdev-labtask/tree/main/Lab%204%20Tasks',
+  objectives: [
+    'Practice JavaScript fundamentals and syntax',
+    'Work with variables, data types, operators, and expressions',
+    'Create and manipulate JavaScript objects and arrays',
+    'Implement functions and basic programming logic',
+    'Use the browser console to execute and test JavaScript code'
+  ],
+  outcome: 'A collection of JavaScript practice tasks demonstrating fundamental programming concepts and console-based JavaScript execution.',
+  tech: ['HTML5', 'CSS3', 'JavaScript'],
+  liveUrl: 'Lab 4 Tasks/index.html',
+  date: '',
+  status: 'Completed',
+  colors: ['#f7df1e', '#323330'],
+},
 ];
 
 /* ==========================================================
