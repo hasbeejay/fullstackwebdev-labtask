@@ -1,1 +1,720 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Lab 4 | Haseeb Jalil</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#home">
+                <span class="brand-icon">JS</span> CodeLab
+            </a>
+
+            <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarMenu">
+                <ul class="navbar-nav ms-auto gap-lg-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tasks">Lab Tasks</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <span class="eyebrow">COMPUTER SCIENCE • LAB WORK</span>
+
+                <h1>JavaScript <span>Lab 04</span></h1>
+
+                <p class="hero-subtitle">
+                    Hands-on Practice on JavaScript
+                </p>
+
+                <p class="hero-description">
+                    Exploring JavaScript fundamentals through variables,
+                    objects, loops, functions, arrays, and mathematical
+                    operations.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="#tasks" class="btn btn-primary-custom">
+                        Explore Lab Tasks
+                    </a>
+                    <a href="#about" class="btn btn-outline-custom">
+                        Student Details
+                    </a>
+                </div>
+
+                <div class="hero-stats row g-3">
+                    <div class="col-6 col-md-4">
+                        <div class="stat-card">
+                            <h3>06</h3>
+                            <p>Lab Tasks</p>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-4">
+                        <div class="stat-card">
+                            <h3>JS</h3>
+                            <p>Programming Language</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="stat-card">
+                            <h3>100%</h3>
+                            <p>Practical Learning</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Lab Overview -->
+    <section class="overview-section">
+        <div class="container">
+            <div class="section-heading">
+                <span class="section-label">OVERVIEW</span>
+                <h2>What This Lab Covers</h2>
+                <p>
+                    Six practical exercises to strengthen core JavaScript
+                    programming skills.
+                </p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="overview-card">
+                        <div class="overview-icon purple">01</div>
+                        <h4>Variables & Objects</h4>
+                        <p>Store personal information and organize it using
+                            nested JavaScript objects.</p>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="overview-card">
+                        <div class="overview-icon blue">02</div>
+                        <h4>Loops & Conditions</h4>
+                        <p>Use loops and conditional statements to find
+                            the next prime number.</p>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="overview-card">
+                        <div class="overview-icon green">03</div>
+                        <h4>Arrays & Strings</h4>
+                        <p>Format an array of ten digits into a
+                            standard phone number.</p>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="overview-card">
+                        <div class="overview-icon orange">04</div>
+                        <h4>Rounding Functions</h4>
+                        <p>Implement a flexible function using
+                            rest parameters and Math.round().</p>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="overview-card">
+                        <div class="overview-icon pink">05</div>
+                        <h4>Math Methods</h4>
+                        <p>Implement absolute value, ceiling,
+                            and floor operations.</p>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="overview-card">
+                        <div class="overview-icon cyan">06</div>
+                        <h4>Summation</h4>
+                        <p>Calculate the sum of natural numbers
+                            divisible by either of two numbers.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- All Lab Tasks -->
+    <main class="tasks-section" id="tasks">
+        <div class="container">
+
+            <div class="section-heading">
+                <span class="section-label">PRACTICAL WORK</span>
+                <h2>Lab Tasks & Solutions</h2>
+                <p>
+                    Each exercise includes its objective, source code,
+                    and console output screenshot.
+                </p>
+            </div>
+
+            <!-- Task 1 -->
+            <article class="task-card">
+                <div class="task-header">
+                    <div class="task-number">01</div>
+                    <div>
+                        <span class="task-category">VARIABLES & OBJECTS</span>
+                        <h3>Personal Biography</h3>
+                    </div>
+                </div>
+
+                <p class="task-description">
+                    Create a personal biography using variables and
+                    primitive data types. Organize the information in
+                    an object containing nested address and degree
+                    program objects.
+                </p>
+
+                <div class="concept-tags">
+                    <span>var</span>
+                    <span>Objects</span>
+                    <span>Nested Objects</span>
+                    <span>console.log()</span>
+                </div>
+
+                <div class="code-window">
+                    <div class="code-toolbar">
+                        <span><i class="dot"></i> task1.js</span>
+                        <span>JavaScript</span>
+                    </div>
+                    <pre><code>var name = "Haseeb Jalil";
+var age = 23;
+var is_student = true;
+var university = "Air University";
+var degree = "BS Computer Science";
+
+var address = {
+    house: 002,
+    street: 1,
+    sector: "E-11",
+    city: "Islamabad"
+};
+
+var degreeProgram = {
+    title: "BS Computer Science",
+    semester: 5,
+    section: "A"
+};
+
+var biography = {
+    name: name,
+    age: age,
+    is_student: is_student,
+    university: university,
+    address: address,
+    degreeProgram: degreeProgram
+};
+
+console.log("Biography");
+console.log("Name: " + biography.name);
+console.log("Age: " + biography.age);
+console.log("Student: " + biography.is_student);
+console.log("University: " + biography.university);
+
+console.log("Address:");
+console.log("House: " + biography.address.house);
+console.log("Street: " + biography.address.street);
+console.log("Block: " + biography.address.block);
+console.log("City: " + biography.address.city);
+
+console.log("Degree Program:");
+console.log("Degree: " + biography.degreeProgram.title);
+console.log("Semester: " + biography.degreeProgram.semester);
+console.log("Section: " + biography.degreeProgram.section);</code></pre>
+                </div>
+
+                <div class="output-heading">
+                    <div>
+                        <span class="output-indicator"></span>
+                        <h4>Console Output</h4>
+                    </div>
+                    <span class="image-hint">Screenshot 01</span>
+                </div>
+
+                <div class="screenshot-frame">
+                    <img src="images/task1-output.png"
+                        alt="Task 1 JavaScript console output"
+                        class="output-image"
+                        loading="lazy"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+                    <div class="screenshot-placeholder">
+                        <span class="placeholder-icon">01</span>
+                        <h5>Task 1 Output Screenshot</h5>
+                        <p>Add your console screenshot here.</p>
+                        <code>images/task1-output.png</code>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Task 2 -->
+            <article class="task-card">
+                <div class="task-header">
+                    <div class="task-number">02</div>
+                    <div>
+                        <span class="task-category">LOOPS & CONDITIONS</span>
+                        <h3>Next Prime Number</h3>
+                    </div>
+                </div>
+
+                <p class="task-description">
+                    Find the first prime number greater than a given
+                    prime number by using loops and conditional logic.
+                </p>
+
+                <div class="concept-tags">
+                    <span>let</span>
+                    <span>while loop</span>
+                    <span>for loop</span>
+                    <span>Prime Numbers</span>
+                </div>
+
+                <div class="code-window">
+                    <div class="code-toolbar">
+                        <span><i class="dot"></i> task2.js</span>
+                        <span>JavaScript</span>
+                    </div>
+                    <pre><code>let givenNumber = 11;
+let number = givenNumber + 1;
+let isPrime = false;
+
+while (true) {
+    isPrime = true;
+
+    for (let i = 2; i &lt;= Math.sqrt(number); i++) {
+        if (number % i === 0) {
+            isPrime = false;
+            break;
+        }
+    }
+
+    if (isPrime) {
+        console.log("Given number: " + givenNumber);
+        console.log("Next prime number: " + number);
+        break;
+    }
+
+    number++;
+}</code></pre>
+                </div>
+
+                <div class="output-heading">
+                    <div>
+                        <span class="output-indicator"></span>
+                        <h4>Console Output</h4>
+                    </div>
+                    <span class="image-hint">Screenshot 02</span>
+                </div>
+
+                <div class="screenshot-frame">
+                    <img src="images/task2-output.png"
+                        alt="Task 2 console output showing the next prime"
+                        class="output-image"
+                        loading="lazy"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+                    <div class="screenshot-placeholder">
+                        <span class="placeholder-icon">02</span>
+                        <h5>Task 2 Output Screenshot</h5>
+                        <p>Add your console screenshot here.</p>
+                        <code>images/task2-output.png</code>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Task 3 -->
+            <article class="task-card">
+                <div class="task-header">
+                    <div class="task-number">03</div>
+                    <div>
+                        <span class="task-category">ARRAYS & STRINGS</span>
+                        <h3>Phone Number Formatter</h3>
+                    </div>
+                </div>
+
+                <p class="task-description">
+                    Write a function that accepts ten integers between
+                    zero and nine and returns a formatted phone number.
+                </p>
+
+                <div class="concept-tags">
+                    <span>Functions</span>
+                    <span>Arrays</span>
+                    <span>slice()</span>
+                    <span>join()</span>
+                </div>
+
+                <div class="code-window">
+                    <div class="code-toolbar">
+                        <span><i class="dot"></i> task3.js</span>
+                        <span>JavaScript</span>
+                    </div>
+                    <pre><code>function createPhoneNumber(numbers) {
+    let areaCode = numbers.slice(0, 3).join("");
+    let firstPart = numbers.slice(3, 6).join("");
+    let secondPart = numbers.slice(6, 10).join("");
+
+    return "(" + areaCode + ") " + firstPart + "-" + secondPart;
+}
+
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+
+console.log(createPhoneNumber(numbers));</code></pre>
+                </div>
+
+                <div class="output-heading">
+                    <div>
+                        <span class="output-indicator"></span>
+                        <h4>Console Output</h4>
+                    </div>
+                    <span class="image-hint">Screenshot 03</span>
+                </div>
+
+                <div class="screenshot-frame">
+                    <img src="images/task3-output.png"
+                        alt="Task 3 formatted phone number output"
+                        class="output-image"
+                        loading="lazy"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+                    <div class="screenshot-placeholder">
+                        <span class="placeholder-icon">03</span>
+                        <h5>Task 3 Output Screenshot</h5>
+                        <p>Add your console screenshot here.</p>
+                        <code>images/task3-output.png</code>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Task 4 -->
+            <article class="task-card">
+                <div class="task-header">
+                    <div class="task-number">04</div>
+                    <div>
+                        <span class="task-category">FUNCTIONS & ROUNDING</span>
+                        <h3>The roundMe() Function</h3>
+                    </div>
+                </div>
+
+                <p class="task-description">
+                    Create a function that accepts zero or more arguments,
+                    rounds each number, and returns the appropriate
+                    result depending on the number of arguments.
+                </p>
+
+                <div class="concept-tags">
+                    <span>Rest Parameters</span>
+                    <span>map()</span>
+                    <span>Math.round()</span>
+                </div>
+
+                <div class="code-window">
+                    <div class="code-toolbar">
+                        <span><i class="dot"></i> task4.js</span>
+                        <span>JavaScript</span>
+                    </div>
+                    <pre><code>function roundMe(...numbers) {
+    if (numbers.length === 0) {
+        return 0;
+    }
+
+    let roundedNumbers = numbers.map(function(number) {
+        return Math.round(number);
+    });
+
+    if (numbers.length === 1) {
+        return roundedNumbers[0];
+    }
+
+    return roundedNumbers;
+}
+
+console.log(roundMe());
+console.log(roundMe(4.7));
+console.log(roundMe(4.7, 4.4));</code></pre>
+                </div>
+
+                <div class="output-heading">
+                    <div>
+                        <span class="output-indicator"></span>
+                        <h4>Console Output</h4>
+                    </div>
+                    <span class="image-hint">Screenshot 04</span>
+                </div>
+
+                <div class="screenshot-frame">
+                    <img src="images/task4-output.png"
+                        alt="Task 4 rounding function output"
+                        class="output-image"
+                        loading="lazy"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+                    <div class="screenshot-placeholder">
+                        <span class="placeholder-icon">04</span>
+                        <h5>Task 4 Output Screenshot</h5>
+                        <p>Add your console screenshot here.</p>
+                        <code>images/task4-output.png</code>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Task 5 -->
+            <article class="task-card">
+                <div class="task-header">
+                    <div class="task-number">05</div>
+                    <div>
+                        <span class="task-category">BUILT-IN MATH METHODS</span>
+                        <h3>Absolute, Ceiling & Floor</h3>
+                    </div>
+                </div>
+
+                <p class="task-description">
+                    Implement custom abs(), ceil(), and floor() functions
+                    that support multiple arguments and return arrays
+                    when multiple values are provided.
+                </p>
+
+                <div class="concept-tags">
+                    <span>Math.abs()</span>
+                    <span>Math.ceil()</span>
+                    <span>Math.floor()</span>
+                    <span>map()</span>
+                </div>
+
+                <div class="code-window">
+                    <div class="code-toolbar">
+                        <span><i class="dot"></i> task5.js</span>
+                        <span>JavaScript</span>
+                    </div>
+                    <pre><code>function abs(...numbers) {
+    if (numbers.length === 0) {
+        return 0;
+    }
+
+    let results = numbers.map(function(number) {
+        return Math.abs(number);
+    });
+
+    return numbers.length === 1 ? results[0] : results;
+}
+
+function ceil(...numbers) {
+    if (numbers.length === 0) {
+        return 0;
+    }
+
+    let results = numbers.map(function(number) {
+        return Math.ceil(number);
+    });
+
+    return numbers.length === 1 ? results[0] : results;
+}
+
+function floor(...numbers) {
+    if (numbers.length === 0) {
+        return 0;
+    }
+
+    let results = numbers.map(function(number) {
+        return Math.floor(number);
+    });
+
+    return numbers.length === 1 ? results[0] : results;
+}
+
+console.log("ABS:");
+console.log(abs());
+console.log(abs(-4.7));
+console.log(abs(-4.7, 4.4));
+
+console.log("CEIL:");
+console.log(ceil());
+console.log(ceil(4.2));
+console.log(ceil(4.2, 4.8));
+
+console.log("FLOOR:");
+console.log(floor());
+console.log(floor(4.8));
+console.log(floor(4.8, 4.2));</code></pre>
+                </div>
+
+                <div class="output-heading">
+                    <div>
+                        <span class="output-indicator"></span>
+                        <h4>Console Output</h4>
+                    </div>
+                    <span class="image-hint">Screenshot 05</span>
+                </div>
+
+                <div class="screenshot-frame">
+                    <img src="images/task5-output.png"
+                        alt="Task 5 absolute, ceiling, and floor output"
+                        class="output-image"
+                        loading="lazy"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+                    <div class="screenshot-placeholder">
+                        <span class="placeholder-icon">05</span>
+                        <h5>Task 5 Output Screenshot</h5>
+                        <p>Add your console screenshot here.</p>
+                        <code>images/task5-output.png</code>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Task 6 -->
+            <article class="task-card">
+                <div class="task-header">
+                    <div class="task-number">06</div>
+                    <div>
+                        <span class="task-category">LOOPS & ARITHMETIC</span>
+                        <h3>Sum of Multiples</h3>
+                    </div>
+                </div>
+
+                <p class="task-description">
+                    Calculate the sum of all natural numbers below z
+                    that are divisible by x or y. Each qualifying
+                    number is counted only once.
+                </p>
+
+                <div class="concept-tags">
+                    <span>Functions</span>
+                    <span>for loop</span>
+                    <span>Modulus (%)</span>
+                    <span>Logical OR</span>
+                </div>
+
+                <div class="code-window">
+                    <div class="code-toolbar">
+                        <span><i class="dot"></i> task6.js</span>
+                        <span>JavaScript</span>
+                    </div>
+                    <pre><code>function sumMultiples(x, y, z) {
+    let sum = 0;
+
+    for (let i = 1; i &lt; z; i++) {
+        if (i % x === 0 || i % y === 0) {
+            sum += i;
+        }
+    }
+
+    return sum;
+}
+
+let x = 3;
+let y = 5;
+let z = 10;
+
+console.log("Sum of multiples: " + sumMultiples(x, y, z));</code></pre>
+                </div>
+
+                <div class="output-heading">
+                    <div>
+                        <span class="output-indicator"></span>
+                        <h4>Console Output</h4>
+                    </div>
+                    <span class="image-hint">Screenshot 06</span>
+                </div>
+
+                <div class="screenshot-frame">
+                    <img src="images/task6-output.png"
+                        alt="Task 6 sum of multiples output"
+                        class="output-image"
+                        loading="lazy"
+                        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+
+                    <div class="screenshot-placeholder">
+                        <span class="placeholder-icon">06</span>
+                        <h5>Task 6 Output Screenshot</h5>
+                        <p>Add your console screenshot here.</p>
+                        <code>images/task6-output.png</code>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </main>
+
+    <!-- About / Student Details -->
+    <section class="about-section" id="about">
+        <div class="container">
+            <div class="about-card">
+                <div class="about-symbol">HJ</div>
+
+                <div class="about-content">
+                    <span class="section-label">SUBMITTED BY</span>
+                    <h2>Haseeb Jalil</h2>
+                    <p class="about-description">
+                        BS Computer Science student at Air University.
+                        This page documents the solutions and console
+                        outputs for JavaScript Lab 3.
+                    </p>
+
+                    <div class="student-details">
+                        <div>
+                            <span>Degree Program</span>
+                            <strong>BS Computer Science</strong>
+                        </div>
+                        <div>
+                            <span>University</span>
+                            <strong>Air University</strong>
+                        </div>
+                        <div>
+                            <span>Lab Number</span>
+                            <strong>Lab 04</strong>
+                        </div>
+                        <div>
+                            <span>Subject</span>
+                            <strong>JavaScript</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>
+                <span class="footer-brand">CodeLab</span>
+                &nbsp;|&nbsp; JavaScript Lab 04
+            </p>
+            <a href="#home">Back to top ↑</a>
+        </div>
+    </footer>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+</body>
+</html>
