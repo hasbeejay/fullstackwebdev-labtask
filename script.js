@@ -97,6 +97,28 @@ const LABS = [
   status: 'Completed',
   colors: ['#f7df1e', '#323330'],
 },
+   {
+  id: 5,
+  title: 'Advanced JavaScript — Hands-on Practice',
+  description: 'Lab 5 focuses on advanced JavaScript concepts through eight hands-on tasks involving data validation, academic analytics, object manipulation, inheritance, ES modules, JSON processing, callbacks, Promises, and asynchronous API handling.',
+  repo: 'https://github.com/hasbeejay/fullstackwebdev-labtask/tree/main/Lab%205%20Tasks',
+  objectives: [
+    'Implement data sanitization, admission decisions, and merit calculations',
+    'Use array methods to process academic results and generate department statistics',
+    'Apply object destructuring, spread syntax, optional chaining, and immutable updates',
+    'Implement class inheritance, method overriding, polymorphism, call(), and bind()',
+    'Organize JavaScript code using ES modules and validate JSON data with error handling',
+    'Build asynchronous workflows using callbacks and error-first conventions',
+    'Implement Promise chains and use Promise combinators for independent services',
+    'Fetch and aggregate data concurrently using async/await, with timeout and error handling'
+  ],
+  outcome: 'A collection of eight advanced JavaScript practice tasks demonstrating data validation, academic data processing, object-oriented programming, modular architecture, fault-tolerant JSON handling, and asynchronous service workflows using Node.js.',
+  tech: ['JavaScript ES6+', 'Node.js', 'ES Modules', 'Promises', 'Async/Await'],
+  liveUrl: 'Lab 5 Tasks/index.html',
+  date: '',
+  status: 'Completed',
+  colors: ['#8EE3D0', '#102A43'],
+},
 ];
 
 /* ==========================================================
