@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
 </head>
-<body>
+<body class="home">
 <div class="bg"></div>
 <header class="nav glass">
   <a class="brand" href="index.html"><span class="brand-mark">JS</span><span>CampusFlow <small>· Lab 05</small></span></a>
@@ -37,94 +37,86 @@
 
   <section class="block" id="tasks">
     <div class="sec-head"><span class="num">LAB OVERVIEW</span><h2>Eight tasks. One <span class="grad">CampusFlow</span> core.</h2>
-      <p>Each card is a live preview of its task page. Open one to read the solution code and the real console output.</p></div>
+      <p>Each card is a live preview of its task page. Hover for details, click to read the solution code and the real console output.</p></div>
     <div class="cards">
     <a class="pcard glass" href="task1.html" style="--a1:#38bdf8;--a2:#818cf8" aria-label="Open Task 1: Admission Engine">
-      <div class="shot"><div class="shot-bar"><i></i><i></i><i></i><span>task1.html</span><em>LIVE</em></div>
-        <img src="images/previews/task1.jpg" alt="Preview of the Task 1 page" loading="lazy"></div>
-      <div class="pbody">
+      <img src="images/previews/task1.jpg" alt="Preview of the Task 1 page" loading="lazy">
+      <div class="ptop"><span>task1.html</span><em>LIVE</em></div>
+      <div class="pover">
         <span class="pnum">TASK 01</span>
-        <h3>Admission Decision &amp; Data Sanitization Engine</h3>
-        <p>Untrusted form strings are converted, validated and scored. Merit is only calculated once a record is proven valid, then every applicant gets a status and the office gets a summary.</p>
-        <div class="chips"><span class="chip">Number()</span><span class="chip">switch</span><span class="chip">ternary</span><span class="chip">guard clauses</span></div>
-        <div class="pgo"><span>View code &amp; output</span><span>→</span></div>
+        <h3>Admission Engine</h3>
+        <div class="pmore"><p>Untrusted form strings are converted, validated and scored. Merit is only calculated once a record is proven valid, then every applicant gets a status and the office gets a summary.</p><div class="chips"><span class="chip">Number()</span><span class="chip">switch</span><span class="chip">ternary</span><span class="chip">guard clauses</span></div></div>
+        <span class="parrow">→</span>
       </div>
     </a>
     <a class="pcard glass" href="task2.html" style="--a1:#a78bfa;--a2:#f472b6" aria-label="Open Task 2: Performance Engine">
-      <div class="shot"><div class="shot-bar"><i></i><i></i><i></i><span>task2.html</span><em>LIVE</em></div>
-        <img src="images/previews/task2.jpg" alt="Preview of the Task 2 page" loading="lazy"></div>
-      <div class="pbody">
+      <img src="images/previews/task2.jpg" alt="Preview of the Task 2 page" loading="lazy">
+      <div class="ptop"><span>task2.html</span><em>LIVE</em></div>
+      <div class="pover">
         <span class="pnum">TASK 02</span>
-        <h3>Academic Performance Intelligence Engine</h3>
-        <p>Grades, a ranked merit list, department statistics and academic queries, built entirely with array methods without mutating the original results.</p>
-        <div class="chips"><span class="chip">map()</span><span class="chip">reduce()</span><span class="chip">sort()</span><span class="chip">every()</span></div>
-        <div class="pgo"><span>View code &amp; output</span><span>→</span></div>
+        <h3>Performance Engine</h3>
+        <div class="pmore"><p>Grades, a ranked merit list, department statistics and academic queries, built entirely with array methods without mutating the original results.</p><div class="chips"><span class="chip">map()</span><span class="chip">reduce()</span><span class="chip">sort()</span><span class="chip">every()</span></div></div>
+        <span class="parrow">→</span>
       </div>
     </a>
     <a class="pcard glass" href="task3.html" style="--a1:#f472b6;--a2:#fb923c" aria-label="Open Task 3: Profile Update Service">
-      <div class="shot"><div class="shot-bar"><i></i><i></i><i></i><span>task3.html</span><em>LIVE</em></div>
-        <img src="images/previews/task3.jpg" alt="Preview of the Task 3 page" loading="lazy"></div>
-      <div class="pbody">
+      <img src="images/previews/task3.jpg" alt="Preview of the Task 3 page" loading="lazy">
+      <div class="ptop"><span>task3.html</span><em>LIVE</em></div>
+      <div class="pover">
         <span class="pnum">TASK 03</span>
-        <h3>Safe Student Profile Update Service</h3>
-        <p>A deep-merge update service that returns a new student object, keeps 0 / false / &quot;&quot; as real values, and proves object references with code.</p>
-        <div class="chips"><span class="chip">destructuring</span><span class="chip">spread</span><span class="chip">?.</span><span class="chip">??</span></div>
-        <div class="pgo"><span>View code &amp; output</span><span>→</span></div>
+        <h3>Profile Update Service</h3>
+        <div class="pmore"><p>A deep-merge update service that returns a new student object, keeps 0 / false / &quot;&quot; as real values, and proves object references with code.</p><div class="chips"><span class="chip">destructuring</span><span class="chip">spread</span><span class="chip">?.</span><span class="chip">??</span></div></div>
+        <span class="parrow">→</span>
       </div>
     </a>
     <a class="pcard glass" href="task4.html" style="--a1:#fbbf24;--a2:#f97316" aria-label="Open Task 4: User Hierarchy">
-      <div class="shot"><div class="shot-bar"><i></i><i></i><i></i><span>task4.html</span><em>LIVE</em></div>
-        <img src="images/previews/task4.jpg" alt="Preview of the Task 4 page" loading="lazy"></div>
-      <div class="pbody">
+      <img src="images/previews/task4.jpg" alt="Preview of the Task 4 page" loading="lazy">
+      <div class="ptop"><span>task4.html</span><em>LIVE</em></div>
+      <div class="pover">
         <span class="pnum">TASK 04</span>
-        <h3>University User Hierarchy &amp; Dynamic this</h3>
-        <p>Person → Student / FacultyMember with overriding and runtime polymorphism, then call(), a detached method that loses this, and bind() to fix it.</p>
-        <div class="chips"><span class="chip">extends</span><span class="chip">super</span><span class="chip">call()</span><span class="chip">bind()</span></div>
-        <div class="pgo"><span>View code &amp; output</span><span>→</span></div>
+        <h3>User Hierarchy</h3>
+        <div class="pmore"><p>Person → Student / FacultyMember with overriding and runtime polymorphism, then call(), a detached method that loses this, and bind() to fix it.</p><div class="chips"><span class="chip">extends</span><span class="chip">super</span><span class="chip">call()</span><span class="chip">bind()</span></div></div>
+        <span class="parrow">→</span>
       </div>
     </a>
     <a class="pcard glass" href="task5.html" style="--a1:#34d399;--a2:#22d3ee" aria-label="Open Task 5: Transcript Modules">
-      <div class="shot"><div class="shot-bar"><i></i><i></i><i></i><span>task5.html</span><em>LIVE</em></div>
-        <img src="images/previews/task5.jpg" alt="Preview of the Task 5 page" loading="lazy"></div>
-      <div class="pbody">
+      <img src="images/previews/task5.jpg" alt="Preview of the Task 5 page" loading="lazy">
+      <div class="ptop"><span>task5.html</span><em>LIVE</em></div>
+      <div class="pover">
         <span class="pnum">TASK 05</span>
-        <h3>Modular Transcript Processing &amp; Fault-Tolerant JSON</h3>
-        <p>Four ES modules that parse JSON safely, validate transcripts, throw meaningful Error / TypeError / RangeError and build a JSON report.</p>
-        <div class="chips"><span class="chip">ES modules</span><span class="chip">JSON</span><span class="chip">RangeError</span><span class="chip">finally</span></div>
-        <div class="pgo"><span>View code &amp; output</span><span>→</span></div>
+        <h3>Transcript Modules</h3>
+        <div class="pmore"><p>Four ES modules that parse JSON safely, validate transcripts, throw meaningful Error / TypeError / RangeError and build a JSON report.</p><div class="chips"><span class="chip">ES modules</span><span class="chip">JSON</span><span class="chip">RangeError</span><span class="chip">finally</span></div></div>
+        <span class="parrow">→</span>
       </div>
     </a>
     <a class="pcard glass" href="task6.html" style="--a1:#fb923c;--a2:#f43f5e" aria-label="Open Task 6: Callback Registration">
-      <div class="shot"><div class="shot-bar"><i></i><i></i><i></i><span>task6.html</span><em>LIVE</em></div>
-        <img src="images/previews/task6.jpg" alt="Preview of the Task 6 page" loading="lazy"></div>
-      <div class="pbody">
+      <img src="images/previews/task6.jpg" alt="Preview of the Task 6 page" loading="lazy">
+      <div class="ptop"><span>task6.html</span><em>LIVE</em></div>
+      <div class="pover">
         <span class="pnum">TASK 06</span>
-        <h3>Legacy Course Registration with Callbacks</h3>
-        <p>Four dependent asynchronous steps using error-first callbacks that stop the moment any stage fails, with no Promises and no async/await.</p>
-        <div class="chips"><span class="chip">setTimeout</span><span class="chip">error-first</span><span class="chip">callbacks</span></div>
-        <div class="pgo"><span>View code &amp; output</span><span>→</span></div>
+        <h3>Callback Registration</h3>
+        <div class="pmore"><p>Four dependent asynchronous steps using error-first callbacks that stop the moment any stage fails, with no Promises and no async/await.</p><div class="chips"><span class="chip">setTimeout</span><span class="chip">error-first</span><span class="chip">callbacks</span></div></div>
+        <span class="parrow">→</span>
       </div>
     </a>
     <a class="pcard glass" href="task7.html" style="--a1:#60a5fa;--a2:#a78bfa" aria-label="Open Task 7: Promise Registration">
-      <div class="shot"><div class="shot-bar"><i></i><i></i><i></i><span>task7.html</span><em>LIVE</em></div>
-        <img src="images/previews/task7.jpg" alt="Preview of the Task 7 page" loading="lazy"></div>
-      <div class="pbody">
+      <img src="images/previews/task7.jpg" alt="Preview of the Task 7 page" loading="lazy">
+      <div class="ptop"><span>task7.html</span><em>LIVE</em></div>
+      <div class="pover">
         <span class="pnum">TASK 07</span>
-        <h3>Promise-Based Multi-Service Registration Engine</h3>
-        <p>The registration workflow as a Promise chain, post-registration services with allSettled and course lookup with Promise.any, with the choices justified.</p>
-        <div class="chips"><span class="chip">chaining</span><span class="chip">allSettled</span><span class="chip">any</span><span class="chip">finally</span></div>
-        <div class="pgo"><span>View code &amp; output</span><span>→</span></div>
+        <h3>Promise Registration</h3>
+        <div class="pmore"><p>The registration workflow as a Promise chain, post-registration services with allSettled and course lookup with Promise.any, with the choices justified.</p><div class="chips"><span class="chip">chaining</span><span class="chip">allSettled</span><span class="chip">any</span><span class="chip">finally</span></div></div>
+        <span class="parrow">→</span>
       </div>
     </a>
     <a class="pcard glass" href="task8.html" style="--a1:#22d3ee;--a2:#34d399" aria-label="Open Task 8: API Aggregator">
-      <div class="shot"><div class="shot-bar"><i></i><i></i><i></i><span>task8.html</span><em>LIVE</em></div>
-        <img src="images/previews/task8.jpg" alt="Preview of the Task 8 page" loading="lazy"></div>
-      <div class="pbody">
+      <img src="images/previews/task8.jpg" alt="Preview of the Task 8 page" loading="lazy">
+      <div class="ptop"><span>task8.html</span><em>LIVE</em></div>
+      <div class="pover">
         <span class="pnum">TASK 08</span>
-        <h3>Concurrent Academic API Aggregator</h3>
-        <p>getJSON with a fake fetch that can simulate every failure, a concurrent dashboard loaded with Promise.all, and a timeout built on AbortController.</p>
-        <div class="chips"><span class="chip">async/await</span><span class="chip">Promise.all</span><span class="chip">AbortController</span></div>
-        <div class="pgo"><span>View code &amp; output</span><span>→</span></div>
+        <h3>API Aggregator</h3>
+        <div class="pmore"><p>getJSON with a fake fetch that can simulate every failure, a concurrent dashboard loaded with Promise.all, and a timeout built on AbortController.</p><div class="chips"><span class="chip">async/await</span><span class="chip">Promise.all</span><span class="chip">AbortController</span></div></div>
+        <span class="parrow">→</span>
       </div>
     </a>
     </div>
