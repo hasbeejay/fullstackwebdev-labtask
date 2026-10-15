@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task 08 · API Aggregator | JavaScript Lab 05</title>
+<meta name="description" content="getJSON with a fake fetch that can simulate every failure, a concurrent dashboard loaded with Promise.all, and a timeout built on AbortController.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237c9cff'/%3E%3Cstop offset='1' stop-color='%23c084fc'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='monospace' font-size='28' font-weight='800' text-anchor='middle' fill='%230a0d1a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body style="--a1:#22d3ee;--a2:#34d399">
+<div class="bg"></div>
+<header class="nav glass">
+  <a class="brand" href="index.html"><span class="brand-mark">JS</span><span>CampusFlow <small>· Lab 05</small></span></a>
+  <nav class="nav-links">
+    <a class="keep" href="index.html">Overview</a>
+    
+    <div class="dots"><a href="task1.html" class="" title="Admission Engine">1</a><a href="task2.html" class="" title="Performance Engine">2</a><a href="task3.html" class="" title="Profile Update Service">3</a><a href="task4.html" class="" title="User Hierarchy">4</a><a href="task5.html" class="" title="Transcript Modules">5</a><a href="task6.html" class="" title="Callback Registration">6</a><a href="task7.html" class="" title="Promise Registration">7</a><a href="task8.html" class="on" title="API Aggregator">8</a></div>
+  </nav>
+</header>
+<main class="wrap">
+
+  <section class="hero glass">
+    <a class="back" href="index.html">← Lab 05 overview</a>
+    <p class="eyebrow">Task 08 · async / await · Promise.all · AbortController</p>
+    <h1>Concurrent Academic API Aggregator</h1>
+    <p class="lead">A dashboard that loads /users, /courses and /results concurrently through a fake fetch, builds the analytics, and handles HTTP errors, network failures, invalid JSON and timeouts with proper cleanup.</p>
+    <div class="chips"><span class="chip">async / await</span><span class="chip">Promise.all</span><span class="chip">response.ok</span><span class="chip">AbortController</span><span class="chip">try / finally</span></div>
+    <div class="stats">
+      <div class="stat"><b>1</b><span>File</span></div>
+      <div class="stat"><b>223</b><span>Lines of code</span></div>
+      <div class="stat"><b>34</b><span>Output lines</span></div>
+      <div class="stat"><b>0</b><span>Packages</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="solution">
+    <div class="sec-head"><span class="num">08 / CODE</span><h2>Solution code</h2>
+      <p>The complete, runnable solution. Everything below ran in Node.js exactly as shown.</p></div>
+    <div class="panel glass" data-files>
+      
+      <div class="file-panel on" data-panel="task8.js">
+  <div class="file-bar"><span>task8.js</span><span class="lang">JavaScript · ES module</span><button class="copy" data-copy="raw11">Copy</button><a href="solutions/task8.js" download>Download</a></div>
+  <pre class="code"><code><span class="line"><span class="tok-c">// Task 8 - Concurrent Academic API Aggregator with async/await</span></span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// Fake data behind the fake network</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">const</span> USERS = [</span><span class="line">  { id: <span class="tok-n">1</span>, name: <span class="tok-s">'Ali'</span>, department: <span class="tok-s">'CS'</span> },</span><span class="line">  { id: <span class="tok-n">2</span>, name: <span class="tok-s">'Sara'</span>, department: <span class="tok-s">'CS'</span> },</span><span class="line">  { id: <span class="tok-n">3</span>, name: <span class="tok-s">'Usman'</span>, department: <span class="tok-s">'SE'</span> },</span><span class="line">  { id: <span class="tok-n">4</span>, name: <span class="tok-s">'Hina'</span>, department: <span class="tok-s">'AI'</span> },</span><span class="line">  { id: <span class="tok-n">5</span>, name: <span class="tok-s">'Ahmed'</span>, department: <span class="tok-s">'SE'</span> },</span><span class="line">  { id: <span class="tok-n">6</span>, name: <span class="tok-s">'Zoya'</span>, department: <span class="tok-s">'AI'</span> }</span><span class="line">];</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> COURSES = [</span><span class="line">  { code: <span class="tok-s">'FSWD'</span>, title: <span class="tok-s">'Full Stack Web Development'</span> },</span><span class="line">  { code: <span class="tok-s">'DSA'</span>, title: <span class="tok-s">'Data Structures and Algorithms'</span> },</span><span class="line">  { code: <span class="tok-s">'DB'</span>, title: <span class="tok-s">'Database Systems'</span> }</span><span class="line">];</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> RESULTS = [</span><span class="line">  { studentId: <span class="tok-n">1</span>, courseCode: <span class="tok-s">'FSWD'</span>, marks: <span class="tok-n">82</span> }, { studentId: <span class="tok-n">1</span>, courseCode: <span class="tok-s">'DSA'</span>, marks: <span class="tok-n">76</span> },</span><span class="line">  { studentId: <span class="tok-n">2</span>, courseCode: <span class="tok-s">'FSWD'</span>, marks: <span class="tok-n">91</span> }, { studentId: <span class="tok-n">2</span>, courseCode: <span class="tok-s">'DSA'</span>, marks: <span class="tok-n">88</span> },</span><span class="line">  { studentId: <span class="tok-n">3</span>, courseCode: <span class="tok-s">'FSWD'</span>, marks: <span class="tok-n">47</span> }, { studentId: <span class="tok-n">3</span>, courseCode: <span class="tok-s">'DSA'</span>, marks: <span class="tok-n">52</span> },</span><span class="line">  { studentId: <span class="tok-n">4</span>, courseCode: <span class="tok-s">'FSWD'</span>, marks: <span class="tok-n">73</span> }, { studentId: <span class="tok-n">4</span>, courseCode: <span class="tok-s">'DSA'</span>, marks: <span class="tok-n">69</span> },</span><span class="line">  { studentId: <span class="tok-n">5</span>, courseCode: <span class="tok-s">'FSWD'</span>, marks: <span class="tok-n">64</span> }, { studentId: <span class="tok-n">5</span>, courseCode: <span class="tok-s">'DSA'</span>, marks: <span class="tok-n">58</span> },</span><span class="line">  { studentId: <span class="tok-n">6</span>, courseCode: <span class="tok-s">'FSWD'</span>, marks: <span class="tok-n">91</span> }, { studentId: <span class="tok-n">6</span>, courseCode: <span class="tok-s">'DSA'</span>, marks: <span class="tok-n">94</span> }</span><span class="line">];</span><span class="line"> </span><span class="line"><span class="tok-c">// url -&gt; behaviour of the fake server</span></span><span class="line"><span class="tok-k">const</span> ROUTES = {</span><span class="line">  <span class="tok-s">'/users'</span>: { kind: <span class="tok-s">'ok'</span>, body: USERS, delay: <span class="tok-n">60</span> },</span><span class="line">  <span class="tok-s">'/courses'</span>: { kind: <span class="tok-s">'ok'</span>, body: COURSES, delay: <span class="tok-n">90</span> },</span><span class="line">  <span class="tok-s">'/results'</span>: { kind: <span class="tok-s">'ok'</span>, body: RESULTS, delay: <span class="tok-n">120</span> },</span><span class="line">  <span class="tok-s">'/not-found'</span>: { kind: <span class="tok-s">'status'</span>, status: <span class="tok-n">404</span>, statusText: <span class="tok-s">'Not Found'</span> },</span><span class="line">  <span class="tok-s">'/server-error'</span>: { kind: <span class="tok-s">'status'</span>, status: <span class="tok-n">500</span>, statusText: <span class="tok-s">'Internal Server Error'</span> },</span><span class="line">  <span class="tok-s">'/network-failure'</span>: { kind: <span class="tok-s">'network'</span> },</span><span class="line">  <span class="tok-s">'/invalid-json'</span>: { kind: <span class="tok-s">'invalid-json'</span> },</span><span class="line">  <span class="tok-s">'/slow'</span>: { kind: <span class="tok-s">'ok'</span>, body: { message: <span class="tok-s">'slow but successful'</span> }, delay: <span class="tok-n">400</span> }</span><span class="line">};</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// Error types so the caller can tell the failure kinds apart</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">export</span> <span class="tok-k">class</span> <span class="tok-t">HttpError</span> <span class="tok-k">extends</span> <span class="tok-t">Error</span> {</span><span class="line">  <span class="tok-f">constructor</span>(status, statusText, url) {</span><span class="line">    <span class="tok-k">super</span>(<span class="tok-s">`HTTP ${status} ${statusText} for ${url}`</span>);</span><span class="line">    <span class="tok-k">this</span>.name = <span class="tok-s">'HttpError'</span>;</span><span class="line">    <span class="tok-k">this</span>.status = status;</span><span class="line">  }</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">createAbortError</span>() {</span><span class="line">  <span class="tok-k">const</span> error = <span class="tok-k">new</span> <span class="tok-f">Error</span>(<span class="tok-s">'The operation was aborted'</span>);</span><span class="line">  error.name = <span class="tok-s">'AbortError'</span>;           <span class="tok-c">// same name the real fetch() uses</span></span><span class="line">  <span class="tok-k">return</span> error;</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// fakeFetch(): behaves like fetch(), returns response-shaped objects</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">class</span> <span class="tok-t">FakeResponse</span> {</span><span class="line">  <span class="tok-f">constructor</span>(status, statusText, bodyText) {</span><span class="line">    <span class="tok-k">this</span>.status = status;</span><span class="line">    <span class="tok-k">this</span>.statusText = statusText;</span><span class="line">    <span class="tok-k">this</span>.bodyText = bodyText;</span><span class="line">  }</span><span class="line"> </span><span class="line">  <span class="tok-k">get</span> <span class="tok-f">ok</span>() {</span><span class="line">    <span class="tok-k">return</span> <span class="tok-k">this</span>.status &gt;= <span class="tok-n">200</span> &amp;&amp; <span class="tok-k">this</span>.status &lt;= <span class="tok-n">299</span>;</span><span class="line">  }</span><span class="line"> </span><span class="line">  <span class="tok-k">async</span> <span class="tok-f">json</span>() {</span><span class="line">    <span class="tok-k">return</span> JSON.<span class="tok-f">parse</span>(<span class="tok-k">this</span>.bodyText);   <span class="tok-c">// throws SyntaxError for invalid JSON</span></span><span class="line">  }</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// Resolves after `ms`, or rejects immediately if the signal is aborted</span></span><span class="line"><span class="tok-k">function</span> <span class="tok-f">abortableDelay</span>(ms, signal) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-k">new</span> <span class="tok-f">Promise</span>(<span class="tok-k">function</span> (resolve, reject) {</span><span class="line">    <span class="tok-k">if</span> (signal?.aborted) {</span><span class="line">      <span class="tok-f">reject</span>(<span class="tok-f">createAbortError</span>());</span><span class="line">      <span class="tok-k">return</span>;</span><span class="line">    }</span><span class="line">    signal?.<span class="tok-f">addEventListener</span>(<span class="tok-s">'abort'</span>, () =&gt; <span class="tok-f">reject</span>(<span class="tok-f">createAbortError</span>()), { once: <span class="tok-k">true</span> });</span><span class="line">    <span class="tok-f">setTimeout</span>(resolve, ms);</span><span class="line">  });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">async</span> <span class="tok-k">function</span> <span class="tok-f">fakeFetch</span>(url, options = {}) {</span><span class="line">  <span class="tok-k">const</span> route = ROUTES[url];</span><span class="line">  <span class="tok-k">if</span> (route === <span class="tok-k">undefined</span>) {</span><span class="line">    <span class="tok-k">return</span> <span class="tok-k">new</span> <span class="tok-f">FakeResponse</span>(<span class="tok-n">404</span>, <span class="tok-s">'Not Found'</span>, JSON.<span class="tok-f">stringify</span>({ error: <span class="tok-s">'unknown route'</span> }));</span><span class="line">  }</span><span class="line"> </span><span class="line">  <span class="tok-k">await</span> <span class="tok-f">abortableDelay</span>(route.delay ?? <span class="tok-n">10</span>, options.signal);</span><span class="line"> </span><span class="line">  <span class="tok-k">switch</span> (route.kind) {</span><span class="line">    <span class="tok-k">case</span> <span class="tok-s">'ok'</span>:</span><span class="line">      <span class="tok-k">return</span> <span class="tok-k">new</span> <span class="tok-f">FakeResponse</span>(<span class="tok-n">200</span>, <span class="tok-s">'OK'</span>, JSON.<span class="tok-f">stringify</span>(route.body));</span><span class="line">    <span class="tok-k">case</span> <span class="tok-s">'status'</span>:</span><span class="line">      <span class="tok-k">return</span> <span class="tok-k">new</span> <span class="tok-f">FakeResponse</span>(route.status, route.statusText, JSON.<span class="tok-f">stringify</span>({ error: route.statusText }));</span><span class="line">    <span class="tok-k">case</span> <span class="tok-s">'invalid-json'</span>:</span><span class="line">      <span class="tok-k">return</span> <span class="tok-k">new</span> <span class="tok-f">FakeResponse</span>(<span class="tok-n">200</span>, <span class="tok-s">'OK'</span>, <span class="tok-s">'{ &quot;broken&quot;: [1, 2, '</span>);</span><span class="line">    <span class="tok-k">case</span> <span class="tok-s">'network'</span>:</span><span class="line">      <span class="tok-k">throw</span> <span class="tok-k">new</span> <span class="tok-f">TypeError</span>(<span class="tok-s">'fetch failed: network unreachable'</span>);   <span class="tok-c">// real fetch rejects with TypeError</span></span><span class="line">    <span class="tok-k">default</span>:</span><span class="line">      <span class="tok-k">throw</span> <span class="tok-k">new</span> <span class="tok-f">Error</span>(<span class="tok-s">`Unhandled route kind: ${route.kind}`</span>);</span><span class="line">  }</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// getJSON(url, fetchImplementation)</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">export</span> <span class="tok-k">async</span> <span class="tok-k">function</span> <span class="tok-f">getJSON</span>(url, fetchImplementation, options = {}) {</span><span class="line">  <span class="tok-k">const</span> response = <span class="tok-k">await</span> <span class="tok-f">fetchImplementation</span>(url, options);   <span class="tok-c">// network failures reject here</span></span><span class="line"> </span><span class="line">  <span class="tok-k">if</span> (!response.ok) {</span><span class="line">    <span class="tok-k">throw</span> <span class="tok-k">new</span> <span class="tok-f">HttpError</span>(response.status, response.statusText, url);</span><span class="line">  }</span><span class="line"> </span><span class="line">  <span class="tok-k">return</span> <span class="tok-k">await</span> response.<span class="tok-f">json</span>();                                <span class="tok-c">// parse failures reject here</span></span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// fetchWithTimeout(url, milliseconds)</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">export</span> <span class="tok-k">const</span> timerState = { active: <span class="tok-n">0</span> };     <span class="tok-c">// used to PROVE that timers are always cleaned up</span></span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">async</span> <span class="tok-k">function</span> <span class="tok-f">fetchWithTimeout</span>(url, milliseconds, fetchImplementation = fakeFetch) {</span><span class="line">  <span class="tok-k">const</span> controller = <span class="tok-k">new</span> <span class="tok-f">AbortController</span>();</span><span class="line">  <span class="tok-k">const</span> timer = <span class="tok-f">setTimeout</span>(controller.abort.<span class="tok-f">bind</span>(controller), milliseconds);</span><span class="line">  timerState.active += <span class="tok-n">1</span>;</span><span class="line"> </span><span class="line">  <span class="tok-k">try</span> {</span><span class="line">    <span class="tok-k">return</span> <span class="tok-k">await</span> <span class="tok-f">getJSON</span>(url, fetchImplementation, { signal: controller.signal });</span><span class="line">  } <span class="tok-k">finally</span> {</span><span class="line">    <span class="tok-f">clearTimeout</span>(timer);                     <span class="tok-c">// runs on success AND on every kind of failure</span></span><span class="line">    timerState.active -= <span class="tok-n">1</span>;</span><span class="line">  }</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">classifyError</span>(error) {</span><span class="line">  <span class="tok-k">if</span> (error.name === <span class="tok-s">'AbortError'</span>) <span class="tok-k">return</span> <span class="tok-s">'TIMEOUT / ABORT'</span>;</span><span class="line">  <span class="tok-k">if</span> (error <span class="tok-k">instanceof</span> <span class="tok-t">HttpError</span>) <span class="tok-k">return</span> <span class="tok-s">'HTTP FAILURE'</span>;</span><span class="line">  <span class="tok-k">if</span> (error <span class="tok-k">instanceof</span> <span class="tok-t">SyntaxError</span>) <span class="tok-k">return</span> <span class="tok-s">'INVALID JSON'</span>;</span><span class="line">  <span class="tok-k">if</span> (error <span class="tok-k">instanceof</span> <span class="tok-t">TypeError</span>) <span class="tok-k">return</span> <span class="tok-s">'NETWORK FAILURE'</span>;</span><span class="line">  <span class="tok-k">return</span> <span class="tok-s">'UNKNOWN'</span>;</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// Dashboard analytics (pure function - easy to test)</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">const</span> round2 = (value) =&gt; <span class="tok-t">Math</span>.<span class="tok-f">round</span>(value * <span class="tok-n">100</span>) / <span class="tok-n">100</span>;</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">buildDashboard</span>(users, courses, results) {</span><span class="line">  <span class="tok-k">const</span> overallAverage = <span class="tok-f">round2</span>(results.<span class="tok-f">reduce</span>((sum, r) =&gt; sum + r.marks, <span class="tok-n">0</span>) / results.length);</span><span class="line"> </span><span class="line">  <span class="tok-k">const</span> perStudent = users.<span class="tok-f">map</span>((user) =&gt; {</span><span class="line">    <span class="tok-k">const</span> marks = results.<span class="tok-f">filter</span>((r) =&gt; r.studentId === user.id).<span class="tok-f">map</span>((r) =&gt; r.marks);</span><span class="line">    <span class="tok-k">const</span> average = marks.length === <span class="tok-n">0</span> ? <span class="tok-n">0</span> : marks.<span class="tok-f">reduce</span>((sum, m) =&gt; sum + m, <span class="tok-n">0</span>) / marks.length;</span><span class="line">    <span class="tok-k">return</span> { ...user, average: <span class="tok-f">round2</span>(average) };</span><span class="line">  });</span><span class="line"> </span><span class="line">  <span class="tok-k">const</span> topStudent = perStudent.<span class="tok-f">reduce</span>((best, current) =&gt; (current.average &gt; best.average ? current : best));</span><span class="line">  <span class="tok-k">const</span> failed = perStudent.<span class="tok-f">filter</span>((student) =&gt; student.average &lt; <span class="tok-n">50</span>);</span><span class="line"> </span><span class="line">  <span class="tok-k">const</span> departments = perStudent.<span class="tok-f">reduce</span>((acc, student) =&gt; {</span><span class="line">    <span class="tok-k">const</span> dept = acc[student.department] ?? { students: <span class="tok-n">0</span>, totalAverage: <span class="tok-n">0</span> };</span><span class="line">    acc[student.department] = { students: dept.students + <span class="tok-n">1</span>, totalAverage: dept.totalAverage + student.average };</span><span class="line">    <span class="tok-k">return</span> acc;</span><span class="line">  }, {});</span><span class="line"> </span><span class="line">  <span class="tok-k">return</span> {</span><span class="line">    totalStudents: users.length,</span><span class="line">    totalCourses: courses.length,</span><span class="line">    overallAverage,</span><span class="line">    highestPerformer: { name: topStudent.name, average: topStudent.average },</span><span class="line">    failedStudents: { count: failed.length, names: failed.<span class="tok-f">map</span>((s) =&gt; s.name) },</span><span class="line">    departmentStats: <span class="tok-t">Object</span>.<span class="tok-f">fromEntries</span>(</span><span class="line">      <span class="tok-t">Object</span>.<span class="tok-f">entries</span>(departments).<span class="tok-f">map</span>(([name, d]) =&gt; [name, { students: d.students, average: <span class="tok-f">round2</span>(d.totalAverage / d.students) }])</span><span class="line">    )</span><span class="line">  };</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// Concurrent loading: all three requests START before any is awaited</span></span><span class="line"><span class="tok-k">export</span> <span class="tok-k">async</span> <span class="tok-k">function</span> <span class="tok-f">loadDashboard</span>(fetchImplementation = fakeFetch) {</span><span class="line">  <span class="tok-k">const</span> [users, courses, results] = <span class="tok-k">await</span> <span class="tok-t">Promise</span>.<span class="tok-f">all</span>([</span><span class="line">    <span class="tok-f">getJSON</span>(<span class="tok-s">'/users'</span>, fetchImplementation),</span><span class="line">    <span class="tok-f">getJSON</span>(<span class="tok-s">'/courses'</span>, fetchImplementation),</span><span class="line">    <span class="tok-f">getJSON</span>(<span class="tok-s">'/results'</span>, fetchImplementation)</span><span class="line">  ]);</span><span class="line">  <span class="tok-k">return</span> <span class="tok-f">buildDashboard</span>(users, courses, results);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// Sequential version, only used to compare timing</span></span><span class="line"><span class="tok-k">async</span> <span class="tok-k">function</span> <span class="tok-f">loadDashboardSequentially</span>(fetchImplementation = fakeFetch) {</span><span class="line">  <span class="tok-k">const</span> users = <span class="tok-k">await</span> <span class="tok-f">getJSON</span>(<span class="tok-s">'/users'</span>, fetchImplementation);</span><span class="line">  <span class="tok-k">const</span> courses = <span class="tok-k">await</span> <span class="tok-f">getJSON</span>(<span class="tok-s">'/courses'</span>, fetchImplementation);</span><span class="line">  <span class="tok-k">const</span> results = <span class="tok-k">await</span> <span class="tok-f">getJSON</span>(<span class="tok-s">'/results'</span>, fetchImplementation);</span><span class="line">  <span class="tok-k">return</span> <span class="tok-f">buildDashboard</span>(users, courses, results);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// Demonstration</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">async</span> <span class="tok-k">function</span> <span class="tok-f">main</span>() {</span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">'=== 1. getJSON() WITH fakeFetch() ==='</span>);</span><span class="line">  <span class="tok-k">const</span> okUsers = <span class="tok-k">await</span> <span class="tok-f">getJSON</span>(<span class="tok-s">'/users'</span>, fakeFetch);</span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">`200 OK -&gt; received ${okUsers.length} users`</span>);</span><span class="line"> </span><span class="line">  <span class="tok-k">const</span> failureUrls = [<span class="tok-s">'/not-found'</span>, <span class="tok-s">'/server-error'</span>, <span class="tok-s">'/network-failure'</span>, <span class="tok-s">'/invalid-json'</span>];</span><span class="line">  <span class="tok-k">for</span> (<span class="tok-k">const</span> url <span class="tok-k">of</span> failureUrls) {</span><span class="line">    <span class="tok-k">try</span> {</span><span class="line">      <span class="tok-k">await</span> <span class="tok-f">getJSON</span>(url, fakeFetch);</span><span class="line">    } <span class="tok-k">catch</span> (error) {</span><span class="line">      console.<span class="tok-f">log</span>(<span class="tok-s">`${url.padEnd(18)} -&gt; [${classifyError(error)}] ${error.name}: ${error.message}`</span>);</span><span class="line">    }</span><span class="line">  }</span><span class="line"> </span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">'\n=== 2. CONCURRENT vs SEQUENTIAL LOADING ==='</span>);</span><span class="line">  <span class="tok-k">let</span> started = performance.<span class="tok-f">now</span>();</span><span class="line">  <span class="tok-k">const</span> dashboard = <span class="tok-k">await</span> <span class="tok-f">loadDashboard</span>();</span><span class="line">  <span class="tok-k">const</span> concurrentMs = <span class="tok-t">Math</span>.<span class="tok-f">round</span>(performance.<span class="tok-f">now</span>() - started);</span><span class="line"> </span><span class="line">  started = performance.<span class="tok-f">now</span>();</span><span class="line">  <span class="tok-k">await</span> <span class="tok-f">loadDashboardSequentially</span>();</span><span class="line">  <span class="tok-k">const</span> sequentialMs = <span class="tok-t">Math</span>.<span class="tok-f">round</span>(performance.<span class="tok-f">now</span>() - started);</span><span class="line"> </span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">`Promise.all (concurrent): ~${concurrentMs} ms   (slowest request is 120 ms)`</span>);</span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">`sequential awaits       : ~${sequentialMs} ms   (60 + 90 + 120 ms added up)`</span>);</span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">'Concurrent is faster    :'</span>, concurrentMs &lt; sequentialMs);</span><span class="line"> </span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">'\n=== 3. DASHBOARD ==='</span>);</span><span class="line">  console.<span class="tok-f">log</span>(dashboard);</span><span class="line"> </span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">'\n=== 4. fetchWithTimeout() ==='</span>);</span><span class="line">  <span class="tok-k">const</span> timeoutCases = [</span><span class="line">    { url: <span class="tok-s">'/users'</span>, ms: <span class="tok-n">500</span> },</span><span class="line">    { url: <span class="tok-s">'/not-found'</span>, ms: <span class="tok-n">500</span> },</span><span class="line">    { url: <span class="tok-s">'/server-error'</span>, ms: <span class="tok-n">500</span> },</span><span class="line">    { url: <span class="tok-s">'/network-failure'</span>, ms: <span class="tok-n">500</span> },</span><span class="line">    { url: <span class="tok-s">'/invalid-json'</span>, ms: <span class="tok-n">500</span> },</span><span class="line">    { url: <span class="tok-s">'/slow'</span>, ms: <span class="tok-n">100</span> },     <span class="tok-c">// slow (400 ms) with a 100 ms limit -&gt; abort</span></span><span class="line">    { url: <span class="tok-s">'/slow'</span>, ms: <span class="tok-n">1000</span> }     <span class="tok-c">// slow but within a 1000 ms limit -&gt; success</span></span><span class="line">  ];</span><span class="line"> </span><span class="line">  <span class="tok-k">for</span> (<span class="tok-k">const</span> { url, ms } <span class="tok-k">of</span> timeoutCases) {</span><span class="line">    <span class="tok-k">try</span> {</span><span class="line">      <span class="tok-k">const</span> data = <span class="tok-k">await</span> <span class="tok-f">fetchWithTimeout</span>(url, ms);</span><span class="line">      console.<span class="tok-f">log</span>(<span class="tok-s">`${url.padEnd(18)} limit ${String(ms).padStart(4)}ms -&gt; SUCCESS ${JSON.stringify(data).slice(0, 40)}   | active timers: ${timerState.active}`</span>);</span><span class="line">    } <span class="tok-k">catch</span> (error) {</span><span class="line">      console.<span class="tok-f">log</span>(<span class="tok-s">`${url.padEnd(18)} limit ${String(ms).padStart(4)}ms -&gt; [${classifyError(error)}] ${error.message}   | active timers: ${timerState.active}`</span>);</span><span class="line">    } <span class="tok-k">finally</span> {</span><span class="line">      <span class="tok-c">// every call, successful or not, must leave zero timers behind</span></span><span class="line">    }</span><span class="line">  }</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-f">main</span>();</span></code></pre>
+  <textarea id="raw11" hidden readonly>// Task 8 - Concurrent Academic API Aggregator with async/await
+
+// ---------------------------------------------------------------------------
+// Fake data behind the fake network
+// ---------------------------------------------------------------------------
+const USERS = [
+  { id: 1, name: 'Ali', department: 'CS' },
+  { id: 2, name: 'Sara', department: 'CS' },
+  { id: 3, name: 'Usman', department: 'SE' },
+  { id: 4, name: 'Hina', department: 'AI' },
+  { id: 5, name: 'Ahmed', department: 'SE' },
+  { id: 6, name: 'Zoya', department: 'AI' }
+];
+
+const COURSES = [
+  { code: 'FSWD', title: 'Full Stack Web Development' },
+  { code: 'DSA', title: 'Data Structures and Algorithms' },
+  { code: 'DB', title: 'Database Systems' }
+];
+
+const RESULTS = [
+  { studentId: 1, courseCode: 'FSWD', marks: 82 }, { studentId: 1, courseCode: 'DSA', marks: 76 },
+  { studentId: 2, courseCode: 'FSWD', marks: 91 }, { studentId: 2, courseCode: 'DSA', marks: 88 },
+  { studentId: 3, courseCode: 'FSWD', marks: 47 }, { studentId: 3, courseCode: 'DSA', marks: 52 },
+  { studentId: 4, courseCode: 'FSWD', marks: 73 }, { studentId: 4, courseCode: 'DSA', marks: 69 },
+  { studentId: 5, courseCode: 'FSWD', marks: 64 }, { studentId: 5, courseCode: 'DSA', marks: 58 },
+  { studentId: 6, courseCode: 'FSWD', marks: 91 }, { studentId: 6, courseCode: 'DSA', marks: 94 }
+];
+
+// url -&gt; behaviour of the fake server
+const ROUTES = {
+  '/users': { kind: 'ok', body: USERS, delay: 60 },
+  '/courses': { kind: 'ok', body: COURSES, delay: 90 },
+  '/results': { kind: 'ok', body: RESULTS, delay: 120 },
+  '/not-found': { kind: 'status', status: 404, statusText: 'Not Found' },
+  '/server-error': { kind: 'status', status: 500, statusText: 'Internal Server Error' },
+  '/network-failure': { kind: 'network' },
+  '/invalid-json': { kind: 'invalid-json' },
+  '/slow': { kind: 'ok', body: { message: 'slow but successful' }, delay: 400 }
+};
+
+// ---------------------------------------------------------------------------
+// Error types so the caller can tell the failure kinds apart
+// ---------------------------------------------------------------------------
+export class HttpError extends Error {
+  constructor(status, statusText, url) {
+    super(`HTTP ${status} ${statusText} for ${url}`);
+    this.name = 'HttpError';
+    this.status = status;
+  }
+}
+
+function createAbortError() {
+  const error = new Error('The operation was aborted');
+  error.name = 'AbortError';           // same name the real fetch() uses
+  return error;
+}
+
+// ---------------------------------------------------------------------------
+// fakeFetch(): behaves like fetch(), returns response-shaped objects
+// ---------------------------------------------------------------------------
+class FakeResponse {
+  constructor(status, statusText, bodyText) {
+    this.status = status;
+    this.statusText = statusText;
+    this.bodyText = bodyText;
+  }
+
+  get ok() {
+    return this.status &gt;= 200 &amp;&amp; this.status &lt;= 299;
+  }
+
+  async json() {
+    return JSON.parse(this.bodyText);   // throws SyntaxError for invalid JSON
+  }
+}
+
+// Resolves after `ms`, or rejects immediately if the signal is aborted
+function abortableDelay(ms, signal) {
+  return new Promise(function (resolve, reject) {
+    if (signal?.aborted) {
+      reject(createAbortError());
+      return;
+    }
+    signal?.addEventListener('abort', () =&gt; reject(createAbortError()), { once: true });
+    setTimeout(resolve, ms);
+  });
+}
+
+export async function fakeFetch(url, options = {}) {
+  const route = ROUTES[url];
+  if (route === undefined) {
+    return new FakeResponse(404, 'Not Found', JSON.stringify({ error: 'unknown route' }));
+  }
+
+  await abortableDelay(route.delay ?? 10, options.signal);
+
+  switch (route.kind) {
+    case 'ok':
+      return new FakeResponse(200, 'OK', JSON.stringify(route.body));
+    case 'status':
+      return new FakeResponse(route.status, route.statusText, JSON.stringify({ error: route.statusText }));
+    case 'invalid-json':
+      return new FakeResponse(200, 'OK', '{ &quot;broken&quot;: [1, 2, ');
+    case 'network':
+      throw new TypeError('fetch failed: network unreachable');   // real fetch rejects with TypeError
+    default:
+      throw new Error(`Unhandled route kind: ${route.kind}`);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// getJSON(url, fetchImplementation)
+// ---------------------------------------------------------------------------
+export async function getJSON(url, fetchImplementation, options = {}) {
+  const response = await fetchImplementation(url, options);   // network failures reject here
+
+  if (!response.ok) {
+    throw new HttpError(response.status, response.statusText, url);
+  }
+
+  return await response.json();                                // parse failures reject here
+}
+
+// ---------------------------------------------------------------------------
+// fetchWithTimeout(url, milliseconds)
+// ---------------------------------------------------------------------------
+export const timerState = { active: 0 };     // used to PROVE that timers are always cleaned up
+
+export async function fetchWithTimeout(url, milliseconds, fetchImplementation = fakeFetch) {
+  const controller = new AbortController();
+  const timer = setTimeout(controller.abort.bind(controller), milliseconds);
+  timerState.active += 1;
+
+  try {
+    return await getJSON(url, fetchImplementation, { signal: controller.signal });
+  } finally {
+    clearTimeout(timer);                     // runs on success AND on every kind of failure
+    timerState.active -= 1;
+  }
+}
+
+export function classifyError(error) {
+  if (error.name === 'AbortError') return 'TIMEOUT / ABORT';
+  if (error instanceof HttpError) return 'HTTP FAILURE';
+  if (error instanceof SyntaxError) return 'INVALID JSON';
+  if (error instanceof TypeError) return 'NETWORK FAILURE';
+  return 'UNKNOWN';
+}
+
+// ---------------------------------------------------------------------------
+// Dashboard analytics (pure function - easy to test)
+// ---------------------------------------------------------------------------
+const round2 = (value) =&gt; Math.round(value * 100) / 100;
+
+export function buildDashboard(users, courses, results) {
+  const overallAverage = round2(results.reduce((sum, r) =&gt; sum + r.marks, 0) / results.length);
+
+  const perStudent = users.map((user) =&gt; {
+    const marks = results.filter((r) =&gt; r.studentId === user.id).map((r) =&gt; r.marks);
+    const average = marks.length === 0 ? 0 : marks.reduce((sum, m) =&gt; sum + m, 0) / marks.length;
+    return { ...user, average: round2(average) };
+  });
+
+  const topStudent = perStudent.reduce((best, current) =&gt; (current.average &gt; best.average ? current : best));
+  const failed = perStudent.filter((student) =&gt; student.average &lt; 50);
+
+  const departments = perStudent.reduce((acc, student) =&gt; {
+    const dept = acc[student.department] ?? { students: 0, totalAverage: 0 };
+    acc[student.department] = { students: dept.students + 1, totalAverage: dept.totalAverage + student.average };
+    return acc;
+  }, {});
+
+  return {
+    totalStudents: users.length,
+    totalCourses: courses.length,
+    overallAverage,
+    highestPerformer: { name: topStudent.name, average: topStudent.average },
+    failedStudents: { count: failed.length, names: failed.map((s) =&gt; s.name) },
+    departmentStats: Object.fromEntries(
+      Object.entries(departments).map(([name, d]) =&gt; [name, { students: d.students, average: round2(d.totalAverage / d.students) }])
+    )
+  };
+}
+
+// Concurrent loading: all three requests START before any is awaited
+export async function loadDashboard(fetchImplementation = fakeFetch) {
+  const [users, courses, results] = await Promise.all([
+    getJSON('/users', fetchImplementation),
+    getJSON('/courses', fetchImplementation),
+    getJSON('/results', fetchImplementation)
+  ]);
+  return buildDashboard(users, courses, results);
+}
+
+// Sequential version, only used to compare timing
+async function loadDashboardSequentially(fetchImplementation = fakeFetch) {
+  const users = await getJSON('/users', fetchImplementation);
+  const courses = await getJSON('/courses', fetchImplementation);
+  const results = await getJSON('/results', fetchImplementation);
+  return buildDashboard(users, courses, results);
+}
+
+// ---------------------------------------------------------------------------
+// Demonstration
+// ---------------------------------------------------------------------------
+async function main() {
+  console.log('=== 1. getJSON() WITH fakeFetch() ===');
+  const okUsers = await getJSON('/users', fakeFetch);
+  console.log(`200 OK -&gt; received ${okUsers.length} users`);
+
+  const failureUrls = ['/not-found', '/server-error', '/network-failure', '/invalid-json'];
+  for (const url of failureUrls) {
+    try {
+      await getJSON(url, fakeFetch);
+    } catch (error) {
+      console.log(`${url.padEnd(18)} -&gt; [${classifyError(error)}] ${error.name}: ${error.message}`);
+    }
+  }
+
+  console.log('\n=== 2. CONCURRENT vs SEQUENTIAL LOADING ===');
+  let started = performance.now();
+  const dashboard = await loadDashboard();
+  const concurrentMs = Math.round(performance.now() - started);
+
+  started = performance.now();
+  await loadDashboardSequentially();
+  const sequentialMs = Math.round(performance.now() - started);
+
+  console.log(`Promise.all (concurrent): ~${concurrentMs} ms   (slowest request is 120 ms)`);
+  console.log(`sequential awaits       : ~${sequentialMs} ms   (60 + 90 + 120 ms added up)`);
+  console.log('Concurrent is faster    :', concurrentMs &lt; sequentialMs);
+
+  console.log('\n=== 3. DASHBOARD ===');
+  console.log(dashboard);
+
+  console.log('\n=== 4. fetchWithTimeout() ===');
+  const timeoutCases = [
+    { url: '/users', ms: 500 },
+    { url: '/not-found', ms: 500 },
+    { url: '/server-error', ms: 500 },
+    { url: '/network-failure', ms: 500 },
+    { url: '/invalid-json', ms: 500 },
+    { url: '/slow', ms: 100 },     // slow (400 ms) with a 100 ms limit -&gt; abort
+    { url: '/slow', ms: 1000 }     // slow but within a 1000 ms limit -&gt; success
+  ];
+
+  for (const { url, ms } of timeoutCases) {
+    try {
+      const data = await fetchWithTimeout(url, ms);
+      console.log(`${url.padEnd(18)} limit ${String(ms).padStart(4)}ms -&gt; SUCCESS ${JSON.stringify(data).slice(0, 40)}   | active timers: ${timerState.active}`);
+    } catch (error) {
+      console.log(`${url.padEnd(18)} limit ${String(ms).padStart(4)}ms -&gt; [${classifyError(error)}] ${error.message}   | active timers: ${timerState.active}`);
+    } finally {
+      // every call, successful or not, must leave zero timers behind
+    }
+  }
+}
+
+main();
+</textarea>
+</div>
+    </div>
+  </section>
+
+  <section class="block" id="output">
+    <div class="sec-head"><span class="num">08 / OUTPUT</span><h2>Console output</h2>
+      <p>Captured from a real run of <code>node task8.js</code> on Node.js. View the screenshot or switch to selectable text.</p></div>
+    <div class="term glass" data-term>
+      <div class="term-bar"><i></i><i></i><i></i><span class="term-title">node task8.js</span>
+        <div class="term-tabs"><button class="on" data-view="shot">Screenshot</button><button data-view="text">Text</button></div></div>
+      <div class="out-view on" data-show="shot"><a href="images/task8-output.png" target="_blank" rel="noopener"><img src="images/task8-output.png" alt="Task 8 console output" loading="lazy"></a></div>
+      <div class="out-view" data-show="text"><pre class="out"><span class="prompt">$ <b>node task8.js</b></span>
+<span class="out-h">=== 1. getJSON() WITH fakeFetch() ===</span>
+200 <span class="o-ok">OK</span> -&gt; received 6 users
+/not-found         -&gt; [<span class="o-bad">HTTP FAILURE</span>] <span class="o-bad">HttpError</span>: HTTP 404 Not Found for /not-found
+/server-error      -&gt; [<span class="o-bad">HTTP FAILURE</span>] <span class="o-bad">HttpError</span>: HTTP 500 Internal Server Error for /server-error
+/network-failure   -&gt; [<span class="o-bad">NETWORK FAILURE</span>] <span class="o-bad">TypeError</span>: fetch failed: network unreachable
+/invalid-json      -&gt; [<span class="o-bad">INVALID JSON</span>] <span class="o-bad">SyntaxError</span>: Unexpected end of JSON input
+
+<span class="out-h">=== 2. CONCURRENT vs SEQUENTIAL LOADING ===</span>
+Promise.all (concurrent): ~121 ms   (slowest request is 120 ms)
+sequential awaits       : ~272 ms   (60 + 90 + 120 ms added up)
+Concurrent is faster    : true
+
+<span class="out-h">=== 3. DASHBOARD ===</span>
+{
+  totalStudents: 6,
+  totalCourses: 3,
+  overallAverage: 73.75,
+  highestPerformer: { name: 'Zoya', average: 92.5 },
+  failedStudents: { count: 1, names: [ 'Usman' ] },
+  departmentStats: {
+    CS: { students: 2, average: 84.25 },
+    SE: { students: 2, average: 55.25 },
+    AI: { students: 2, average: 81.75 }
+  }
+}
+
+<span class="out-h">=== 4. fetchWithTimeout() ===</span>
+/users             limit  500ms -&gt; <span class="o-ok">SUCCESS</span> [{&quot;id&quot;:1,&quot;name&quot;:&quot;Ali&quot;,&quot;department&quot;:&quot;CS&quot;}   | active timers: 0
+/not-found         limit  500ms -&gt; [<span class="o-bad">HTTP FAILURE</span>] HTTP 404 Not Found for /not-found   | active timers: 0
+/server-error      limit  500ms -&gt; [<span class="o-bad">HTTP FAILURE</span>] HTTP 500 Internal Server Error for /server-error   | active timers: 0
+/network-failure   limit  500ms -&gt; [<span class="o-bad">NETWORK FAILURE</span>] fetch failed: network unreachable   | active timers: 0
+/invalid-json      limit  500ms -&gt; [<span class="o-bad">INVALID JSON</span>] Unexpected end of JSON input   | active timers: 0
+/slow              limit  100ms -&gt; [<span class="o-bad">TIMEOUT / ABORT</span>] The operation was aborted   | active timers: 0
+/slow              limit 1000ms -&gt; <span class="o-ok">SUCCESS</span> {&quot;message&quot;:&quot;slow but successful&quot;}   | active timers: 0</pre></div>
+    </div>
+  </section>
+
+  <section class="block" id="explain">
+    <div class="sec-head"><span class="num">08 / NOTES</span><h2>Requirements &amp; explanation</h2></div>
+    <div class="card glass" style="margin-bottom:18px">
+      <h3>Requirements covered</h3>
+      <div class="check-grid"><div class="check"><span><code>getJSON(url, fetchImplementation)</code> checks <code>response.ok</code> and throws on bad status</span></div><div class="check"><span><code>fakeFetch()</code> simulates 200, 404, 500, network failure, invalid JSON and a slow response</span></div><div class="check"><span>Three independent requests start together with <code>Promise.all</code></span></div><div class="check"><span>Totals, overall average, top student, failed count and department statistics</span></div><div class="check"><span><code>fetchWithTimeout()</code> uses <code>AbortController</code>, <code>setTimeout</code>, <code>clearTimeout</code> and <code>try/finally</code></span></div><div class="check"><span>HTTP failure, network failure, invalid JSON and timeout are told apart</span></div></div>
+    </div>
+    <div class="grid">
+      <article class="card glass "><h3>Concurrent, not sequential</h3><p>The three requests are independent, so <code>Promise.all([getJSON(...), getJSON(...), getJSON(...)])</code> starts all of them before anything is awaited and the total time is that of the <b>slowest</b> request (about 120 ms). Three sequential <code>await</code>s add the delays up (about 270 ms). The output measures both.</p>
+<p><code>Promise.all</code> is fail-fast: if any one request fails, the dashboard cannot be built, so rejecting is correct here. If a partial dashboard were acceptable, <code>Promise.allSettled</code> would be the better choice.</p></article>
+      <article class="card glass wide"><h3>Telling the failures apart</h3><div class="tbl-wrap"><table><thead><tr><th>Failure</th><th>How it appears</th><th>Classified as</th></tr></thead><tbody>
+<tr><td>HTTP 404 / 500</td><td><code>response.ok</code> is false, <code>getJSON</code> throws <code>HttpError</code></td><td>HTTP FAILURE</td></tr>
+<tr><td>Network down</td><td>the fetch itself rejects with a <code>TypeError</code></td><td>NETWORK FAILURE</td></tr>
+<tr><td>Broken body</td><td><code>response.json()</code> rejects with a <code>SyntaxError</code></td><td>INVALID JSON</td></tr>
+<tr><td>Too slow</td><td>the abort signal makes the fetch reject with <code>AbortError</code></td><td>TIMEOUT / ABORT</td></tr>
+</tbody></table></div></article>
+      <article class="card glass "><h3>Timer cleanup is proven</h3><p><code>fetchWithTimeout()</code> starts the timer, awaits <code>getJSON()</code> inside <code>try</code>, and calls <code>clearTimeout()</code> in <code>finally</code>, so the timer is cleared on success and on every kind of failure. A counter of active timers is printed after each call and is <code>0</code> every time. The abort uses <code>controller.abort.bind(controller)</code> as the timer callback, so no extra wrapper function is needed.</p></article>
+    </div>
+  </section>
+
+  <nav class="pager">
+    <a class="glass" href="task7.html" style="--a1:#60a5fa;--a2:#a78bfa"><small>← Previous · Task 07</small><strong>Promise Registration</strong></a>
+    <a class="glass next" href="index.html"><small>Done · Back to</small><strong>Lab 05 overview</strong></a>
+  </nav>
+</main>
+<footer><b>CampusFlow</b> · JavaScript Lab 05 · Haseeb Jalil · Air University</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

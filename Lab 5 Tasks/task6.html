@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task 06 · Callback Registration | JavaScript Lab 05</title>
+<meta name="description" content="Four dependent asynchronous steps using error-first callbacks that stop the moment any stage fails, with no Promises and no async/await.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237c9cff'/%3E%3Cstop offset='1' stop-color='%23c084fc'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='monospace' font-size='28' font-weight='800' text-anchor='middle' fill='%230a0d1a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body style="--a1:#fb923c;--a2:#f43f5e">
+<div class="bg"></div>
+<header class="nav glass">
+  <a class="brand" href="index.html"><span class="brand-mark">JS</span><span>CampusFlow <small>· Lab 05</small></span></a>
+  <nav class="nav-links">
+    <a class="keep" href="index.html">Overview</a>
+    
+    <div class="dots"><a href="task1.html" class="" title="Admission Engine">1</a><a href="task2.html" class="" title="Performance Engine">2</a><a href="task3.html" class="" title="Profile Update Service">3</a><a href="task4.html" class="" title="User Hierarchy">4</a><a href="task5.html" class="" title="Transcript Modules">5</a><a href="task6.html" class="on" title="Callback Registration">6</a><a href="task7.html" class="" title="Promise Registration">7</a><a href="task8.html" class="" title="API Aggregator">8</a></div>
+  </nav>
+</header>
+<main class="wrap">
+
+  <section class="hero glass">
+    <a class="back" href="index.html">← Lab 05 overview</a>
+    <p class="eyebrow">Task 06 · setTimeout · Error-first callbacks · Async flow</p>
+    <h1>Legacy Course Registration with Callbacks</h1>
+    <p class="lead">The old registration system: load the student, check prerequisites, check seats, register. Every step is asynchronous and uses the error-first callback convention, and the whole workflow stops at the first failure.</p>
+    <div class="chips"><span class="chip">setTimeout</span><span class="chip">callback(error, value)</span><span class="chip">error-first</span><span class="chip">call once</span><span class="chip">no Promises</span></div>
+    <div class="stats">
+      <div class="stat"><b>1</b><span>File</span></div>
+      <div class="stat"><b>129</b><span>Lines of code</span></div>
+      <div class="stat"><b>47</b><span>Output lines</span></div>
+      <div class="stat"><b>0</b><span>Packages</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="solution">
+    <div class="sec-head"><span class="num">06 / CODE</span><h2>Solution code</h2>
+      <p>The complete, runnable solution. Everything below ran in Node.js exactly as shown.</p></div>
+    <div class="panel glass" data-files>
+      
+      <div class="file-panel on" data-panel="task6.js">
+  <div class="file-bar"><span>task6.js</span><span class="lang">JavaScript · ES module</span><button class="copy" data-copy="raw9">Copy</button><a href="solutions/task6.js" download>Download</a></div>
+  <pre class="code"><code><span class="line"><span class="tok-c">// Task 6 - Legacy Course Registration Service Using Callbacks</span></span><span class="line"><span class="tok-c">// Error-first callbacks: callback(error, value). No Promises, no async/await.</span></span><span class="line"> </span><span class="line"><span class="tok-c">// ---------- the &quot;legacy database&quot; ----------</span></span><span class="line"><span class="tok-k">const</span> students = {</span><span class="line">  <span class="tok-n">101</span>: { id: <span class="tok-n">101</span>, name: <span class="tok-s">'Ali'</span>, completed: [<span class="tok-s">'CS301'</span>, <span class="tok-s">'CS302'</span>] },</span><span class="line">  <span class="tok-n">102</span>: { id: <span class="tok-n">102</span>, name: <span class="tok-s">'Sara'</span>, completed: [<span class="tok-s">'CS101'</span>] },</span><span class="line">  <span class="tok-n">103</span>: { id: <span class="tok-n">103</span>, name: <span class="tok-s">'Hina'</span>, completed: [<span class="tok-s">'CS301'</span>, <span class="tok-s">'CS302'</span>] }</span><span class="line">};</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> courses = {</span><span class="line">  CS401: { code: <span class="tok-s">'CS401'</span>, prerequisites: [<span class="tok-s">'CS301'</span>, <span class="tok-s">'CS302'</span>], seatsLeft: <span class="tok-n">2</span> },</span><span class="line">  CS402: { code: <span class="tok-s">'CS402'</span>, prerequisites: [<span class="tok-s">'CS301'</span>], seatsLeft: <span class="tok-n">0</span> }</span><span class="line">};</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> registrations = [{ studentId: <span class="tok-n">103</span>, course: <span class="tok-s">'CS401'</span> }];</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> DELAY_MS = <span class="tok-n">15</span>;</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// The four asynchronous operations.</span></span><span class="line"><span class="tok-c">// Each one schedules a named function with setTimeout and passes data as extra</span></span><span class="line"><span class="tok-c">// arguments, so the timer function needs nothing but its own parameters.</span></span><span class="line"><span class="tok-c">// Each finish function calls its callback EXACTLY ONCE and then returns.</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">finishLoadStudent</span>(studentId, callback) {</span><span class="line">  <span class="tok-k">const</span> student = students[studentId];</span><span class="line">  <span class="tok-k">if</span> (student === <span class="tok-k">undefined</span>) {</span><span class="line">    <span class="tok-f">callback</span>(<span class="tok-k">new</span> <span class="tok-f">Error</span>(<span class="tok-s">`Student ${studentId} does not exist`</span>));</span><span class="line">    <span class="tok-k">return</span>;</span><span class="line">  }</span><span class="line">  <span class="tok-f">callback</span>(<span class="tok-k">null</span>, student);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">loadStudent</span>(studentId, callback) {</span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">`  [1] loadStudent(${studentId})`</span>);</span><span class="line">  <span class="tok-f">setTimeout</span>(finishLoadStudent, DELAY_MS, studentId, callback);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">finishCheckPrerequisites</span>(student, courseCode, callback) {</span><span class="line">  <span class="tok-k">const</span> course = courses[courseCode];</span><span class="line">  <span class="tok-k">if</span> (course === <span class="tok-k">undefined</span>) {</span><span class="line">    <span class="tok-f">callback</span>(<span class="tok-k">new</span> <span class="tok-f">Error</span>(<span class="tok-s">`Course ${courseCode} does not exist`</span>));</span><span class="line">    <span class="tok-k">return</span>;</span><span class="line">  }</span><span class="line">  <span class="tok-k">const</span> missing = course.prerequisites.<span class="tok-f">filter</span>((code) =&gt; !student.completed.<span class="tok-f">includes</span>(code));</span><span class="line">  <span class="tok-k">if</span> (missing.length &gt; <span class="tok-n">0</span>) {</span><span class="line">    <span class="tok-f">callback</span>(<span class="tok-k">new</span> <span class="tok-f">Error</span>(<span class="tok-s">`Prerequisite not completed: ${missing.join(', ')}`</span>));</span><span class="line">    <span class="tok-k">return</span>;</span><span class="line">  }</span><span class="line">  <span class="tok-f">callback</span>(<span class="tok-k">null</span>, course);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">checkPrerequisites</span>(student, courseCode, callback) {</span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">`  [2] checkPrerequisites(${student.name}, ${courseCode})`</span>);</span><span class="line">  <span class="tok-f">setTimeout</span>(finishCheckPrerequisites, DELAY_MS, student, courseCode, callback);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">finishCheckSeats</span>(course, callback) {</span><span class="line">  <span class="tok-k">if</span> (course.seatsLeft &lt;= <span class="tok-n">0</span>) {</span><span class="line">    <span class="tok-f">callback</span>(<span class="tok-k">new</span> <span class="tok-f">Error</span>(<span class="tok-s">`Course ${course.code} is full`</span>));</span><span class="line">    <span class="tok-k">return</span>;</span><span class="line">  }</span><span class="line">  <span class="tok-f">callback</span>(<span class="tok-k">null</span>, course);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">checkSeats</span>(course, callback) {</span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">`  [3] checkSeats(${course.code}) -&gt; ${course.seatsLeft} seat(s) left`</span>);</span><span class="line">  <span class="tok-f">setTimeout</span>(finishCheckSeats, DELAY_MS, course, callback);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">finishRegisterCourse</span>(student, course, callback) {</span><span class="line">  <span class="tok-k">const</span> alreadyRegistered = registrations.<span class="tok-f">some</span>(</span><span class="line">    (entry) =&gt; entry.studentId === student.id &amp;&amp; entry.course === course.code</span><span class="line">  );</span><span class="line">  <span class="tok-k">if</span> (alreadyRegistered) {</span><span class="line">    <span class="tok-f">callback</span>(<span class="tok-k">new</span> <span class="tok-f">Error</span>(<span class="tok-s">`Student ${student.id} is already registered for ${course.code}`</span>));</span><span class="line">    <span class="tok-k">return</span>;</span><span class="line">  }</span><span class="line">  registrations.<span class="tok-f">push</span>({ studentId: student.id, course: course.code });</span><span class="line">  course.seatsLeft -= <span class="tok-n">1</span>;</span><span class="line">  <span class="tok-f">callback</span>(<span class="tok-k">null</span>, { studentId: student.id, course: course.code, status: <span class="tok-s">'REGISTERED'</span> });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">registerCourse</span>(student, course, callback) {</span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">`  [4] registerCourse(${student.name}, ${course.code})`</span>);</span><span class="line">  <span class="tok-f">setTimeout</span>(finishRegisterCourse, DELAY_MS, student, course, callback);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// The dependent workflow. Every stage is nested inside the previous callback,</span></span><span class="line"><span class="tok-c">// and every error is returned immediately with `return done(error)` so the</span></span><span class="line"><span class="tok-c">// remaining stages never run.</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">registerForCourse</span>(studentId, courseCode, done) {</span><span class="line">  <span class="tok-f">loadStudent</span>(studentId, <span class="tok-k">function</span> (loadError, student) {</span><span class="line">    <span class="tok-k">if</span> (loadError) <span class="tok-k">return</span> <span class="tok-f">done</span>(loadError);</span><span class="line"> </span><span class="line">    <span class="tok-f">checkPrerequisites</span>(student, courseCode, <span class="tok-k">function</span> (prereqError, course) {</span><span class="line">      <span class="tok-k">if</span> (prereqError) <span class="tok-k">return</span> <span class="tok-f">done</span>(prereqError);</span><span class="line"> </span><span class="line">      <span class="tok-f">checkSeats</span>(course, <span class="tok-k">function</span> (seatError, openCourse) {</span><span class="line">        <span class="tok-k">if</span> (seatError) <span class="tok-k">return</span> <span class="tok-f">done</span>(seatError);</span><span class="line"> </span><span class="line">        <span class="tok-f">registerCourse</span>(student, openCourse, <span class="tok-k">function</span> (registerError, confirmation) {</span><span class="line">          <span class="tok-k">if</span> (registerError) <span class="tok-k">return</span> <span class="tok-f">done</span>(registerError);</span><span class="line"> </span><span class="line">          <span class="tok-f">done</span>(<span class="tok-k">null</span>, confirmation);          <span class="tok-c">// the only success path</span></span><span class="line">        });</span><span class="line">      });</span><span class="line">    });</span><span class="line">  });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// Demonstration: scenarios run one after another through named functions that</span></span><span class="line"><span class="tok-c">// read a shared queue (module-level state, no function factories).</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">const</span> scenarios = [</span><span class="line">  { label: <span class="tok-s">'SUCCESS            '</span>, studentId: <span class="tok-n">101</span>, course: <span class="tok-s">'CS401'</span> },</span><span class="line">  { label: <span class="tok-s">'UNKNOWN STUDENT    '</span>, studentId: <span class="tok-n">999</span>, course: <span class="tok-s">'CS401'</span> },</span><span class="line">  { label: <span class="tok-s">'PREREQUISITE MISSING'</span>, studentId: <span class="tok-n">102</span>, course: <span class="tok-s">'CS401'</span> },</span><span class="line">  { label: <span class="tok-s">'COURSE FULL        '</span>, studentId: <span class="tok-n">101</span>, course: <span class="tok-s">'CS402'</span> },</span><span class="line">  { label: <span class="tok-s">'ALREADY REGISTERED '</span>, studentId: <span class="tok-n">103</span>, course: <span class="tok-s">'CS401'</span> },</span><span class="line">  { label: <span class="tok-s">'DUPLICATE REQUEST  '</span>, studentId: <span class="tok-n">101</span>, course: <span class="tok-s">'CS401'</span> },</span><span class="line">  { label: <span class="tok-s">'UNKNOWN COURSE     '</span>, studentId: <span class="tok-n">101</span>, course: <span class="tok-s">'CS999'</span> }</span><span class="line">];</span><span class="line"> </span><span class="line"><span class="tok-k">let</span> currentScenario = <span class="tok-k">null</span>;</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">runNextScenario</span>() {</span><span class="line">  currentScenario = scenarios.<span class="tok-f">shift</span>();</span><span class="line">  <span class="tok-k">if</span> (currentScenario === <span class="tok-k">undefined</span>) {</span><span class="line">    console.<span class="tok-f">log</span>(<span class="tok-s">'\nAll scenarios finished. CS401 seats left:'</span>, courses.CS401.seatsLeft);</span><span class="line">    console.<span class="tok-f">log</span>(<span class="tok-s">'Registrations on file:'</span>, registrations);</span><span class="line">    <span class="tok-k">return</span>;</span><span class="line">  }</span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">`\n&gt;&gt;&gt; ${currentScenario.label.trim()}: student ${currentScenario.studentId} -&gt; ${currentScenario.course}`</span>);</span><span class="line">  <span class="tok-f">registerForCourse</span>(currentScenario.studentId, currentScenario.course, onScenarioDone);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">onScenarioDone</span>(error, confirmation) {</span><span class="line">  <span class="tok-k">if</span> (error) {</span><span class="line">    console.<span class="tok-f">log</span>(<span class="tok-s">`  FAILED: ${error.message}  (workflow stopped)`</span>);</span><span class="line">  } <span class="tok-k">else</span> {</span><span class="line">    console.<span class="tok-f">log</span>(<span class="tok-s">'  OK:'</span>, confirmation);</span><span class="line">  }</span><span class="line">  <span class="tok-f">runNextScenario</span>();</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-f">runNextScenario</span>();</span></code></pre>
+  <textarea id="raw9" hidden readonly>// Task 6 - Legacy Course Registration Service Using Callbacks
+// Error-first callbacks: callback(error, value). No Promises, no async/await.
+
+// ---------- the &quot;legacy database&quot; ----------
+const students = {
+  101: { id: 101, name: 'Ali', completed: ['CS301', 'CS302'] },
+  102: { id: 102, name: 'Sara', completed: ['CS101'] },
+  103: { id: 103, name: 'Hina', completed: ['CS301', 'CS302'] }
+};
+
+const courses = {
+  CS401: { code: 'CS401', prerequisites: ['CS301', 'CS302'], seatsLeft: 2 },
+  CS402: { code: 'CS402', prerequisites: ['CS301'], seatsLeft: 0 }
+};
+
+const registrations = [{ studentId: 103, course: 'CS401' }];
+
+const DELAY_MS = 15;
+
+// ---------------------------------------------------------------------------
+// The four asynchronous operations.
+// Each one schedules a named function with setTimeout and passes data as extra
+// arguments, so the timer function needs nothing but its own parameters.
+// Each finish function calls its callback EXACTLY ONCE and then returns.
+// ---------------------------------------------------------------------------
+
+function finishLoadStudent(studentId, callback) {
+  const student = students[studentId];
+  if (student === undefined) {
+    callback(new Error(`Student ${studentId} does not exist`));
+    return;
+  }
+  callback(null, student);
+}
+
+export function loadStudent(studentId, callback) {
+  console.log(`  [1] loadStudent(${studentId})`);
+  setTimeout(finishLoadStudent, DELAY_MS, studentId, callback);
+}
+
+function finishCheckPrerequisites(student, courseCode, callback) {
+  const course = courses[courseCode];
+  if (course === undefined) {
+    callback(new Error(`Course ${courseCode} does not exist`));
+    return;
+  }
+  const missing = course.prerequisites.filter((code) =&gt; !student.completed.includes(code));
+  if (missing.length &gt; 0) {
+    callback(new Error(`Prerequisite not completed: ${missing.join(', ')}`));
+    return;
+  }
+  callback(null, course);
+}
+
+export function checkPrerequisites(student, courseCode, callback) {
+  console.log(`  [2] checkPrerequisites(${student.name}, ${courseCode})`);
+  setTimeout(finishCheckPrerequisites, DELAY_MS, student, courseCode, callback);
+}
+
+function finishCheckSeats(course, callback) {
+  if (course.seatsLeft &lt;= 0) {
+    callback(new Error(`Course ${course.code} is full`));
+    return;
+  }
+  callback(null, course);
+}
+
+export function checkSeats(course, callback) {
+  console.log(`  [3] checkSeats(${course.code}) -&gt; ${course.seatsLeft} seat(s) left`);
+  setTimeout(finishCheckSeats, DELAY_MS, course, callback);
+}
+
+function finishRegisterCourse(student, course, callback) {
+  const alreadyRegistered = registrations.some(
+    (entry) =&gt; entry.studentId === student.id &amp;&amp; entry.course === course.code
+  );
+  if (alreadyRegistered) {
+    callback(new Error(`Student ${student.id} is already registered for ${course.code}`));
+    return;
+  }
+  registrations.push({ studentId: student.id, course: course.code });
+  course.seatsLeft -= 1;
+  callback(null, { studentId: student.id, course: course.code, status: 'REGISTERED' });
+}
+
+export function registerCourse(student, course, callback) {
+  console.log(`  [4] registerCourse(${student.name}, ${course.code})`);
+  setTimeout(finishRegisterCourse, DELAY_MS, student, course, callback);
+}
+
+// ---------------------------------------------------------------------------
+// The dependent workflow. Every stage is nested inside the previous callback,
+// and every error is returned immediately with `return done(error)` so the
+// remaining stages never run.
+// ---------------------------------------------------------------------------
+export function registerForCourse(studentId, courseCode, done) {
+  loadStudent(studentId, function (loadError, student) {
+    if (loadError) return done(loadError);
+
+    checkPrerequisites(student, courseCode, function (prereqError, course) {
+      if (prereqError) return done(prereqError);
+
+      checkSeats(course, function (seatError, openCourse) {
+        if (seatError) return done(seatError);
+
+        registerCourse(student, openCourse, function (registerError, confirmation) {
+          if (registerError) return done(registerError);
+
+          done(null, confirmation);          // the only success path
+        });
+      });
+    });
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Demonstration: scenarios run one after another through named functions that
+// read a shared queue (module-level state, no function factories).
+// ---------------------------------------------------------------------------
+const scenarios = [
+  { label: 'SUCCESS            ', studentId: 101, course: 'CS401' },
+  { label: 'UNKNOWN STUDENT    ', studentId: 999, course: 'CS401' },
+  { label: 'PREREQUISITE MISSING', studentId: 102, course: 'CS401' },
+  { label: 'COURSE FULL        ', studentId: 101, course: 'CS402' },
+  { label: 'ALREADY REGISTERED ', studentId: 103, course: 'CS401' },
+  { label: 'DUPLICATE REQUEST  ', studentId: 101, course: 'CS401' },
+  { label: 'UNKNOWN COURSE     ', studentId: 101, course: 'CS999' }
+];
+
+let currentScenario = null;
+
+function runNextScenario() {
+  currentScenario = scenarios.shift();
+  if (currentScenario === undefined) {
+    console.log('\nAll scenarios finished. CS401 seats left:', courses.CS401.seatsLeft);
+    console.log('Registrations on file:', registrations);
+    return;
+  }
+  console.log(`\n&gt;&gt;&gt; ${currentScenario.label.trim()}: student ${currentScenario.studentId} -&gt; ${currentScenario.course}`);
+  registerForCourse(currentScenario.studentId, currentScenario.course, onScenarioDone);
+}
+
+function onScenarioDone(error, confirmation) {
+  if (error) {
+    console.log(`  FAILED: ${error.message}  (workflow stopped)`);
+  } else {
+    console.log('  OK:', confirmation);
+  }
+  runNextScenario();
+}
+
+runNextScenario();
+</textarea>
+</div>
+    </div>
+  </section>
+
+  <section class="block" id="output">
+    <div class="sec-head"><span class="num">06 / OUTPUT</span><h2>Console output</h2>
+      <p>Captured from a real run of <code>node task6.js</code> on Node.js. View the screenshot or switch to selectable text.</p></div>
+    <div class="term glass" data-term>
+      <div class="term-bar"><i></i><i></i><i></i><span class="term-title">node task6.js</span>
+        <div class="term-tabs"><button class="on" data-view="shot">Screenshot</button><button data-view="text">Text</button></div></div>
+      <div class="out-view on" data-show="shot"><a href="images/task6-output.png" target="_blank" rel="noopener"><img src="images/task6-output.png" alt="Task 6 console output" loading="lazy"></a></div>
+      <div class="out-view" data-show="text"><pre class="out"><span class="prompt">$ <b>node task6.js</b></span>
+
+<span class="out-h">&gt;&gt;&gt; SUCCESS: student 101 -&gt; CS401</span>
+  [1] loadStudent(101)
+  [2] checkPrerequisites(Ali, CS401)
+  [3] checkSeats(CS401) -&gt; 2 seat(s) left
+  [4] registerCourse(Ali, CS401)
+  <span class="o-ok">OK</span>: { studentId: 101, course: 'CS401', status: '<span class="o-ok">REGISTERED</span>' }
+
+<span class="out-h">&gt;&gt;&gt; UNKNOWN STUDENT: student 999 -&gt; CS401</span>
+  [1] loadStudent(999)
+  <span class="o-bad">FAILED</span>: Student 999 does not exist  <span class="o-dim">(workflow stopped)</span>
+
+<span class="out-h">&gt;&gt;&gt; PREREQUISITE MISSING: student 102 -&gt; CS401</span>
+  [1] loadStudent(102)
+  [2] checkPrerequisites(Sara, CS401)
+  <span class="o-bad">FAILED</span>: Prerequisite not completed: CS301, CS302  <span class="o-dim">(workflow stopped)</span>
+
+<span class="out-h">&gt;&gt;&gt; COURSE FULL: student 101 -&gt; CS402</span>
+  [1] loadStudent(101)
+  [2] checkPrerequisites(Ali, CS402)
+  [3] checkSeats(CS402) -&gt; 0 seat(s) left
+  <span class="o-bad">FAILED</span>: Course CS402 is full  <span class="o-dim">(workflow stopped)</span>
+
+<span class="out-h">&gt;&gt;&gt; ALREADY REGISTERED: student 103 -&gt; CS401</span>
+  [1] loadStudent(103)
+  [2] checkPrerequisites(Hina, CS401)
+  [3] checkSeats(CS401) -&gt; 1 seat(s) left
+  [4] registerCourse(Hina, CS401)
+  <span class="o-bad">FAILED</span>: Student 103 is already registered for CS401  <span class="o-dim">(workflow stopped)</span>
+
+<span class="out-h">&gt;&gt;&gt; DUPLICATE REQUEST: student 101 -&gt; CS401</span>
+  [1] loadStudent(101)
+  [2] checkPrerequisites(Ali, CS401)
+  [3] checkSeats(CS401) -&gt; 1 seat(s) left
+  [4] registerCourse(Ali, CS401)
+  <span class="o-bad">FAILED</span>: Student 101 is already registered for CS401  <span class="o-dim">(workflow stopped)</span>
+
+<span class="out-h">&gt;&gt;&gt; UNKNOWN COURSE: student 101 -&gt; CS999</span>
+  [1] loadStudent(101)
+  [2] checkPrerequisites(Ali, CS999)
+  <span class="o-bad">FAILED</span>: Course CS999 does not exist  <span class="o-dim">(workflow stopped)</span>
+
+All scenarios finished. CS401 seats left: 1
+Registrations on file: [
+  { studentId: 103, course: 'CS401' },
+  { studentId: 101, course: 'CS401' }
+]</pre></div>
+    </div>
+  </section>
+
+  <section class="block" id="explain">
+    <div class="sec-head"><span class="num">06 / NOTES</span><h2>Requirements &amp; explanation</h2></div>
+    <div class="card glass" style="margin-bottom:18px">
+      <h3>Requirements covered</h3>
+      <div class="check-grid"><div class="check"><span>Four operations built on <code>setTimeout()</code> with <code>callback(error, value)</code></span></div><div class="check"><span>Failures: unknown student, missing prerequisite, full course, already registered</span></div><div class="check"><span>Each operation calls its callback <b>exactly once</b> (every path ends in <code>return</code>)</span></div><div class="check"><span>Errors returned through the callback, workflow stops immediately</span></div><div class="check"><span>Final result: <code>{ studentId, course, status: 'REGISTERED' }</code></span></div><div class="check"><span>No Promises and no <code>async/await</code></span></div></div>
+    </div>
+    <div class="grid">
+      <article class="card glass "><h3>Why this style becomes hard to maintain</h3><ul>
+<li><b>Callback nesting.</b> Each stage depends on the previous result, so each one sits inside the previous callback. Four stages already form a pyramid; ten would push the real logic far off the right edge of the screen.</li>
+<li><b>Repeated error handling.</b> Every level needs its own <code>if (error) return done(error)</code>. Forget one and the error is swallowed or the next stage runs with <code>undefined</code>.</li>
+<li><b>No try/catch across the boundary.</b> A <code>try</code> block around the call cannot catch an error thrown later inside a timer callback, so errors have to travel as arguments.</li>
+<li><b>Easy to break the "exactly once" rule.</b> A missing <code>return</code> after calling the callback leads to a second call, and nothing in the language prevents it.</li>
+<li><b>Hard to extend.</b> Adding a step in the middle, running steps in parallel or retrying means restructuring the whole pyramid.</li>
+</ul>
+<p>Promises (Task 7) flatten the pyramid into a chain with a single <code>.catch()</code>.</p></article>
+      <article class="card glass "><h3>Design notes</h3><p>Each operation schedules a <b>named function</b> through <code>setTimeout(fn, delay, ...args)</code>, passing its data as arguments. The timer functions use only their own parameters, and no function returns another function to keep state. The nested callbacks in <code>registerForCourse</code> simply refer to the stage results passed into them.</p>
+<p>The demo runner reads a plain module-level queue, one scenario at a time, so scenarios never overlap. Failed stages print nothing after them: stages 3 and 4 do not run when stage 2 fails.</p></article>
+    </div>
+  </section>
+
+  <nav class="pager">
+    <a class="glass" href="task5.html" style="--a1:#34d399;--a2:#22d3ee"><small>← Previous · Task 05</small><strong>Transcript Modules</strong></a>
+    <a class="glass next" href="task7.html" style="--a1:#60a5fa;--a2:#a78bfa"><small>Next · Task 07 →</small><strong>Promise Registration</strong></a>
+  </nav>
+</main>
+<footer><b>CampusFlow</b> · JavaScript Lab 05 · Haseeb Jalil · Air University</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task 02 · Performance Engine | JavaScript Lab 05</title>
+<meta name="description" content="Grades, a ranked merit list, department statistics and academic queries, built entirely with array methods without mutating the original results.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237c9cff'/%3E%3Cstop offset='1' stop-color='%23c084fc'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='monospace' font-size='28' font-weight='800' text-anchor='middle' fill='%230a0d1a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body style="--a1:#a78bfa;--a2:#f472b6">
+<div class="bg"></div>
+<header class="nav glass">
+  <a class="brand" href="index.html"><span class="brand-mark">JS</span><span>CampusFlow <small>· Lab 05</small></span></a>
+  <nav class="nav-links">
+    <a class="keep" href="index.html">Overview</a>
+    
+    <div class="dots"><a href="task1.html" class="" title="Admission Engine">1</a><a href="task2.html" class="on" title="Performance Engine">2</a><a href="task3.html" class="" title="Profile Update Service">3</a><a href="task4.html" class="" title="User Hierarchy">4</a><a href="task5.html" class="" title="Transcript Modules">5</a><a href="task6.html" class="" title="Callback Registration">6</a><a href="task7.html" class="" title="Promise Registration">7</a><a href="task8.html" class="" title="API Aggregator">8</a></div>
+  </nav>
+</header>
+<main class="wrap">
+
+  <section class="hero glass">
+    <a class="back" href="index.html">← Lab 05 overview</a>
+    <p class="eyebrow">Task 02 · Array methods · Immutability · Analytics</p>
+    <h1>Academic Performance Intelligence Engine</h1>
+    <p class="lead">Result processing, a ranked merit list, department statistics and a set of academic queries, all built with array methods instead of manual loops, and without touching the original results array.</p>
+    <div class="chips"><span class="chip">map()</span><span class="chip">filter()</span><span class="chip">find()</span><span class="chip">findIndex()</span><span class="chip">reduce()</span><span class="chip">some() / every()</span><span class="chip">sort()</span><span class="chip">slice()</span></div>
+    <div class="stats">
+      <div class="stat"><b>1</b><span>File</span></div>
+      <div class="stat"><b>105</b><span>Lines of code</span></div>
+      <div class="stat"><b>42</b><span>Output lines</span></div>
+      <div class="stat"><b>0</b><span>Packages</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="solution">
+    <div class="sec-head"><span class="num">02 / CODE</span><h2>Solution code</h2>
+      <p>The complete, runnable solution. Everything below ran in Node.js exactly as shown.</p></div>
+    <div class="panel glass" data-files>
+      
+      <div class="file-panel on" data-panel="task2.js">
+  <div class="file-bar"><span>task2.js</span><span class="lang">JavaScript · ES module</span><button class="copy" data-copy="raw2">Copy</button><a href="solutions/task2.js" download>Download</a></div>
+  <pre class="code"><code><span class="line"><span class="tok-c">// Task 2 - Academic Performance Intelligence Engine</span></span><span class="line"><span class="tok-c">// Array methods are used for the analytics. No traditional for / while loops.</span></span><span class="line"> </span><span class="line"><span class="tok-k">const</span> results = [</span><span class="line">  { id: <span class="tok-n">1</span>, name: <span class="tok-s">'Ali'</span>, department: <span class="tok-s">'CS'</span>, course: <span class="tok-s">'FSWD'</span>, marks: <span class="tok-n">82</span> },</span><span class="line">  { id: <span class="tok-n">2</span>, name: <span class="tok-s">'Sara'</span>, department: <span class="tok-s">'CS'</span>, course: <span class="tok-s">'FSWD'</span>, marks: <span class="tok-n">91</span> },</span><span class="line">  { id: <span class="tok-n">3</span>, name: <span class="tok-s">'Usman'</span>, department: <span class="tok-s">'SE'</span>, course: <span class="tok-s">'FSWD'</span>, marks: <span class="tok-n">47</span> },</span><span class="line">  { id: <span class="tok-n">4</span>, name: <span class="tok-s">'Hina'</span>, department: <span class="tok-s">'AI'</span>, course: <span class="tok-s">'FSWD'</span>, marks: <span class="tok-n">73</span> },</span><span class="line">  { id: <span class="tok-n">5</span>, name: <span class="tok-s">'Ahmed'</span>, department: <span class="tok-s">'SE'</span>, course: <span class="tok-s">'FSWD'</span>, marks: <span class="tok-n">64</span> },</span><span class="line">  { id: <span class="tok-n">6</span>, name: <span class="tok-s">'Zoya'</span>, department: <span class="tok-s">'AI'</span>, course: <span class="tok-s">'FSWD'</span>, marks: <span class="tok-n">91</span> }</span><span class="line">];</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> PASS_MARKS = <span class="tok-n">50</span>;</span><span class="line"><span class="tok-k">const</span> round2 = (value) =&gt; <span class="tok-t">Math</span>.<span class="tok-f">round</span>(value * <span class="tok-n">100</span>) / <span class="tok-n">100</span>;</span><span class="line"> </span><span class="line"><span class="tok-c">// Grading policy, ordered from the highest band to the lowest.</span></span><span class="line"><span class="tok-k">const</span> GRADE_POLICY = [</span><span class="line">  { min: <span class="tok-n">85</span>, grade: <span class="tok-s">'A'</span>, gradePoints: <span class="tok-n">4.0</span> },</span><span class="line">  { min: <span class="tok-n">80</span>, grade: <span class="tok-s">'A-'</span>, gradePoints: <span class="tok-n">3.67</span> },</span><span class="line">  { min: <span class="tok-n">75</span>, grade: <span class="tok-s">'B+'</span>, gradePoints: <span class="tok-n">3.33</span> },</span><span class="line">  { min: <span class="tok-n">70</span>, grade: <span class="tok-s">'B'</span>, gradePoints: <span class="tok-n">3.0</span> },</span><span class="line">  { min: <span class="tok-n">65</span>, grade: <span class="tok-s">'B-'</span>, gradePoints: <span class="tok-n">2.67</span> },</span><span class="line">  { min: <span class="tok-n">60</span>, grade: <span class="tok-s">'C+'</span>, gradePoints: <span class="tok-n">2.33</span> },</span><span class="line">  { min: <span class="tok-n">50</span>, grade: <span class="tok-s">'C'</span>, gradePoints: <span class="tok-n">2.0</span> },</span><span class="line">  { min: <span class="tok-n">0</span>, grade: <span class="tok-s">'F'</span>, gradePoints: <span class="tok-n">0.0</span> }</span><span class="line">];</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> line = (text) =&gt; console.<span class="tok-f">log</span>(text);</span><span class="line"><span class="tok-k">const</span> heading = (text) =&gt; console.<span class="tok-f">log</span>(<span class="tok-s">`\n=== ${text} ===`</span>);</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// A. Result processing - map() returns NEW objects, the source stays untouched</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">gradeFor</span>(marks) {</span><span class="line">  <span class="tok-k">const</span> band = GRADE_POLICY.<span class="tok-f">find</span>((entry) =&gt; marks &gt;= entry.min);</span><span class="line">  <span class="tok-k">return</span> { grade: band.grade, gradePoints: band.gradePoints };</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">processResults</span>(list) {</span><span class="line">  <span class="tok-k">return</span> list.<span class="tok-f">map</span>((student) =&gt; ({</span><span class="line">    ...student,</span><span class="line">    ...<span class="tok-f">gradeFor</span>(student.marks),</span><span class="line">    status: student.marks &gt;= PASS_MARKS ? <span class="tok-s">'PASS'</span> : <span class="tok-s">'FAIL'</span></span><span class="line">  }));</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// B. Ranked merit list - sort() MUTATES, so it is applied to a copy</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">rankStudents</span>(list) {</span><span class="line">  <span class="tok-k">return</span> [...list].<span class="tok-f">sort</span>((a, b) =&gt; b.marks - a.marks || a.name.<span class="tok-f">localeCompare</span>(b.name));</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// C. Department statistics - reduce() builds an object keyed by department,</span></span><span class="line"><span class="tok-c">//    so a brand-new department such as &quot;DS&quot; works without any code change</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">departmentStats</span>(list) {</span><span class="line">  <span class="tok-k">const</span> totals = list.<span class="tok-f">reduce</span>((acc, student) =&gt; {</span><span class="line">    <span class="tok-k">const</span> dept = acc[student.department] ?? { students: <span class="tok-n">0</span>, totalMarks: <span class="tok-n">0</span>, highest: -<span class="tok-t">Infinity</span>, passed: <span class="tok-n">0</span> };</span><span class="line">    acc[student.department] = {</span><span class="line">      students: dept.students + <span class="tok-n">1</span>,</span><span class="line">      totalMarks: dept.totalMarks + student.marks,</span><span class="line">      highest: <span class="tok-t">Math</span>.<span class="tok-f">max</span>(dept.highest, student.marks),</span><span class="line">      passed: dept.passed + (student.marks &gt;= PASS_MARKS ? <span class="tok-n">1</span> : <span class="tok-n">0</span>)</span><span class="line">    };</span><span class="line">    <span class="tok-k">return</span> acc;</span><span class="line">  }, {});</span><span class="line"> </span><span class="line">  <span class="tok-k">return</span> <span class="tok-t">Object</span>.<span class="tok-f">fromEntries</span>(</span><span class="line">    <span class="tok-t">Object</span>.<span class="tok-f">entries</span>(totals).<span class="tok-f">map</span>(([department, t]) =&gt; [</span><span class="line">      department,</span><span class="line">      { students: t.students, average: <span class="tok-f">round2</span>(t.totalMarks / t.students), highest: t.highest, passed: t.passed }</span><span class="line">    ])</span><span class="line">  );</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// Demonstration</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">const</span> originalSnapshot = JSON.<span class="tok-f">stringify</span>(results);</span><span class="line"> </span><span class="line"><span class="tok-f">heading</span>(<span class="tok-s">'A. RESULT PROCESSING (map)'</span>);</span><span class="line"><span class="tok-k">const</span> processed = <span class="tok-f">processResults</span>(results);</span><span class="line"><span class="tok-f">line</span>(<span class="tok-s">'ID  Name    Dept  Marks  Grade  GP    Status'</span>);</span><span class="line">processed.<span class="tok-f">forEach</span>((s) =&gt;</span><span class="line">  <span class="tok-f">line</span>(<span class="tok-s">`${String(s.id).padEnd(3)} ${s.name.padEnd(7)} ${s.department.padEnd(5)} ${String(s.marks).padEnd(6)} ${s.grade.padEnd(6)} ${s.gradePoints.toFixed(2)}  ${s.status}`</span>)</span><span class="line">);</span><span class="line"> </span><span class="line"><span class="tok-f">heading</span>(<span class="tok-s">'B. RANKED MERIT LIST (sorted copy)'</span>);</span><span class="line"><span class="tok-k">const</span> ranked = <span class="tok-f">rankStudents</span>(processed);</span><span class="line">ranked.<span class="tok-f">forEach</span>((s, index) =&gt; <span class="tok-f">line</span>(<span class="tok-s">`#${index + 1}  ${s.name.padEnd(7)} ${s.marks}  ${s.grade}`</span>));</span><span class="line"><span class="tok-f">line</span>(<span class="tok-s">`original order still: [${results.map((s) =&gt; s.name).join(', ')}]`</span>);</span><span class="line"><span class="tok-f">line</span>(<span class="tok-s">`ranked === processed (same array?): ${ranked === processed}`</span>);</span><span class="line"> </span><span class="line"><span class="tok-f">heading</span>(<span class="tok-s">'C. DEPARTMENT STATISTICS (reduce)'</span>);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-f">departmentStats</span>(processed));</span><span class="line"> </span><span class="line"><span class="tok-f">line</span>(<span class="tok-s">'\nA new department appears later (DS) - same function, no code change:'</span>);</span><span class="line"><span class="tok-k">const</span> withNewDepartment = [...processed, { id: <span class="tok-n">7</span>, name: <span class="tok-s">'Bilal'</span>, department: <span class="tok-s">'DS'</span>, course: <span class="tok-s">'FSWD'</span>, marks: <span class="tok-n">88</span>, ...<span class="tok-f">gradeFor</span>(<span class="tok-n">88</span>), status: <span class="tok-s">'PASS'</span> }];</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-f">departmentStats</span>(withNewDepartment).DS);</span><span class="line"> </span><span class="line"><span class="tok-f">heading</span>(<span class="tok-s">'D. ACADEMIC QUERIES'</span>);</span><span class="line"><span class="tok-k">const</span> overallAverage = <span class="tok-f">round2</span>(processed.<span class="tok-f">reduce</span>((sum, s) =&gt; sum + s.marks, <span class="tok-n">0</span>) / processed.length);</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> firstAbove85 = processed.<span class="tok-f">find</span>((s) =&gt; s.marks &gt; <span class="tok-n">85</span>);</span><span class="line"><span class="tok-k">const</span> firstFailedIndex = processed.<span class="tok-f">findIndex</span>((s) =&gt; s.status === <span class="tok-s">'FAIL'</span>);</span><span class="line"><span class="tok-k">const</span> anyFailed = processed.<span class="tok-f">some</span>((s) =&gt; s.status === <span class="tok-s">'FAIL'</span>);</span><span class="line"><span class="tok-k">const</span> allMarksValid = processed.<span class="tok-f">every</span>((s) =&gt; <span class="tok-t">Number</span>.<span class="tok-f">isFinite</span>(s.marks) &amp;&amp; s.marks &gt;= <span class="tok-n">0</span> &amp;&amp; s.marks &lt;= <span class="tok-n">100</span>);</span><span class="line"><span class="tok-k">const</span> aboveAverage = processed.<span class="tok-f">filter</span>((s) =&gt; s.marks &gt; overallAverage).<span class="tok-f">map</span>((s) =&gt; s.name);</span><span class="line"><span class="tok-k">const</span> topThree = <span class="tok-f">rankStudents</span>(processed).<span class="tok-f">slice</span>(<span class="tok-n">0</span>, <span class="tok-n">3</span>).<span class="tok-f">map</span>((s) =&gt; s.name);</span><span class="line"> </span><span class="line"><span class="tok-f">line</span>(<span class="tok-s">`Overall average              : ${overallAverage}`</span>);</span><span class="line"><span class="tok-f">line</span>(<span class="tok-s">`First student scoring &gt; 85   : ${firstAbove85.name} (${firstAbove85.marks})`</span>);</span><span class="line"><span class="tok-f">line</span>(<span class="tok-s">`Index of first failed student: ${firstFailedIndex} (${processed[firstFailedIndex].name})`</span>);</span><span class="line"><span class="tok-f">line</span>(<span class="tok-s">`At least one student failed? : ${anyFailed}`</span>);</span><span class="line"><span class="tok-f">line</span>(<span class="tok-s">`All marks within 0-100?      : ${allMarksValid}`</span>);</span><span class="line"><span class="tok-f">line</span>(<span class="tok-s">`Scoring above the average    : ${aboveAverage.join(', ')}`</span>);</span><span class="line"><span class="tok-f">line</span>(<span class="tok-s">`Top three students           : ${topThree.join(', ')}`</span>);</span><span class="line"> </span><span class="line"><span class="tok-f">heading</span>(<span class="tok-s">'MUTATION CHECK'</span>);</span><span class="line"><span class="tok-f">line</span>(<span class="tok-s">`results unchanged after all operations: ${JSON.stringify(results) === originalSnapshot}`</span>);</span><span class="line"><span class="tok-f">line</span>(<span class="tok-s">`results[0] has grade property?         : ${'grade' in results[0]}`</span>);</span></code></pre>
+  <textarea id="raw2" hidden readonly>// Task 2 - Academic Performance Intelligence Engine
+// Array methods are used for the analytics. No traditional for / while loops.
+
+const results = [
+  { id: 1, name: 'Ali', department: 'CS', course: 'FSWD', marks: 82 },
+  { id: 2, name: 'Sara', department: 'CS', course: 'FSWD', marks: 91 },
+  { id: 3, name: 'Usman', department: 'SE', course: 'FSWD', marks: 47 },
+  { id: 4, name: 'Hina', department: 'AI', course: 'FSWD', marks: 73 },
+  { id: 5, name: 'Ahmed', department: 'SE', course: 'FSWD', marks: 64 },
+  { id: 6, name: 'Zoya', department: 'AI', course: 'FSWD', marks: 91 }
+];
+
+const PASS_MARKS = 50;
+const round2 = (value) =&gt; Math.round(value * 100) / 100;
+
+// Grading policy, ordered from the highest band to the lowest.
+const GRADE_POLICY = [
+  { min: 85, grade: 'A', gradePoints: 4.0 },
+  { min: 80, grade: 'A-', gradePoints: 3.67 },
+  { min: 75, grade: 'B+', gradePoints: 3.33 },
+  { min: 70, grade: 'B', gradePoints: 3.0 },
+  { min: 65, grade: 'B-', gradePoints: 2.67 },
+  { min: 60, grade: 'C+', gradePoints: 2.33 },
+  { min: 50, grade: 'C', gradePoints: 2.0 },
+  { min: 0, grade: 'F', gradePoints: 0.0 }
+];
+
+const line = (text) =&gt; console.log(text);
+const heading = (text) =&gt; console.log(`\n=== ${text} ===`);
+
+// ---------------------------------------------------------------------------
+// A. Result processing - map() returns NEW objects, the source stays untouched
+// ---------------------------------------------------------------------------
+export function gradeFor(marks) {
+  const band = GRADE_POLICY.find((entry) =&gt; marks &gt;= entry.min);
+  return { grade: band.grade, gradePoints: band.gradePoints };
+}
+
+export function processResults(list) {
+  return list.map((student) =&gt; ({
+    ...student,
+    ...gradeFor(student.marks),
+    status: student.marks &gt;= PASS_MARKS ? 'PASS' : 'FAIL'
+  }));
+}
+
+// ---------------------------------------------------------------------------
+// B. Ranked merit list - sort() MUTATES, so it is applied to a copy
+// ---------------------------------------------------------------------------
+export function rankStudents(list) {
+  return [...list].sort((a, b) =&gt; b.marks - a.marks || a.name.localeCompare(b.name));
+}
+
+// ---------------------------------------------------------------------------
+// C. Department statistics - reduce() builds an object keyed by department,
+//    so a brand-new department such as &quot;DS&quot; works without any code change
+// ---------------------------------------------------------------------------
+export function departmentStats(list) {
+  const totals = list.reduce((acc, student) =&gt; {
+    const dept = acc[student.department] ?? { students: 0, totalMarks: 0, highest: -Infinity, passed: 0 };
+    acc[student.department] = {
+      students: dept.students + 1,
+      totalMarks: dept.totalMarks + student.marks,
+      highest: Math.max(dept.highest, student.marks),
+      passed: dept.passed + (student.marks &gt;= PASS_MARKS ? 1 : 0)
+    };
+    return acc;
+  }, {});
+
+  return Object.fromEntries(
+    Object.entries(totals).map(([department, t]) =&gt; [
+      department,
+      { students: t.students, average: round2(t.totalMarks / t.students), highest: t.highest, passed: t.passed }
+    ])
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Demonstration
+// ---------------------------------------------------------------------------
+const originalSnapshot = JSON.stringify(results);
+
+heading('A. RESULT PROCESSING (map)');
+const processed = processResults(results);
+line('ID  Name    Dept  Marks  Grade  GP    Status');
+processed.forEach((s) =&gt;
+  line(`${String(s.id).padEnd(3)} ${s.name.padEnd(7)} ${s.department.padEnd(5)} ${String(s.marks).padEnd(6)} ${s.grade.padEnd(6)} ${s.gradePoints.toFixed(2)}  ${s.status}`)
+);
+
+heading('B. RANKED MERIT LIST (sorted copy)');
+const ranked = rankStudents(processed);
+ranked.forEach((s, index) =&gt; line(`#${index + 1}  ${s.name.padEnd(7)} ${s.marks}  ${s.grade}`));
+line(`original order still: [${results.map((s) =&gt; s.name).join(', ')}]`);
+line(`ranked === processed (same array?): ${ranked === processed}`);
+
+heading('C. DEPARTMENT STATISTICS (reduce)');
+console.log(departmentStats(processed));
+
+line('\nA new department appears later (DS) - same function, no code change:');
+const withNewDepartment = [...processed, { id: 7, name: 'Bilal', department: 'DS', course: 'FSWD', marks: 88, ...gradeFor(88), status: 'PASS' }];
+console.log(departmentStats(withNewDepartment).DS);
+
+heading('D. ACADEMIC QUERIES');
+const overallAverage = round2(processed.reduce((sum, s) =&gt; sum + s.marks, 0) / processed.length);
+
+const firstAbove85 = processed.find((s) =&gt; s.marks &gt; 85);
+const firstFailedIndex = processed.findIndex((s) =&gt; s.status === 'FAIL');
+const anyFailed = processed.some((s) =&gt; s.status === 'FAIL');
+const allMarksValid = processed.every((s) =&gt; Number.isFinite(s.marks) &amp;&amp; s.marks &gt;= 0 &amp;&amp; s.marks &lt;= 100);
+const aboveAverage = processed.filter((s) =&gt; s.marks &gt; overallAverage).map((s) =&gt; s.name);
+const topThree = rankStudents(processed).slice(0, 3).map((s) =&gt; s.name);
+
+line(`Overall average              : ${overallAverage}`);
+line(`First student scoring &gt; 85   : ${firstAbove85.name} (${firstAbove85.marks})`);
+line(`Index of first failed student: ${firstFailedIndex} (${processed[firstFailedIndex].name})`);
+line(`At least one student failed? : ${anyFailed}`);
+line(`All marks within 0-100?      : ${allMarksValid}`);
+line(`Scoring above the average    : ${aboveAverage.join(', ')}`);
+line(`Top three students           : ${topThree.join(', ')}`);
+
+heading('MUTATION CHECK');
+line(`results unchanged after all operations: ${JSON.stringify(results) === originalSnapshot}`);
+line(`results[0] has grade property?         : ${'grade' in results[0]}`);
+</textarea>
+</div>
+    </div>
+  </section>
+
+  <section class="block" id="output">
+    <div class="sec-head"><span class="num">02 / OUTPUT</span><h2>Console output</h2>
+      <p>Captured from a real run of <code>node task2.js</code> on Node.js. View the screenshot or switch to selectable text.</p></div>
+    <div class="term glass" data-term>
+      <div class="term-bar"><i></i><i></i><i></i><span class="term-title">node task2.js</span>
+        <div class="term-tabs"><button class="on" data-view="shot">Screenshot</button><button data-view="text">Text</button></div></div>
+      <div class="out-view on" data-show="shot"><a href="images/task2-output.png" target="_blank" rel="noopener"><img src="images/task2-output.png" alt="Task 2 console output" loading="lazy"></a></div>
+      <div class="out-view" data-show="text"><pre class="out"><span class="prompt">$ <b>node task2.js</b></span>
+
+<span class="out-h">=== A. RESULT PROCESSING (map) ===</span>
+ID  Name    Dept  Marks  Grade  GP    Status
+1   Ali     CS    82     A-     3.67  <span class="o-ok">PASS</span>
+2   Sara    CS    91     A      4.00  <span class="o-ok">PASS</span>
+3   Usman   SE    47     F      0.00  <span class="o-bad">FAIL</span>
+4   Hina    AI    73     B      3.00  <span class="o-ok">PASS</span>
+5   Ahmed   SE    64     C+     2.33  <span class="o-ok">PASS</span>
+6   Zoya    AI    91     A      4.00  <span class="o-ok">PASS</span>
+
+<span class="out-h">=== B. RANKED MERIT LIST (sorted copy) ===</span>
+#1  Sara    91  A
+#2  Zoya    91  A
+#3  Ali     82  A-
+#4  Hina    73  B
+#5  Ahmed   64  C+
+#6  Usman   47  F
+original order still: [Ali, Sara, Usman, Hina, Ahmed, Zoya]
+ranked === processed (same array?): false
+
+<span class="out-h">=== C. DEPARTMENT STATISTICS (reduce) ===</span>
+{
+  CS: { students: 2, average: 86.5, highest: 91, passed: 2 },
+  SE: { students: 2, average: 55.5, highest: 64, passed: 1 },
+  AI: { students: 2, average: 82, highest: 91, passed: 2 }
+}
+
+A new department appears later (DS) - same function, no code change:
+{ students: 1, average: 88, highest: 88, passed: 1 }
+
+<span class="out-h">=== D. ACADEMIC QUERIES ===</span>
+Overall average              : 74.67
+First student scoring &gt; 85   : Sara (91)
+Index of first failed student: 2 (Usman)
+At least one student failed? : true
+All marks within 0-100?      : true
+Scoring above the average    : Ali, Sara, Zoya
+Top three students           : Sara, Zoya, Ali
+
+<span class="out-h">=== MUTATION CHECK ===</span>
+results unchanged after all operations: true
+results[0] has grade property?         : false</pre></div>
+    </div>
+  </section>
+
+  <section class="block" id="explain">
+    <div class="sec-head"><span class="num">02 / NOTES</span><h2>Requirements &amp; explanation</h2></div>
+    <div class="card glass" style="margin-bottom:18px">
+      <h3>Requirements covered</h3>
+      <div class="check-grid"><div class="check"><span><code>map()</code> produces grade, status and gradePoints as <b>new</b> objects</span></div><div class="check"><span>Ranked list: marks descending, then name alphabetically, on a copy</span></div><div class="check"><span><code>reduce()</code> builds department statistics that also work for a new "DS" department</span></div><div class="check"><span>First student above 85, index of first failure, <code>some()</code>, <code>every()</code></span></div><div class="check"><span>Students above the overall average and the top three names</span></div><div class="check"><span>Original array proven unchanged after every operation</span></div></div>
+    </div>
+    <div class="grid">
+      <article class="card glass "><h3>Array methods that mutate</h3><p><code>sort()</code>, <code>reverse()</code>, <code>splice()</code>, <code>push()</code>, <code>pop()</code>, <code>shift()</code>, <code>unshift()</code>, <code>fill()</code> and <code>copyWithin()</code> change the array they are called on. <code>map()</code>, <code>filter()</code>, <code>slice()</code>, <code>concat()</code> and the spread operator do not.</p>
+<p>That is why the ranking is <code>[...list].sort(...)</code>. Sorting <code>results</code> directly would silently reorder the source data. The output proves it: <code>ranked === processed</code> is <code>false</code> and the original order is intact.</p></article>
+      <article class="card glass "><h3>Why reduce() for departments</h3><p>The accumulator is an object keyed by department name, and a department is created the first time it is seen (<code>acc[dept] ?? { ... }</code>). Nothing lists "CS", "SE" or "AI" in the code, so when a student from "DS" appears the same function produces a <code>DS</code> entry with no changes.</p></article>
+      <article class="card glass wide"><h3>Grading policy</h3><div class="tbl-wrap"><table><thead><tr><th>Marks</th><th>Grade</th><th>Points</th></tr></thead><tbody>
+<tr><td>85–100</td><td>A</td><td>4.00</td></tr><tr><td>80–84</td><td>A-</td><td>3.67</td></tr><tr><td>75–79</td><td>B+</td><td>3.33</td></tr><tr><td>70–74</td><td>B</td><td>3.00</td></tr>
+<tr><td>65–69</td><td>B-</td><td>2.67</td></tr><tr><td>60–64</td><td>C+</td><td>2.33</td></tr><tr><td>50–59</td><td>C</td><td>2.00</td></tr><tr><td>below 50</td><td>F</td><td>0.00</td></tr></tbody></table></div>
+<p>The policy is a lookup table read with <code>find()</code>, so changing a band means editing one row. Grade points use the common 4.0 scale; status is PASS at 50 and above.</p></article>
+    </div>
+  </section>
+
+  <nav class="pager">
+    <a class="glass" href="task1.html" style="--a1:#38bdf8;--a2:#818cf8"><small>← Previous · Task 01</small><strong>Admission Engine</strong></a>
+    <a class="glass next" href="task3.html" style="--a1:#f472b6;--a2:#fb923c"><small>Next · Task 03 →</small><strong>Profile Update Service</strong></a>
+  </nav>
+</main>
+<footer><b>CampusFlow</b> · JavaScript Lab 05 · Haseeb Jalil · Air University</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

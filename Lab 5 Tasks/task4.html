@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task 04 · User Hierarchy | JavaScript Lab 05</title>
+<meta name="description" content="Person → Student / FacultyMember with overriding and runtime polymorphism, then call(), a detached method that loses this, and bind() to fix it.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237c9cff'/%3E%3Cstop offset='1' stop-color='%23c084fc'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='monospace' font-size='28' font-weight='800' text-anchor='middle' fill='%230a0d1a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body style="--a1:#fbbf24;--a2:#f97316">
+<div class="bg"></div>
+<header class="nav glass">
+  <a class="brand" href="index.html"><span class="brand-mark">JS</span><span>CampusFlow <small>· Lab 05</small></span></a>
+  <nav class="nav-links">
+    <a class="keep" href="index.html">Overview</a>
+    
+    <div class="dots"><a href="task1.html" class="" title="Admission Engine">1</a><a href="task2.html" class="" title="Performance Engine">2</a><a href="task3.html" class="" title="Profile Update Service">3</a><a href="task4.html" class="on" title="User Hierarchy">4</a><a href="task5.html" class="" title="Transcript Modules">5</a><a href="task6.html" class="" title="Callback Registration">6</a><a href="task7.html" class="" title="Promise Registration">7</a><a href="task8.html" class="" title="API Aggregator">8</a></div>
+  </nav>
+</header>
+<main class="wrap">
+
+  <section class="hero glass">
+    <a class="back" href="index.html">← Lab 05 overview</a>
+    <p class="eyebrow">Task 04 · Classes · Inheritance · this · call() · bind()</p>
+    <h1>University User Hierarchy &amp; Dynamic this</h1>
+    <p class="lead">A Person → Student / FacultyMember hierarchy where each subclass overrides introduce() but reuses the parent version. The second half investigates how this behaves with call(), a detached method and bind().</p>
+    <div class="chips"><span class="chip">class</span><span class="chip">extends</span><span class="chip">super</span><span class="chip">polymorphism</span><span class="chip">instanceof</span><span class="chip">call()</span><span class="chip">bind()</span></div>
+    <div class="stats">
+      <div class="stat"><b>1</b><span>File</span></div>
+      <div class="stat"><b>84</b><span>Lines of code</span></div>
+      <div class="stat"><b>34</b><span>Output lines</span></div>
+      <div class="stat"><b>0</b><span>Packages</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="solution">
+    <div class="sec-head"><span class="num">04 / CODE</span><h2>Solution code</h2>
+      <p>The complete, runnable solution. Everything below ran in Node.js exactly as shown.</p></div>
+    <div class="panel glass" data-files>
+      
+      <div class="file-panel on" data-panel="task4.js">
+  <div class="file-bar"><span>task4.js</span><span class="lang">JavaScript · ES module</span><button class="copy" data-copy="raw4">Copy</button><a href="solutions/task4.js" download>Download</a></div>
+  <pre class="code"><code><span class="line"><span class="tok-c">// Task 4 - University User Hierarchy and Dynamic `this`</span></span><span class="line"> </span><span class="line"><span class="tok-k">class</span> <span class="tok-t">Person</span> {</span><span class="line">  <span class="tok-f">constructor</span>(name, email) {</span><span class="line">    <span class="tok-k">this</span>.name = name;</span><span class="line">    <span class="tok-k">this</span>.email = email;</span><span class="line">  }</span><span class="line"> </span><span class="line">  <span class="tok-f">introduce</span>() {</span><span class="line">    <span class="tok-k">return</span> <span class="tok-s">`Hi, I am ${this.name} (${this.email}).`</span>;</span><span class="line">  }</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">class</span> <span class="tok-t">Student</span> <span class="tok-k">extends</span> <span class="tok-t">Person</span> {</span><span class="line">  <span class="tok-f">constructor</span>(name, email, rollNo, marks) {</span><span class="line">    <span class="tok-k">super</span>(name, email);                 <span class="tok-c">// parent constructor must run before `this` is used</span></span><span class="line">    <span class="tok-k">this</span>.rollNo = rollNo;</span><span class="line">    <span class="tok-k">this</span>.marks = marks;</span><span class="line">  }</span><span class="line"> </span><span class="line">  <span class="tok-f">introduce</span>() {</span><span class="line">    <span class="tok-c">// reuse the parent version, then extend it</span></span><span class="line">    <span class="tok-k">return</span> <span class="tok-s">`${super.introduce()} I am a student, roll no ${this.rollNo}.`</span>;</span><span class="line">  }</span><span class="line"> </span><span class="line">  <span class="tok-f">getResult</span>() {</span><span class="line">    <span class="tok-k">return</span> <span class="tok-k">this</span>.marks &gt;= <span class="tok-n">50</span></span><span class="line">      ? { rollNo: <span class="tok-k">this</span>.rollNo, marks: <span class="tok-k">this</span>.marks, result: <span class="tok-s">'PASS'</span> }</span><span class="line">      : { rollNo: <span class="tok-k">this</span>.rollNo, marks: <span class="tok-k">this</span>.marks, result: <span class="tok-s">'FAIL'</span> };</span><span class="line">  }</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">class</span> <span class="tok-t">FacultyMember</span> <span class="tok-k">extends</span> <span class="tok-t">Person</span> {</span><span class="line">  <span class="tok-f">constructor</span>(name, email, employeeId, department) {</span><span class="line">    <span class="tok-k">super</span>(name, email);</span><span class="line">    <span class="tok-k">this</span>.employeeId = employeeId;</span><span class="line">    <span class="tok-k">this</span>.department = department;</span><span class="line">  }</span><span class="line"> </span><span class="line">  <span class="tok-f">introduce</span>() {</span><span class="line">    <span class="tok-k">return</span> <span class="tok-s">`${super.introduce()} I teach in the ${this.department} department (employee ${this.employeeId}).`</span>;</span><span class="line">  }</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> heading = (text) =&gt; console.<span class="tok-f">log</span>(<span class="tok-s">`\n=== ${text} ===`</span>);</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-f">heading</span>(<span class="tok-s">'1. RUNTIME POLYMORPHISM'</span>);</span><span class="line"><span class="tok-k">const</span> users = [</span><span class="line">  <span class="tok-k">new</span> <span class="tok-f">Student</span>(<span class="tok-s">'Ali'</span>, <span class="tok-s">'ali@au.edu.pk'</span>, <span class="tok-s">'241901'</span>, <span class="tok-n">82</span>),</span><span class="line">  <span class="tok-k">new</span> <span class="tok-f">FacultyMember</span>(<span class="tok-s">'Dr. Sana'</span>, <span class="tok-s">'sana@au.edu.pk'</span>, <span class="tok-s">'EMP-17'</span>, <span class="tok-s">'CS'</span>),</span><span class="line">  <span class="tok-k">new</span> <span class="tok-f">Person</span>(<span class="tok-s">'Registrar Office'</span>, <span class="tok-s">'registrar@au.edu.pk'</span>),</span><span class="line">  <span class="tok-k">new</span> <span class="tok-f">Student</span>(<span class="tok-s">'Hina'</span>, <span class="tok-s">'hina@au.edu.pk'</span>, <span class="tok-s">'241907'</span>, <span class="tok-n">44</span>),</span><span class="line">  <span class="tok-k">new</span> <span class="tok-f">FacultyMember</span>(<span class="tok-s">'Dr. Bilal'</span>, <span class="tok-s">'bilal@au.edu.pk'</span>, <span class="tok-s">'EMP-42'</span>, <span class="tok-s">'SE'</span>)</span><span class="line">];</span><span class="line"> </span><span class="line"><span class="tok-c">// The same call, a different introduce() runs depending on the real object.</span></span><span class="line">users.<span class="tok-f">forEach</span>((user) =&gt; console.<span class="tok-f">log</span>(user.<span class="tok-f">introduce</span>()));</span><span class="line"> </span><span class="line"><span class="tok-f">heading</span>(<span class="tok-s">'2. instanceof AND THE PROTOTYPE CHAIN'</span>);</span><span class="line">users.<span class="tok-f">forEach</span>((user) =&gt;</span><span class="line">  console.<span class="tok-f">log</span>(</span><span class="line">    <span class="tok-s">`${user.name.padEnd(17)} Person:${String(user instanceof Person).padEnd(6)} Student:${String(user instanceof Student).padEnd(6)} FacultyMember:${user instanceof FacultyMember}`</span></span><span class="line">  )</span><span class="line">);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'Student.prototype overrides introduce():'</span>, <span class="tok-t">Object</span>.<span class="tok-f">hasOwn</span>(<span class="tok-t">Student</span>.prototype, <span class="tok-s">'introduce'</span>));</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'Object.getPrototypeOf(Student) === Person:'</span>, <span class="tok-t">Object</span>.<span class="tok-f">getPrototypeOf</span>(<span class="tok-t">Student</span>) === <span class="tok-t">Person</span>);</span><span class="line"> </span><span class="line"><span class="tok-f">heading</span>(<span class="tok-s">'3. STUDENT-ONLY BEHAVIOUR'</span>);</span><span class="line">users</span><span class="line">  .<span class="tok-f">filter</span>((user) =&gt; user <span class="tok-k">instanceof</span> <span class="tok-t">Student</span>)</span><span class="line">  .<span class="tok-f">forEach</span>((s) =&gt; console.<span class="tok-f">log</span>(s.name, s.<span class="tok-f">getResult</span>()));</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-f">heading</span>(<span class="tok-s">'4. call(): BORROW A METHOD FOR ANOTHER OBJECT'</span>);</span><span class="line"><span class="tok-k">const</span> guest = { name: <span class="tok-s">'Dr. Ahmed'</span>, email: <span class="tok-s">'ahmed@example.com'</span> };</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-t">Person</span>.prototype.introduce.<span class="tok-f">call</span>(guest));</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'guest instanceof Person:'</span>, guest <span class="tok-k">instanceof</span> <span class="tok-t">Person</span>, <span class="tok-s">'(it only borrowed the method)'</span>);</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-f">heading</span>(<span class="tok-s">'5. DETACHED METHOD LOSES this'</span>);</span><span class="line"><span class="tok-k">const</span> student = users[<span class="tok-n">0</span>];</span><span class="line"><span class="tok-k">const</span> fn = student.introduce;            <span class="tok-c">// just a function now - nothing remembers `student`</span></span><span class="line"><span class="tok-k">try</span> {</span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-f">fn</span>());</span><span class="line">} <span class="tok-k">catch</span> (error) {</span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">`${error.name}: ${error.message}`</span>);</span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">'Reason: fn() is a plain call, so `this` is undefined (class bodies and modules are strict mode).'</span>);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-f">heading</span>(<span class="tok-s">'6. bind(): PERMANENTLY ATTACH this'</span>);</span><span class="line"><span class="tok-k">const</span> safeIntroduce = student.introduce.<span class="tok-f">bind</span>(student);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-f">safeIntroduce</span>());</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> otherStudent = users[<span class="tok-n">3</span>];</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'bound version called &quot;on&quot; another object:'</span>, safeIntroduce.<span class="tok-f">call</span>(otherStudent));</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'  -&gt; still introduces Ali: bind() fixes `this`, call() cannot override it.'</span>);</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> detachedFromFaculty = users[<span class="tok-n">1</span>].introduce.<span class="tok-f">bind</span>(users[<span class="tok-n">1</span>]);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-f">detachedFromFaculty</span>());</span></code></pre>
+  <textarea id="raw4" hidden readonly>// Task 4 - University User Hierarchy and Dynamic `this`
+
+class Person {
+  constructor(name, email) {
+    this.name = name;
+    this.email = email;
+  }
+
+  introduce() {
+    return `Hi, I am ${this.name} (${this.email}).`;
+  }
+}
+
+class Student extends Person {
+  constructor(name, email, rollNo, marks) {
+    super(name, email);                 // parent constructor must run before `this` is used
+    this.rollNo = rollNo;
+    this.marks = marks;
+  }
+
+  introduce() {
+    // reuse the parent version, then extend it
+    return `${super.introduce()} I am a student, roll no ${this.rollNo}.`;
+  }
+
+  getResult() {
+    return this.marks &gt;= 50
+      ? { rollNo: this.rollNo, marks: this.marks, result: 'PASS' }
+      : { rollNo: this.rollNo, marks: this.marks, result: 'FAIL' };
+  }
+}
+
+class FacultyMember extends Person {
+  constructor(name, email, employeeId, department) {
+    super(name, email);
+    this.employeeId = employeeId;
+    this.department = department;
+  }
+
+  introduce() {
+    return `${super.introduce()} I teach in the ${this.department} department (employee ${this.employeeId}).`;
+  }
+}
+
+const heading = (text) =&gt; console.log(`\n=== ${text} ===`);
+
+// ---------------------------------------------------------------------------
+heading('1. RUNTIME POLYMORPHISM');
+const users = [
+  new Student('Ali', 'ali@au.edu.pk', '241901', 82),
+  new FacultyMember('Dr. Sana', 'sana@au.edu.pk', 'EMP-17', 'CS'),
+  new Person('Registrar Office', 'registrar@au.edu.pk'),
+  new Student('Hina', 'hina@au.edu.pk', '241907', 44),
+  new FacultyMember('Dr. Bilal', 'bilal@au.edu.pk', 'EMP-42', 'SE')
+];
+
+// The same call, a different introduce() runs depending on the real object.
+users.forEach((user) =&gt; console.log(user.introduce()));
+
+heading('2. instanceof AND THE PROTOTYPE CHAIN');
+users.forEach((user) =&gt;
+  console.log(
+    `${user.name.padEnd(17)} Person:${String(user instanceof Person).padEnd(6)} Student:${String(user instanceof Student).padEnd(6)} FacultyMember:${user instanceof FacultyMember}`
+  )
+);
+console.log('Student.prototype overrides introduce():', Object.hasOwn(Student.prototype, 'introduce'));
+console.log('Object.getPrototypeOf(Student) === Person:', Object.getPrototypeOf(Student) === Person);
+
+heading('3. STUDENT-ONLY BEHAVIOUR');
+users
+  .filter((user) =&gt; user instanceof Student)
+  .forEach((s) =&gt; console.log(s.name, s.getResult()));
+
+// ---------------------------------------------------------------------------
+heading('4. call(): BORROW A METHOD FOR ANOTHER OBJECT');
+const guest = { name: 'Dr. Ahmed', email: 'ahmed@example.com' };
+console.log(Person.prototype.introduce.call(guest));
+console.log('guest instanceof Person:', guest instanceof Person, '(it only borrowed the method)');
+
+// ---------------------------------------------------------------------------
+heading('5. DETACHED METHOD LOSES this');
+const student = users[0];
+const fn = student.introduce;            // just a function now - nothing remembers `student`
+try {
+  console.log(fn());
+} catch (error) {
+  console.log(`${error.name}: ${error.message}`);
+  console.log('Reason: fn() is a plain call, so `this` is undefined (class bodies and modules are strict mode).');
+}
+
+// ---------------------------------------------------------------------------
+heading('6. bind(): PERMANENTLY ATTACH this');
+const safeIntroduce = student.introduce.bind(student);
+console.log(safeIntroduce());
+
+const otherStudent = users[3];
+console.log('bound version called &quot;on&quot; another object:', safeIntroduce.call(otherStudent));
+console.log('  -&gt; still introduces Ali: bind() fixes `this`, call() cannot override it.');
+
+const detachedFromFaculty = users[1].introduce.bind(users[1]);
+console.log(detachedFromFaculty());
+</textarea>
+</div>
+    </div>
+  </section>
+
+  <section class="block" id="output">
+    <div class="sec-head"><span class="num">04 / OUTPUT</span><h2>Console output</h2>
+      <p>Captured from a real run of <code>node task4.js</code> on Node.js. View the screenshot or switch to selectable text.</p></div>
+    <div class="term glass" data-term>
+      <div class="term-bar"><i></i><i></i><i></i><span class="term-title">node task4.js</span>
+        <div class="term-tabs"><button class="on" data-view="shot">Screenshot</button><button data-view="text">Text</button></div></div>
+      <div class="out-view on" data-show="shot"><a href="images/task4-output.png" target="_blank" rel="noopener"><img src="images/task4-output.png" alt="Task 4 console output" loading="lazy"></a></div>
+      <div class="out-view" data-show="text"><pre class="out"><span class="prompt">$ <b>node task4.js</b></span>
+
+<span class="out-h">=== 1. RUNTIME POLYMORPHISM ===</span>
+Hi, I am Ali (ali@au.edu.pk). I am a student, roll no 241901.
+Hi, I am Dr. Sana (sana@au.edu.pk). I teach in the CS department (employee EMP-17).
+Hi, I am Registrar Office (registrar@au.edu.pk).
+Hi, I am Hina (hina@au.edu.pk). I am a student, roll no 241907.
+Hi, I am Dr. Bilal (bilal@au.edu.pk). I teach in the SE department (employee EMP-42).
+
+<span class="out-h">=== 2. instanceof AND THE PROTOTYPE CHAIN ===</span>
+Ali               Person:true   Student:true   FacultyMember:false
+Dr. Sana          Person:true   Student:false  FacultyMember:true
+Registrar Office  Person:true   Student:false  FacultyMember:false
+Hina              Person:true   Student:true   FacultyMember:false
+Dr. Bilal         Person:true   Student:false  FacultyMember:true
+Student.prototype overrides introduce(): true
+Object.getPrototypeOf(Student) === Person: true
+
+<span class="out-h">=== 3. STUDENT-ONLY BEHAVIOUR ===</span>
+Ali { rollNo: '241901', marks: 82, result: '<span class="o-ok">PASS</span>' }
+Hina { rollNo: '241907', marks: 44, result: '<span class="o-bad">FAIL</span>' }
+
+<span class="out-h">=== 4. call(): BORROW A METHOD FOR ANOTHER OBJECT ===</span>
+Hi, I am Dr. Ahmed (ahmed@example.com).
+guest instanceof Person: false (it only borrowed the method)
+
+<span class="out-h">=== 5. DETACHED METHOD LOSES this ===</span>
+<span class="o-bad">TypeError</span>: Cannot read properties of undefined (reading 'name')
+Reason: fn() is a plain call, so `this` is undefined (class bodies and modules are strict mode).
+
+<span class="out-h">=== 6. bind(): PERMANENTLY ATTACH this ===</span>
+Hi, I am Ali (ali@au.edu.pk). I am a student, roll no 241901.
+bound version called &quot;on&quot; another object: Hi, I am Ali (ali@au.edu.pk). I am a student, roll no 241901.
+  -&gt; still introduces Ali: bind() fixes `this`, call() cannot override it.
+Hi, I am Dr. Sana (sana@au.edu.pk). I teach in the CS department (employee EMP-17).</pre></div>
+    </div>
+  </section>
+
+  <section class="block" id="explain">
+    <div class="sec-head"><span class="num">04 / NOTES</span><h2>Requirements &amp; explanation</h2></div>
+    <div class="card glass" style="margin-bottom:18px">
+      <h3>Requirements covered</h3>
+      <div class="check-grid"><div class="check"><span><code>Person</code> with name, email and <code>introduce()</code></span></div><div class="check"><span><code>Student</code> adds rollNo, marks, <code>getResult()</code>; <code>FacultyMember</code> adds employeeId, department</span></div><div class="check"><span>Both subclasses override <code>introduce()</code> and reuse the parent through <code>super</code></span></div><div class="check"><span>Mixed array run with <code>users.forEach(user => console.log(user.introduce()))</code></span></div><div class="check"><span><code>call()</code> with the guest speaker object as <code>this</code></span></div><div class="check"><span>Detached <code>const fn = student.introduce</code> investigated, then fixed with <code>bind()</code></span></div></div>
+    </div>
+    <div class="grid">
+      <article class="card glass wide"><h3>Concepts demonstrated</h3><div class="tbl-wrap"><table><thead><tr><th>Concept</th><th>What happens in the code</th></tr></thead><tbody>
+<tr><td>constructor / new</td><td><code>new Student(...)</code> creates an empty object, sets its prototype to <code>Student.prototype</code>, runs the constructor with <code>this</code> pointing at it, and returns it.</td></tr>
+<tr><td>extends / super</td><td><code>class Student extends Person</code> links the prototype chains. <code>super(name, email)</code> must run before <code>this</code> is used; <code>super.introduce()</code> calls the parent method.</td></tr>
+<tr><td>Method overriding</td><td><code>Student</code> and <code>FacultyMember</code> define their own <code>introduce()</code>, which shadows <code>Person.prototype.introduce</code>.</td></tr>
+<tr><td>Runtime polymorphism</td><td>The same <code>user.introduce()</code> call runs a different method depending on the <b>actual</b> object in the array, decided when the call happens.</td></tr>
+<tr><td>instanceof</td><td>Walks the prototype chain: a Student is a Student <b>and</b> a Person, but never a FacultyMember.</td></tr>
+<tr><td>call()</td><td>Runs <code>Person.prototype.introduce</code> once with <code>guest</code> as <code>this</code>. The guest only borrows the method; it is not a Person.</td></tr>
+<tr><td>Detached method</td><td><code>fn()</code> has no object before the dot, so <code>this</code> is <code>undefined</code> (class code is strict) and reading <code>this.name</code> throws a <code>TypeError</code>.</td></tr>
+<tr><td>bind()</td><td>Returns a new function whose <code>this</code> is permanently fixed, so it is safe to pass around. Even <code>.call(otherStudent)</code> cannot override it.</td></tr>
+</tbody></table></div></article>
+      <article class="card glass "><h3>Why the detached call fails</h3><p><code>this</code> is decided by <b>how a function is called</b>, not where it was written. <code>student.introduce()</code> has an object before the dot, so <code>this</code> is that student. <code>const fn = student.introduce; fn()</code> copies only the function, and the plain call has no object. In sloppy mode <code>this</code> would fall back to the global object and print "undefined" for the name; in strict code it is <code>undefined</code> and the property read throws.</p></article>
+    </div>
+  </section>
+
+  <nav class="pager">
+    <a class="glass" href="task3.html" style="--a1:#f472b6;--a2:#fb923c"><small>← Previous · Task 03</small><strong>Profile Update Service</strong></a>
+    <a class="glass next" href="task5.html" style="--a1:#34d399;--a2:#22d3ee"><small>Next · Task 05 →</small><strong>Transcript Modules</strong></a>
+  </nav>
+</main>
+<footer><b>CampusFlow</b> · JavaScript Lab 05 · Haseeb Jalil · Air University</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

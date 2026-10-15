@@ -1,238 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Lab 5 — Hands-on Practice on Advanced JavaScript. Explore eight Node.js tasks covering validation, arrays, objects, OOP, modules, callbacks, promises, and async/await.">
-  <title>Lab 05 | Advanced JavaScript — Haseeb Jalil</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0b0d12;
-      --panel: #121620;
-      --panel-2: #171c28;
-      --line: rgba(255,255,255,.09);
-      --text: #f2f4f8;
-      --muted: #a1a9b9;
-      --accent: #b7f36b;
-      --accent-2: #8ee3d0;
-      --mono: "DM Mono", monospace;
-      --sans: "Manrope", sans-serif;
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; scroll-padding-top: 90px; }
-    body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.65; }
-    a { color: inherit; }
-    .navbar { background: rgba(11,13,18,.84); backdrop-filter: blur(16px); border-bottom: 1px solid var(--line); }
-    .navbar-brand { font-weight: 800; letter-spacing: -.04em; }
-    .brand-mark { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; margin-right: 9px; color: #0b0d12; background: var(--accent); font-family: var(--mono); font-size: .85rem; }
-    .nav-link { color: var(--muted) !important; font-size: .9rem; }
-    .nav-link:hover, .nav-link:focus { color: var(--accent) !important; }
-    .btn-accent { background: var(--accent); border: 1px solid var(--accent); color: #10140b; font-weight: 800; border-radius: 10px; padding: .78rem 1.1rem; transition: transform .2s, box-shadow .2s, background .2s; }
-    .btn-accent:hover { background: #c9ff86; color: #10140b; transform: translateY(-2px); box-shadow: 0 10px 30px rgba(183,243,107,.15); }
-    .btn-ghost { border: 1px solid var(--line); color: var(--text); border-radius: 10px; padding: .78rem 1.1rem; }
-    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); background: rgba(183,243,107,.04); }
-    .hero { position: relative; overflow: hidden; padding: 112px 0 82px; border-bottom: 1px solid var(--line); }
-    .hero:before { content: ""; position: absolute; width: 520px; height: 520px; border-radius: 50%; background: rgba(183,243,107,.08); filter: blur(90px); top: -230px; right: -120px; pointer-events: none; }
-    .hero:after { content: ""; position: absolute; width: 300px; height: 300px; border-radius: 50%; background: rgba(142,227,208,.06); filter: blur(80px); bottom: -180px; left: 10%; pointer-events: none; }
-    .hero-content { position: relative; z-index: 1; }
-    .eyebrow { display: inline-flex; align-items: center; gap: 9px; color: var(--accent); font-family: var(--mono); font-size: .76rem; text-transform: uppercase; letter-spacing: .12em; }
-    .eyebrow:before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 14px var(--accent); }
-    h1 { font-size: clamp(2.7rem, 7vw, 5.8rem); font-weight: 800; letter-spacing: -.075em; line-height: .99; margin: 22px 0; max-width: 850px; }
-    h1 span { color: var(--accent); }
-    .hero-copy { max-width: 680px; color: var(--muted); font-size: 1.06rem; }
-    .hero-meta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
-    .meta-chip { font: .75rem var(--mono); color: #c8ced9; border: 1px solid var(--line); border-radius: 100px; padding: 8px 12px; background: rgba(255,255,255,.025); }
-    .hero-code { background: rgba(18,22,32,.78); border: 1px solid rgba(255,255,255,.12); border-radius: 18px; padding: 20px; box-shadow: 0 24px 80px rgba(0,0,0,.25); transform: rotate(1deg); }
-    .code-top { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); padding-bottom: 14px; margin-bottom: 16px; color: var(--muted); font: .72rem var(--mono); }
-    .dots { display: flex; gap: 5px; } .dots i { width: 7px; height: 7px; display: block; border-radius: 50%; background: #555e70; }
-    .code-line { display: flex; gap: 15px; font: .8rem/2 var(--mono); color: #c7d0df; white-space: nowrap; }
-    .line-no { color: #657086; user-select: none; }
-    .code-green { color: var(--accent); } .code-blue { color: #8ee3d0; } .code-purple { color: #c4a7ff; }
-    .section { padding: 84px 0; }
-    .section-kicker { color: var(--accent); font: .74rem var(--mono); letter-spacing: .12em; text-transform: uppercase; margin-bottom: 12px; }
-    .section-title { font-size: clamp(1.9rem, 4vw, 3.1rem); letter-spacing: -.055em; font-weight: 800; line-height: 1.1; }
-    .section-copy { color: var(--muted); max-width: 650px; }
-    .stat-card, .task-card, .info-card { height: 100%; background: linear-gradient(145deg, rgba(255,255,255,.045), rgba(255,255,255,.015)); border: 1px solid var(--line); border-radius: 17px; transition: transform .22s ease, border-color .22s ease, background .22s ease; }
-    .stat-card { padding: 22px; }
-    .stat-card:hover, .task-card:hover, .info-card:hover { transform: translateY(-5px); border-color: rgba(183,243,107,.4); background: linear-gradient(145deg, rgba(183,243,107,.07), rgba(255,255,255,.02)); }
-    .stat-value { font-size: 2rem; font-weight: 800; letter-spacing: -.06em; }
-    .stat-label { color: var(--muted); font-size: .85rem; }
-    .task-card { padding: 24px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
-    .task-number { font: .76rem var(--mono); color: var(--accent); letter-spacing: .1em; }
-    .task-icon { display: grid; place-items: center; width: 45px; height: 45px; border-radius: 13px; background: rgba(183,243,107,.1); color: var(--accent); font-size: 1.25rem; margin: 19px 0; }
-    .task-card h3 { font-size: 1.12rem; font-weight: 800; letter-spacing: -.025em; }
-    .task-card p { color: var(--muted); font-size: .9rem; flex-grow: 1; }
-    .tag-list { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 12px; }
-    .tag { color: #c4cbd7; font: .68rem var(--mono); background: rgba(255,255,255,.045); border: 1px solid var(--line); border-radius: 6px; padding: 5px 7px; }
-    .task-card .task-footer { border-top: 1px solid var(--line); margin-top: 20px; padding-top: 15px; display: flex; align-items: center; justify-content: space-between; color: var(--muted); font-size: .78rem; }
-    .task-footer span:last-child { color: var(--accent); }
-    .workflow { border: 1px solid var(--line); border-radius: 18px; padding: 24px; background: var(--panel); }
-    .workflow-step { display: flex; gap: 14px; align-items: flex-start; padding: 15px 0; }
-    .workflow-step + .workflow-step { border-top: 1px solid var(--line); }
-    .step-num { flex: 0 0 34px; height: 34px; border: 1px solid rgba(183,243,107,.35); border-radius: 10px; display: grid; place-items: center; color: var(--accent); font: .8rem var(--mono); }
-    .workflow-step p { margin: 3px 0 0; color: var(--muted); font-size: .88rem; }
-    .terminal { border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: #080a0e; }
-    .terminal-head { background: #151923; padding: 12px 16px; border-bottom: 1px solid var(--line); color: var(--muted); font: .75rem var(--mono); }
-    .terminal pre { margin: 0; padding: 22px; color: #d6dfeb; font: .82rem/1.9 var(--mono); white-space: pre-wrap; }
-    .terminal .prompt { color: var(--accent); }
-    .note { border-left: 3px solid var(--accent); background: rgba(183,243,107,.055); padding: 16px 18px; border-radius: 0 10px 10px 0; color: #d3d9e4; font-size: .9rem; }
-    .footer { border-top: 1px solid var(--line); padding: 28px 0; color: var(--muted); font-size: .82rem; }
-    .footer a { text-decoration: none; color: var(--accent); }
-    @media (max-width: 767px) { .hero { padding: 88px 0 60px; } .hero-code { margin-top: 28px; transform: none; } .section { padding: 62px 0; } }
-    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript Lab 05 | Haseeb Jalil</title>
+<meta name="description" content="Advanced JavaScript lab: CampusFlow core logic in Node.js, with code and real console output for all eight tasks.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237c9cff'/%3E%3Cstop offset='1' stop-color='%23c084fc'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='monospace' font-size='28' font-weight='800' text-anchor='middle' fill='%230a0d1a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-    <div class="container">
-      <a class="navbar-brand d-flex align-items-center" href="#home"><span class="brand-mark">JS</span>CodeLab<span class="text-secondary ms-2 fw-normal">/ Lab 05</span></a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-      <div class="collapse navbar-collapse" id="mainNav">
-        <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-3 mt-3 mt-lg-0">
-          <li class="nav-item"><a class="nav-link" href="#overview">Overview</a></li>
-          <li class="nav-item"><a class="nav-link" href="#tasks">Tasks</a></li>
-          <li class="nav-item"><a class="nav-link" href="#workflow">Workflow</a></li>
-          <li class="nav-item"><a class="nav-link" href="#setup">Setup</a></li>
-          <li class="nav-item ms-lg-2"><a class="btn btn-accent btn-sm px-3 py-2" href="Lab%205%20Tasks.pdf" target="_blank" rel="noopener">Open Lab Sheet ↗</a></li>
-        </ul>
-      </div>
-    </div>
+<div class="bg"></div>
+<header class="nav glass">
+  <a class="brand" href="index.html"><span class="brand-mark">JS</span><span>CampusFlow <small>· Lab 05</small></span></a>
+  <nav class="nav-links">
+    <a class="keep" href="index.html">Home</a>
+    <a href="#tasks">Tasks</a><a href="#rules">Rules</a><a href="#about">Student</a>
+    
   </nav>
+</header>
+<main class="wrap" id="home">
 
-  <main>
-    <header class="hero" id="home">
-      <div class="container hero-content">
-        <div class="row align-items-center g-5">
-          <div class="col-lg-7">
-            <div class="eyebrow">Full Stack Web Development · Fall 2026</div>
-            <h1>Advanced<br><span>JavaScript.</span></h1>
-            <p class="hero-copy">Lab 05 explores the JavaScript engine behind a university operations platform. Build reliable data processing, academic analytics, object-oriented models, modular services, and asynchronous workflows with Node.js.</p>
-            <div class="hero-meta">
-              <span class="meta-chip">LAB 05</span>
-              <span class="meta-chip">CLO-1 · GA-4</span>
-              <span class="meta-chip">8 PRACTICAL TASKS</span>
-              <span class="meta-chip">NODE.JS</span>
-            </div>
-            <div class="d-flex flex-wrap gap-3 mt-4">
-              <a class="btn btn-accent" href="#tasks">Explore all tasks <span aria-hidden="true">↓</span></a>
-              <a class="btn btn-ghost" href="Lab%205%20Tasks.pdf" target="_blank" rel="noopener">Read lab instructions ↗</a>
-            </div>
-          </div>
-          <div class="col-lg-5">
-            <div class="hero-code" aria-label="JavaScript code preview">
-              <div class="code-top"><span class="dots"><i></i><i></i><i></i></span><span>campusflow.js</span><span>JS</span></div>
-              <div class="code-line"><span class="line-no">01</span><span><span class="code-purple">const</span> campusFlow = {</span></div>
-              <div class="code-line"><span class="line-no">02</span><span>&nbsp;&nbsp;data: <span class="code-green">'validated'</span>,</span></div>
-              <div class="code-line"><span class="line-no">03</span><span>&nbsp;&nbsp;analytics: <span class="code-green">'computed'</span>,</span></div>
-              <div class="code-line"><span class="line-no">04</span><span>&nbsp;&nbsp;services: <span class="code-blue">'asynchronous'</span>,</span></div>
-              <div class="code-line"><span class="line-no">05</span><span>&nbsp;&nbsp;runtime: <span class="code-green">'Node.js'</span></span></div>
-              <div class="code-line"><span class="line-no">06</span><span>};</span></div>
-              <div class="code-line mt-3"><span class="line-no">07</span><span><span class="code-purple">console</span>.log(campusFlow);<span class="code-green"> ▌</span></span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <section class="section pb-4" id="overview">
-      <div class="container">
-        <div class="row g-3">
-          <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-value">08</div><div class="stat-label">Hands-on tasks</div></div></div>
-          <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-value">02</div><div class="stat-label">Tasks explicitly marked 12 marks</div></div></div>
-          <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-value">100%</div><div class="stat-label">JavaScript-focused practice</div></div></div>
-          <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-value">0</div><div class="stat-label">External packages required</div></div></div>
-        </div>
-        <div class="row g-5 align-items-start mt-5">
-          <div class="col-lg-5">
-            <div class="section-kicker">01 / Overview</div>
-            <h2 class="section-title">One case study.<br>Eight core skills.</h2>
-          </div>
-          <div class="col-lg-7">
-            <p class="section-copy">CampusFlow is a proposed academic operations system for Air University. The lab asks you to implement and test its core business logic before connecting it to a web interface. You will work with imperfect student data, academic results, user hierarchies, JSON transcripts, and services that complete asynchronously.</p>
-            <div class="note mt-4"><strong>Lab rule:</strong> Focus on Node.js and JavaScript logic. The handout prohibits DOM manipulation, HTML, React, Express, databases, and external packages for the actual lab solutions.</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="tasks">
-      <div class="container">
-        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-3 mb-4">
-          <div><div class="section-kicker">02 / The practicals</div><h2 class="section-title">Explore the eight tasks.</h2></div>
-          <p class="section-copy mb-1">Each task builds a different part of the CampusFlow system.</p>
-        </div>
-        <div class="row g-3">
-          <div class="col-md-6 col-xl-3"><article class="task-card"><div class="task-number">TASK / 01</div><div class="task-icon">⌁</div><h3>Admission Decision &amp; Data Sanitization</h3><p>Validate applicant inputs, convert types, calculate weighted merit, assign admission statuses and summarize applicant data.</p><div class="tag-list"><span class="tag">Validation</span><span class="tag">Conditions</span><span class="tag">Functions</span></div><div class="task-footer"><span>Admissions engine</span><span>Explore ↗</span></div></article></div>
-          <div class="col-md-6 col-xl-3"><article class="task-card"><div class="task-number">TASK / 02</div><div class="task-icon">▥</div><h3>Academic Performance Intelligence</h3><p>Generate grades, rank students, calculate department statistics and answer academic queries with array methods.</p><div class="tag-list"><span class="tag">map()</span><span class="tag">reduce()</span><span class="tag">sort()</span></div><div class="task-footer"><span>Academic analytics</span><span>Explore ↗</span></div></article></div>
-          <div class="col-md-6 col-xl-3"><article class="task-card"><div class="task-number">TASK / 03</div><div class="task-icon">◇</div><h3>Safe Student Profile Updates</h3><p>Merge partial profile updates while preserving original data and nested object properties.</p><div class="tag-list"><span class="tag">Spread</span><span class="tag">Destructuring</span><span class="tag">Optional chaining</span></div><div class="task-footer"><span>Object handling</span><span>Explore ↗</span></div></article></div>
-          <div class="col-md-6 col-xl-3"><article class="task-card"><div class="task-number">TASK / 04</div><div class="task-icon">⌘</div><h3>User Hierarchy &amp; Dynamic this</h3><p>Create Person, Student and FacultyMember classes and test inheritance, overriding, call() and bind().</p><div class="tag-list"><span class="tag">Classes</span><span class="tag">Inheritance</span><span class="tag">Polymorphism</span></div><div class="task-footer"><span>Object-oriented JS</span><span>Explore ↗</span></div></article></div>
-          <div class="col-md-6 col-xl-3"><article class="task-card"><div class="task-number">TASK / 05</div><div class="task-icon">▤</div><h3>Modular Transcript Processing</h3><p>Split code into ES modules, validate transcript JSON, calculate average and GPA, and handle errors.</p><div class="tag-list"><span class="tag">ES modules</span><span class="tag">JSON</span><span class="tag">Exceptions</span></div><div class="task-footer"><span>Modular services</span><span>Explore ↗</span></div></article></div>
-          <div class="col-md-6 col-xl-3"><article class="task-card"><div class="task-number">TASK / 06</div><div class="task-icon">↝</div><h3>Callback-Based Registration</h3><p>Sequence student loading, prerequisite checks, seat checks and registration with error-first callbacks.</p><div class="tag-list"><span class="tag">Callbacks</span><span class="tag">setTimeout()</span><span class="tag">Error handling</span></div><div class="task-footer"><span>Legacy workflow</span><span>Explore ↗</span></div></article></div>
-          <div class="col-md-6 col-xl-3"><article class="task-card"><div class="task-number">TASK / 07 <span class="tag ms-1">12 MARKS</span></div><div class="task-icon">⇢</div><h3>Promise-Based Registration</h3><p>Chain registration services, run post-registration tasks independently and select the right Promise combinators.</p><div class="tag-list"><span class="tag">then()</span><span class="tag">allSettled()</span><span class="tag">any()</span></div><div class="task-footer"><span>Promise workflow</span><span>Explore ↗</span></div></article></div>
-          <div class="col-md-6 col-xl-3"><article class="task-card"><div class="task-number">TASK / 08 <span class="tag ms-1">12 MARKS</span></div><div class="task-icon">⇄</div><h3>Concurrent API Aggregator</h3><p>Fetch users, courses and results concurrently, calculate dashboard metrics and handle request timeouts.</p><div class="tag-list"><span class="tag">async/await</span><span class="tag">Promise.all()</span><span class="tag">AbortController</span></div><div class="task-footer"><span>API aggregation</span><span>Explore ↗</span></div></article></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section pt-0" id="workflow">
-      <div class="container">
-        <div class="row g-5">
-          <div class="col-lg-5">
-            <div class="section-kicker">03 / Learning path</div>
-            <h2 class="section-title">Build concepts<br>in the right order.</h2>
-            <p class="section-copy mt-3">The later tasks become easier when the earlier JavaScript fundamentals are solid. Use this sequence as a study guide, then follow the exact requirements in the lab sheet.</p>
-          </div>
-          <div class="col-lg-7">
-            <div class="workflow">
-              <div class="workflow-step"><div class="step-num">01</div><div><strong>Data &amp; transformations</strong><p>Tasks 1–2: validation, calculations, conditions and array methods.</p></div></div>
-              <div class="workflow-step"><div class="step-num">02</div><div><strong>Objects &amp; architecture</strong><p>Tasks 3–5: immutable updates, classes, dynamic this, modules and JSON errors.</p></div></div>
-              <div class="workflow-step"><div class="step-num">03</div><div><strong>Asynchronous programming</strong><p>Tasks 6–7: error-first callbacks, Promise chains and Promise combinators.</p></div></div>
-              <div class="workflow-step"><div class="step-num">04</div><div><strong>Concurrent services</strong><p>Task 8: Fetch-like requests, concurrent execution, dashboard aggregation and timeout cleanup.</p></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section pt-0" id="setup">
-      <div class="container">
-        <div class="row g-5 align-items-center">
-          <div class="col-lg-5">
-            <div class="section-kicker">04 / Get started</div>
-            <h2 class="section-title">Run it with Node.js.</h2>
-            <p class="section-copy mt-3">Create separate files for each task and execute them from the terminal. Task 5 should have its own module folder with a package.json configured for ES modules.</p>
-            <a class="btn btn-accent mt-2" href="Lab%205%20Tasks.pdf" target="_blank" rel="noopener">Open the official lab PDF ↗</a>
-          </div>
-          <div class="col-lg-7">
-            <div class="terminal">
-              <div class="terminal-head">TERMINAL — GETTING STARTED</div>
-              <pre><span class="prompt">$</span> node --version
-<span class="prompt">$</span> mkdir Lab5_AdvancedJavaScript
-<span class="prompt">$</span> cd Lab5_AdvancedJavaScript
-<span class="prompt">$</span> node task1.js
-
-<span class="code-green"># Run each task separately</span>
-<span class="prompt">$</span> node task2.js
-<span class="prompt">$</span> node task3.js
-<span class="prompt">$</span> node task4.js</pre>
-            </div>
-          </div>
-        </div>
-        <div class="note mt-4">Testing tip: for every task, demonstrate a normal case, a boundary case and an invalid or failure case. The lab specifically asks you to account for unexpected data and asynchronous errors.</div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
-      <div><strong class="text-light">JS CodeLab</strong> <span class="mx-2">/</span> Lab 05: Advanced JavaScript</div>
-      <div>Full Stack Web Development · Fall 2026 <span class="mx-2">·</span> <a href="#home">Back to top ↑</a></div>
+  <section class="home-hero glass">
+    <p class="eyebrow">Computer Science · Lab Work</p>
+    <h1>JavaScript <span class="grad">Lab 05</span></h1>
+    <p class="lead">Hands-on practice with advanced JavaScript: validation, array methods, destructuring, classes and <code>this</code>, ES modules, callbacks, Promises and async/await. All of it as the core logic of CampusFlow.</p>
+    <div class="cta-row"><a class="btn primary" href="#tasks">Browse the tasks ↓</a><a class="btn" href="#about">Student details</a></div>
+    <div class="stats">
+      <div class="stat"><b>08</b><span>Tasks</span></div>
+      <div class="stat"><b>JS</b><span>Language</span></div>
+      <div class="stat"><b>05</b><span>Lab</span></div>
+      <div class="stat"><b>0</b><span>Dependencies</span></div>
     </div>
-  </footer>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </section>
+
+  <section class="block" id="tasks">
+    <div class="sec-head"><span class="num">LAB OVERVIEW</span><h2>Eight tasks. One <span class="grad">CampusFlow</span> core.</h2>
+      <p>Each card is a live preview of its task page. Open one to read the solution code and the real console output.</p></div>
+    <div class="cards">
+    <a class="pcard glass" href="task1.html" style="--a1:#38bdf8;--a2:#818cf8" aria-label="Open Task 1: Admission Engine">
+      <div class="shot"><div class="shot-bar"><i></i><i></i><i></i><span>task1.html</span><em>LIVE</em></div>
+        <img src="images/previews/task1.jpg" alt="Preview of the Task 1 page" loading="lazy"></div>
+      <div class="pbody">
+        <span class="pnum">TASK 01</span>
+        <h3>Admission Decision &amp; Data Sanitization Engine</h3>
+        <p>Untrusted form strings are converted, validated and scored. Merit is only calculated once a record is proven valid, then every applicant gets a status and the office gets a summary.</p>
+        <div class="chips"><span class="chip">Number()</span><span class="chip">switch</span><span class="chip">ternary</span><span class="chip">guard clauses</span></div>
+        <div class="pgo"><span>View code &amp; output</span><span>→</span></div>
+      </div>
+    </a>
+    <a class="pcard glass" href="task2.html" style="--a1:#a78bfa;--a2:#f472b6" aria-label="Open Task 2: Performance Engine">
+      <div class="shot"><div class="shot-bar"><i></i><i></i><i></i><span>task2.html</span><em>LIVE</em></div>
+        <img src="images/previews/task2.jpg" alt="Preview of the Task 2 page" loading="lazy"></div>
+      <div class="pbody">
+        <span class="pnum">TASK 02</span>
+        <h3>Academic Performance Intelligence Engine</h3>
+        <p>Grades, a ranked merit list, department statistics and academic queries, built entirely with array methods without mutating the original results.</p>
+        <div class="chips"><span class="chip">map()</span><span class="chip">reduce()</span><span class="chip">sort()</span><span class="chip">every()</span></div>
+        <div class="pgo"><span>View code &amp; output</span><span>→</span></div>
+      </div>
+    </a>
+    <a class="pcard glass" href="task3.html" style="--a1:#f472b6;--a2:#fb923c" aria-label="Open Task 3: Profile Update Service">
+      <div class="shot"><div class="shot-bar"><i></i><i></i><i></i><span>task3.html</span><em>LIVE</em></div>
+        <img src="images/previews/task3.jpg" alt="Preview of the Task 3 page" loading="lazy"></div>
+      <div class="pbody">
+        <span class="pnum">TASK 03</span>
+        <h3>Safe Student Profile Update Service</h3>
+        <p>A deep-merge update service that returns a new student object, keeps 0 / false / &quot;&quot; as real values, and proves object references with code.</p>
+        <div class="chips"><span class="chip">destructuring</span><span class="chip">spread</span><span class="chip">?.</span><span class="chip">??</span></div>
+        <div class="pgo"><span>View code &amp; output</span><span>→</span></div>
+      </div>
+    </a>
+    <a class="pcard glass" href="task4.html" style="--a1:#fbbf24;--a2:#f97316" aria-label="Open Task 4: User Hierarchy">
+      <div class="shot"><div class="shot-bar"><i></i><i></i><i></i><span>task4.html</span><em>LIVE</em></div>
+        <img src="images/previews/task4.jpg" alt="Preview of the Task 4 page" loading="lazy"></div>
+      <div class="pbody">
+        <span class="pnum">TASK 04</span>
+        <h3>University User Hierarchy &amp; Dynamic this</h3>
+        <p>Person → Student / FacultyMember with overriding and runtime polymorphism, then call(), a detached method that loses this, and bind() to fix it.</p>
+        <div class="chips"><span class="chip">extends</span><span class="chip">super</span><span class="chip">call()</span><span class="chip">bind()</span></div>
+        <div class="pgo"><span>View code &amp; output</span><span>→</span></div>
+      </div>
+    </a>
+    <a class="pcard glass" href="task5.html" style="--a1:#34d399;--a2:#22d3ee" aria-label="Open Task 5: Transcript Modules">
+      <div class="shot"><div class="shot-bar"><i></i><i></i><i></i><span>task5.html</span><em>LIVE</em></div>
+        <img src="images/previews/task5.jpg" alt="Preview of the Task 5 page" loading="lazy"></div>
+      <div class="pbody">
+        <span class="pnum">TASK 05</span>
+        <h3>Modular Transcript Processing &amp; Fault-Tolerant JSON</h3>
+        <p>Four ES modules that parse JSON safely, validate transcripts, throw meaningful Error / TypeError / RangeError and build a JSON report.</p>
+        <div class="chips"><span class="chip">ES modules</span><span class="chip">JSON</span><span class="chip">RangeError</span><span class="chip">finally</span></div>
+        <div class="pgo"><span>View code &amp; output</span><span>→</span></div>
+      </div>
+    </a>
+    <a class="pcard glass" href="task6.html" style="--a1:#fb923c;--a2:#f43f5e" aria-label="Open Task 6: Callback Registration">
+      <div class="shot"><div class="shot-bar"><i></i><i></i><i></i><span>task6.html</span><em>LIVE</em></div>
+        <img src="images/previews/task6.jpg" alt="Preview of the Task 6 page" loading="lazy"></div>
+      <div class="pbody">
+        <span class="pnum">TASK 06</span>
+        <h3>Legacy Course Registration with Callbacks</h3>
+        <p>Four dependent asynchronous steps using error-first callbacks that stop the moment any stage fails, with no Promises and no async/await.</p>
+        <div class="chips"><span class="chip">setTimeout</span><span class="chip">error-first</span><span class="chip">callbacks</span></div>
+        <div class="pgo"><span>View code &amp; output</span><span>→</span></div>
+      </div>
+    </a>
+    <a class="pcard glass" href="task7.html" style="--a1:#60a5fa;--a2:#a78bfa" aria-label="Open Task 7: Promise Registration">
+      <div class="shot"><div class="shot-bar"><i></i><i></i><i></i><span>task7.html</span><em>LIVE</em></div>
+        <img src="images/previews/task7.jpg" alt="Preview of the Task 7 page" loading="lazy"></div>
+      <div class="pbody">
+        <span class="pnum">TASK 07</span>
+        <h3>Promise-Based Multi-Service Registration Engine</h3>
+        <p>The registration workflow as a Promise chain, post-registration services with allSettled and course lookup with Promise.any, with the choices justified.</p>
+        <div class="chips"><span class="chip">chaining</span><span class="chip">allSettled</span><span class="chip">any</span><span class="chip">finally</span></div>
+        <div class="pgo"><span>View code &amp; output</span><span>→</span></div>
+      </div>
+    </a>
+    <a class="pcard glass" href="task8.html" style="--a1:#22d3ee;--a2:#34d399" aria-label="Open Task 8: API Aggregator">
+      <div class="shot"><div class="shot-bar"><i></i><i></i><i></i><span>task8.html</span><em>LIVE</em></div>
+        <img src="images/previews/task8.jpg" alt="Preview of the Task 8 page" loading="lazy"></div>
+      <div class="pbody">
+        <span class="pnum">TASK 08</span>
+        <h3>Concurrent Academic API Aggregator</h3>
+        <p>getJSON with a fake fetch that can simulate every failure, a concurrent dashboard loaded with Promise.all, and a timeout built on AbortController.</p>
+        <div class="chips"><span class="chip">async/await</span><span class="chip">Promise.all</span><span class="chip">AbortController</span></div>
+        <div class="pgo"><span>View code &amp; output</span><span>→</span></div>
+      </div>
+    </a>
+    </div>
+  </section>
+
+  <section class="block" id="rules">
+    <div class="sec-head"><span class="num">GROUND RULES</span><h2>Constraints followed in every task</h2></div>
+    <div class="rules glass"><div class="check"><span>No DOM, HTML, React, Express, databases or external packages: plain Node.js ES modules</span></div><div class="check"><span>No closure-based state: no function returns an inner function to remember anything</span></div><div class="check"><span><code>const</code> and <code>let</code> only, strict equality (<code>===</code>) throughout</span></div><div class="check"><span>Source data is never mutated; every function returns a meaningful result</span></div><div class="check"><span>Invalid and unexpected data handled, with normal, boundary and invalid test cases</span></div><div class="check"><span>Nothing hard-coded: every figure in the output is calculated by the code</span></div></div>
+  </section>
+
+  <section class="block" id="run">
+    <div class="sec-head"><span class="num">RUN IT YOURSELF</span><h2>Reproduce the output</h2></div>
+    <div class="run glass">
+      <p style="color:var(--muted)">The solutions need only Node.js 18 or newer. A <code>package.json</code> with <code>"type": "module"</code> is included so the files run as ES modules.</p>
+<pre>cd solutions
+node task1.js
+node task2.js
+node task3.js
+node task4.js
+node task5/main.js
+node task6.js
+node task7.js
+node task8.js</pre>
+    </div>
+  </section>
+
+  <section class="block" id="about">
+    <div class="about glass">
+      <div class="avatar">HJ</div>
+      <div>
+        <p class="eyebrow" style="margin:0">Submitted by</p>
+        <h2>Haseeb Jalil</h2>
+        <p>BS Computer Science student at Air University. This page presents the solutions and console outputs completed for JavaScript Lab 05.</p>
+        <div class="facts">
+          <div><small>Program</small><b>BS Computer Science</b></div>
+          <div><small>University</small><b>Air University</b></div>
+          <div><small>Course</small><b>Full Stack Web Development</b></div>
+          <div><small>Lab</small><b>05</b></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer><b>CampusFlow</b> · JavaScript Lab 05 · Haseeb Jalil · Air University</footer>
 </body>
 </html>

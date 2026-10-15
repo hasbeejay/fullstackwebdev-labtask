@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task 03 · Profile Update Service | JavaScript Lab 05</title>
+<meta name="description" content="A deep-merge update service that returns a new student object, keeps 0 / false / &quot;&quot; as real values, and proves object references with code.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237c9cff'/%3E%3Cstop offset='1' stop-color='%23c084fc'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='monospace' font-size='28' font-weight='800' text-anchor='middle' fill='%230a0d1a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body style="--a1:#f472b6;--a2:#fb923c">
+<div class="bg"></div>
+<header class="nav glass">
+  <a class="brand" href="index.html"><span class="brand-mark">JS</span><span>CampusFlow <small>· Lab 05</small></span></a>
+  <nav class="nav-links">
+    <a class="keep" href="index.html">Overview</a>
+    
+    <div class="dots"><a href="task1.html" class="" title="Admission Engine">1</a><a href="task2.html" class="" title="Performance Engine">2</a><a href="task3.html" class="on" title="Profile Update Service">3</a><a href="task4.html" class="" title="User Hierarchy">4</a><a href="task5.html" class="" title="Transcript Modules">5</a><a href="task6.html" class="" title="Callback Registration">6</a><a href="task7.html" class="" title="Promise Registration">7</a><a href="task8.html" class="" title="API Aggregator">8</a></div>
+  </nav>
+</header>
+<main class="wrap">
+
+  <section class="hero glass">
+    <a class="back" href="index.html">← Lab 05 overview</a>
+    <p class="eyebrow">Task 03 · Destructuring · Spread · Reference vs value</p>
+    <h1>Safe Student Profile Update Service</h1>
+    <p class="lead">A profile update service that merges partial updates into a brand-new student object. The original is never modified, nested objects merge instead of being replaced, and falsy-but-valid values survive.</p>
+    <div class="chips"><span class="chip">destructuring</span><span class="chip">rest / spread</span><span class="chip">?.</span><span class="chip">??</span><span class="chip">shorthand</span><span class="chip">structuredClone</span></div>
+    <div class="stats">
+      <div class="stat"><b>1</b><span>File</span></div>
+      <div class="stat"><b>100</b><span>Lines of code</span></div>
+      <div class="stat"><b>49</b><span>Output lines</span></div>
+      <div class="stat"><b>0</b><span>Packages</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="solution">
+    <div class="sec-head"><span class="num">03 / CODE</span><h2>Solution code</h2>
+      <p>The complete, runnable solution. Everything below ran in Node.js exactly as shown.</p></div>
+    <div class="panel glass" data-files>
+      
+      <div class="file-panel on" data-panel="task3.js">
+  <div class="file-bar"><span>task3.js</span><span class="lang">JavaScript · ES module</span><button class="copy" data-copy="raw3">Copy</button><a href="solutions/task3.js" download>Download</a></div>
+  <pre class="code"><code><span class="line"><span class="tok-c">// Task 3 - Safe Student Profile Update Service</span></span><span class="line"> </span><span class="line"><span class="tok-k">const</span> student = {</span><span class="line">  id: <span class="tok-n">101</span>,</span><span class="line">  name: <span class="tok-s">'Ali'</span>,</span><span class="line">  marks: <span class="tok-n">0</span>,</span><span class="line">  scholarship: <span class="tok-k">false</span>,</span><span class="line">  address: { city: <span class="tok-s">'Islamabad'</span>, sector: <span class="tok-s">'F-10'</span> },</span><span class="line">  contact: { email: <span class="tok-s">'ali@university.edu'</span> }</span><span class="line">};</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> update = {</span><span class="line">  name: <span class="tok-s">'Ali Khan'</span>,</span><span class="line">  address: { city: <span class="tok-s">'Rawalpindi'</span> },</span><span class="line">  contact: { phone: <span class="tok-s">'03001234567'</span> }</span><span class="line">};</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> heading = (text) =&gt; console.<span class="tok-f">log</span>(<span class="tok-s">`\n=== ${text} ===`</span>);</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">isPlainObject</span>(value) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-k">typeof</span> value === <span class="tok-s">'object'</span> &amp;&amp; value !== <span class="tok-k">null</span> &amp;&amp; !<span class="tok-t">Array</span>.<span class="tok-f">isArray</span>(value);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// Recursive merge: returns a brand-new object, never touches `target` or `source`.</span></span><span class="line"><span class="tok-c">// `undefined` means &quot;not provided&quot;; every other value (0, false, '', null) is a real value.</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">function</span> <span class="tok-f">mergeDeep</span>(target, source) {</span><span class="line">  <span class="tok-k">const</span> merged = { ...target };                              <span class="tok-c">// spread: copy top-level properties</span></span><span class="line">  <span class="tok-k">for</span> (<span class="tok-k">const</span> [key, value] <span class="tok-k">of</span> <span class="tok-t">Object</span>.<span class="tok-f">entries</span>(source)) {</span><span class="line">    <span class="tok-k">if</span> (value === <span class="tok-k">undefined</span>) <span class="tok-k">continue</span>;                       <span class="tok-c">// not provided -&gt; keep the old value</span></span><span class="line">    merged[key] = <span class="tok-f">isPlainObject</span>(value)</span><span class="line">      ? <span class="tok-f">mergeDeep</span>(<span class="tok-f">isPlainObject</span>(target[key]) ? target[key] : {}, value)   <span class="tok-c">// nested -&gt; merge recursively</span></span><span class="line">      : value;                                               <span class="tok-c">// primitive -&gt; replace</span></span><span class="line">  }</span><span class="line">  <span class="tok-k">return</span> merged;</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// The service: deep-clone first so NO nested object is ever shared with the original.</span></span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">updateStudent</span>(currentStudent, changes = {}) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-f">mergeDeep</span>(<span class="tok-f">structuredClone</span>(currentStudent), changes);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-f">heading</span>(<span class="tok-s">'1. THE UPDATE SERVICE'</span>);</span><span class="line"><span class="tok-k">const</span> originalSnapshot = JSON.<span class="tok-f">stringify</span>(student);</span><span class="line"><span class="tok-k">const</span> updated = <span class="tok-f">updateStudent</span>(student, update);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'original:'</span>, student);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'updated :'</span>, updated);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'original unchanged:'</span>, JSON.<span class="tok-f">stringify</span>(student) === originalSnapshot);</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-f">heading</span>(<span class="tok-s">'2. 0, false AND &quot;&quot; ARE VALID VALUES'</span>);</span><span class="line"><span class="tok-k">const</span> scored = { ...student, marks: <span class="tok-n">85</span>, scholarship: <span class="tok-k">true</span> };</span><span class="line"><span class="tok-k">const</span> zeroUpdate = { marks: <span class="tok-n">0</span>, scholarship: <span class="tok-k">false</span>, contact: { email: <span class="tok-s">''</span> } };</span><span class="line"><span class="tok-k">const</span> afterZero = <span class="tok-f">updateStudent</span>(scored, zeroUpdate);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'marks      :'</span>, scored.marks, <span class="tok-s">'-&gt;'</span>, afterZero.marks);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'scholarship:'</span>, scored.scholarship, <span class="tok-s">'-&gt;'</span>, afterZero.scholarship);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'email      :'</span>, JSON.<span class="tok-f">stringify</span>(scored.contact.email), <span class="tok-s">'-&gt;'</span>, JSON.<span class="tok-f">stringify</span>(afterZero.contact.email));</span><span class="line"> </span><span class="line"><span class="tok-c">// || treats 0 / false / '' as &quot;missing&quot;; ?? only treats null and undefined as missing</span></span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'with ||  :'</span>, zeroUpdate.marks || scored.marks, <span class="tok-s">'(wrong, 0 was replaced)'</span>);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'with ??  :'</span>, zeroUpdate.marks ?? scored.marks, <span class="tok-s">'(correct, 0 kept)'</span>);</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-f">heading</span>(<span class="tok-s">'3. DESTRUCTURING TOOLKIT'</span>);</span><span class="line"> </span><span class="line"><span class="tok-c">// object destructuring + renaming + default value</span></span><span class="line"><span class="tok-k">const</span> { name: studentName, marks = <span class="tok-n">100</span>, nickname = <span class="tok-s">'no nickname'</span> } = student;</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'rename + default:'</span>, studentName, marks, nickname);   <span class="tok-c">// marks is 0, the default is NOT used</span></span><span class="line"> </span><span class="line"><span class="tok-c">// nested destructuring</span></span><span class="line"><span class="tok-k">const</span> { address: { city: oldCity, sector }, contact: { email } } = student;</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'nested:'</span>, oldCity, sector, email);</span><span class="line"> </span><span class="line"><span class="tok-c">// object rest: everything except address and contact</span></span><span class="line"><span class="tok-k">const</span> { address, contact, ...basicInfo } = student;</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'object rest:'</span>, basicInfo);</span><span class="line"> </span><span class="line"><span class="tok-c">// array destructuring (skip an element, default value, swap)</span></span><span class="line"><span class="tok-k">const</span> [firstKey, , thirdKey, missingKey = <span class="tok-s">'no fifth-plus key'</span>] = <span class="tok-t">Object</span>.<span class="tok-f">keys</span>(student);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'array destructuring:'</span>, firstKey, thirdKey, missingKey);</span><span class="line"><span class="tok-k">let</span> left = <span class="tok-s">'city'</span>;</span><span class="line"><span class="tok-k">let</span> right = <span class="tok-s">'sector'</span>;</span><span class="line">[left, right] = [right, left];</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'swap:'</span>, left, right);</span><span class="line"> </span><span class="line"><span class="tok-c">// rest parameters: collect any number of field names</span></span><span class="line"><span class="tok-k">function</span> <span class="tok-f">pickFields</span>(source, ...fields) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-t">Object</span>.<span class="tok-f">fromEntries</span>(fields.<span class="tok-f">map</span>((field) =&gt; [field, source[field]]));</span><span class="line">}</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'rest parameters:'</span>, <span class="tok-f">pickFields</span>(student, <span class="tok-s">'id'</span>, <span class="tok-s">'name'</span>, <span class="tok-s">'scholarship'</span>));</span><span class="line"> </span><span class="line"><span class="tok-c">// property shorthand</span></span><span class="line"><span class="tok-k">const</span> id = student.id;</span><span class="line"><span class="tok-k">const</span> summary = { id, studentName, oldCity };     <span class="tok-c">// same as { id: id, studentName: studentName, ... }</span></span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'shorthand:'</span>, summary);</span><span class="line"> </span><span class="line"><span class="tok-c">// optional chaining</span></span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'optional chaining:'</span>, update?.contact?.phone, <span class="tok-s">'|'</span>, student?.contact?.fax?.number, <span class="tok-s">'|'</span>, student.guardian?.name);</span><span class="line"> </span><span class="line"><span class="tok-c">// spread: copy an array and add to an object</span></span><span class="line"><span class="tok-k">const</span> keys = [...<span class="tok-t">Object</span>.<span class="tok-f">keys</span>(student), <span class="tok-s">'extra'</span>];</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'spread array:'</span>, keys.length, <span class="tok-s">'keys'</span>);</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-f">heading</span>(<span class="tok-s">'4. REFERENCE CHALLENGE'</span>);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'original  === updated         :'</span>, student === updated);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'original.address === updated.address:'</span>, student.address === updated.address);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'original.contact === updated.contact:'</span>, student.contact === updated.contact);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'Why: objects are compared by reference. updateStudent() clones first, so every'</span>);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'     object (outer, address, contact) in the result is a different object in memory.'</span>);</span><span class="line"> </span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'\nCompare with a SHALLOW copy made by spread only:'</span>);</span><span class="line"><span class="tok-k">const</span> shallow = { ...student, name: <span class="tok-s">'Ali Khan'</span> };</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'shallow === student                 :'</span>, shallow === student);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'shallow.address === student.address :'</span>, shallow.address === student.address, <span class="tok-s">'&lt;- shared!'</span>);</span><span class="line">shallow.address.city = <span class="tok-s">'Lahore'</span>;</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'after shallow.address.city = &quot;Lahore&quot;, the ORIGINAL city is now:'</span>, student.address.city);</span><span class="line">student.address.city = <span class="tok-s">'Islamabad'</span>;   <span class="tok-c">// restore the demo data</span></span></code></pre>
+  <textarea id="raw3" hidden readonly>// Task 3 - Safe Student Profile Update Service
+
+const student = {
+  id: 101,
+  name: 'Ali',
+  marks: 0,
+  scholarship: false,
+  address: { city: 'Islamabad', sector: 'F-10' },
+  contact: { email: 'ali@university.edu' }
+};
+
+const update = {
+  name: 'Ali Khan',
+  address: { city: 'Rawalpindi' },
+  contact: { phone: '03001234567' }
+};
+
+const heading = (text) =&gt; console.log(`\n=== ${text} ===`);
+
+function isPlainObject(value) {
+  return typeof value === 'object' &amp;&amp; value !== null &amp;&amp; !Array.isArray(value);
+}
+
+// ---------------------------------------------------------------------------
+// Recursive merge: returns a brand-new object, never touches `target` or `source`.
+// `undefined` means &quot;not provided&quot;; every other value (0, false, '', null) is a real value.
+// ---------------------------------------------------------------------------
+function mergeDeep(target, source) {
+  const merged = { ...target };                              // spread: copy top-level properties
+  for (const [key, value] of Object.entries(source)) {
+    if (value === undefined) continue;                       // not provided -&gt; keep the old value
+    merged[key] = isPlainObject(value)
+      ? mergeDeep(isPlainObject(target[key]) ? target[key] : {}, value)   // nested -&gt; merge recursively
+      : value;                                               // primitive -&gt; replace
+  }
+  return merged;
+}
+
+// The service: deep-clone first so NO nested object is ever shared with the original.
+export function updateStudent(currentStudent, changes = {}) {
+  return mergeDeep(structuredClone(currentStudent), changes);
+}
+
+// ---------------------------------------------------------------------------
+heading('1. THE UPDATE SERVICE');
+const originalSnapshot = JSON.stringify(student);
+const updated = updateStudent(student, update);
+console.log('original:', student);
+console.log('updated :', updated);
+console.log('original unchanged:', JSON.stringify(student) === originalSnapshot);
+
+// ---------------------------------------------------------------------------
+heading('2. 0, false AND &quot;&quot; ARE VALID VALUES');
+const scored = { ...student, marks: 85, scholarship: true };
+const zeroUpdate = { marks: 0, scholarship: false, contact: { email: '' } };
+const afterZero = updateStudent(scored, zeroUpdate);
+console.log('marks      :', scored.marks, '-&gt;', afterZero.marks);
+console.log('scholarship:', scored.scholarship, '-&gt;', afterZero.scholarship);
+console.log('email      :', JSON.stringify(scored.contact.email), '-&gt;', JSON.stringify(afterZero.contact.email));
+
+// || treats 0 / false / '' as &quot;missing&quot;; ?? only treats null and undefined as missing
+console.log('with ||  :', zeroUpdate.marks || scored.marks, '(wrong, 0 was replaced)');
+console.log('with ??  :', zeroUpdate.marks ?? scored.marks, '(correct, 0 kept)');
+
+// ---------------------------------------------------------------------------
+heading('3. DESTRUCTURING TOOLKIT');
+
+// object destructuring + renaming + default value
+const { name: studentName, marks = 100, nickname = 'no nickname' } = student;
+console.log('rename + default:', studentName, marks, nickname);   // marks is 0, the default is NOT used
+
+// nested destructuring
+const { address: { city: oldCity, sector }, contact: { email } } = student;
+console.log('nested:', oldCity, sector, email);
+
+// object rest: everything except address and contact
+const { address, contact, ...basicInfo } = student;
+console.log('object rest:', basicInfo);
+
+// array destructuring (skip an element, default value, swap)
+const [firstKey, , thirdKey, missingKey = 'no fifth-plus key'] = Object.keys(student);
+console.log('array destructuring:', firstKey, thirdKey, missingKey);
+let left = 'city';
+let right = 'sector';
+[left, right] = [right, left];
+console.log('swap:', left, right);
+
+// rest parameters: collect any number of field names
+function pickFields(source, ...fields) {
+  return Object.fromEntries(fields.map((field) =&gt; [field, source[field]]));
+}
+console.log('rest parameters:', pickFields(student, 'id', 'name', 'scholarship'));
+
+// property shorthand
+const id = student.id;
+const summary = { id, studentName, oldCity };     // same as { id: id, studentName: studentName, ... }
+console.log('shorthand:', summary);
+
+// optional chaining
+console.log('optional chaining:', update?.contact?.phone, '|', student?.contact?.fax?.number, '|', student.guardian?.name);
+
+// spread: copy an array and add to an object
+const keys = [...Object.keys(student), 'extra'];
+console.log('spread array:', keys.length, 'keys');
+
+// ---------------------------------------------------------------------------
+heading('4. REFERENCE CHALLENGE');
+console.log('original  === updated         :', student === updated);
+console.log('original.address === updated.address:', student.address === updated.address);
+console.log('original.contact === updated.contact:', student.contact === updated.contact);
+console.log('Why: objects are compared by reference. updateStudent() clones first, so every');
+console.log('     object (outer, address, contact) in the result is a different object in memory.');
+
+console.log('\nCompare with a SHALLOW copy made by spread only:');
+const shallow = { ...student, name: 'Ali Khan' };
+console.log('shallow === student                 :', shallow === student);
+console.log('shallow.address === student.address :', shallow.address === student.address, '&lt;- shared!');
+shallow.address.city = 'Lahore';
+console.log('after shallow.address.city = &quot;Lahore&quot;, the ORIGINAL city is now:', student.address.city);
+student.address.city = 'Islamabad';   // restore the demo data
+</textarea>
+</div>
+    </div>
+  </section>
+
+  <section class="block" id="output">
+    <div class="sec-head"><span class="num">03 / OUTPUT</span><h2>Console output</h2>
+      <p>Captured from a real run of <code>node task3.js</code> on Node.js. View the screenshot or switch to selectable text.</p></div>
+    <div class="term glass" data-term>
+      <div class="term-bar"><i></i><i></i><i></i><span class="term-title">node task3.js</span>
+        <div class="term-tabs"><button class="on" data-view="shot">Screenshot</button><button data-view="text">Text</button></div></div>
+      <div class="out-view on" data-show="shot"><a href="images/task3-output.png" target="_blank" rel="noopener"><img src="images/task3-output.png" alt="Task 3 console output" loading="lazy"></a></div>
+      <div class="out-view" data-show="text"><pre class="out"><span class="prompt">$ <b>node task3.js</b></span>
+
+<span class="out-h">=== 1. THE UPDATE SERVICE ===</span>
+original: {
+  id: 101,
+  name: 'Ali',
+  marks: 0,
+  scholarship: false,
+  address: { city: 'Islamabad', sector: 'F-10' },
+  contact: { email: 'ali@university.edu' }
+}
+updated : {
+  id: 101,
+  name: 'Ali Khan',
+  marks: 0,
+  scholarship: false,
+  address: { city: 'Rawalpindi', sector: 'F-10' },
+  contact: { email: 'ali@university.edu', phone: '03001234567' }
+}
+original unchanged: true
+
+<span class="out-h">=== 2. 0, false AND &quot;&quot; ARE VALID VALUES ===</span>
+marks      : 85 -&gt; 0
+scholarship: true -&gt; false
+email      : &quot;ali@university.edu&quot; -&gt; &quot;&quot;
+with ||  : 85 (wrong, 0 was replaced)
+with ??  : 0 (correct, 0 kept)
+
+<span class="out-h">=== 3. DESTRUCTURING TOOLKIT ===</span>
+rename + default: Ali 0 no nickname
+nested: Islamabad F-10 ali@university.edu
+object rest: { id: 101, name: 'Ali', marks: 0, scholarship: false }
+array destructuring: id marks scholarship
+swap: sector city
+rest parameters: { id: 101, name: 'Ali', scholarship: false }
+shorthand: { id: 101, studentName: 'Ali', oldCity: 'Islamabad' }
+optional chaining: 03001234567 | undefined | undefined
+spread array: 7 keys
+
+<span class="out-h">=== 4. REFERENCE CHALLENGE ===</span>
+original  === updated         : false
+original.address === updated.address: false
+original.contact === updated.contact: false
+Why: objects are compared by reference. updateStudent() clones first, so every
+     object (outer, address, contact) in the result is a different object in memory.
+
+Compare with a SHALLOW copy made by spread only:
+shallow === student                 : false
+shallow.address === student.address : true &lt;- shared!
+after shallow.address.city = &quot;Lahore&quot;, the ORIGINAL city is now: Lahore</pre></div>
+    </div>
+  </section>
+
+  <section class="block" id="explain">
+    <div class="sec-head"><span class="num">03 / NOTES</span><h2>Requirements &amp; explanation</h2></div>
+    <div class="card glass" style="margin-bottom:18px">
+      <h3>Requirements covered</h3>
+      <div class="check-grid"><div class="check"><span>Returns a <b>new</b> student, the original object is never modified</span></div><div class="check"><span><code>address.city</code> changes while <code>address.sector</code> remains</span></div><div class="check"><span><code>contact.email</code> remains and <code>contact.phone</code> is added</span></div><div class="check"><span><code>0</code>, <code>false</code> and <code>""</code> are not replaced by defaults</span></div><div class="check"><span>Object, nested, renamed and default destructuring; array destructuring; rest parameters; object rest</span></div><div class="check"><span>Spread, optional chaining, nullish coalescing and property shorthand</span></div><div class="check"><span>Reference comparison of original vs updated, address and contact</span></div></div>
+    </div>
+    <div class="grid">
+      <article class="card glass "><h3>Reference challenge: all three are different</h3><p>Objects are compared by <b>reference</b> (their location in memory), not by content. <code>updateStudent()</code> starts from <code>structuredClone(student)</code>, so the result, its <code>address</code> and its <code>contact</code> are each separate objects: all three comparisons print <code>false</code>.</p>
+<p>The reverse is shown too. A shallow copy made with <code>{ ...student }</code> gives a new outer object but <b>shares</b> the same <code>address</code>. Changing <code>shallow.address.city</code> then changes the original, which is exactly the bug a safe update service must avoid.</p></article>
+      <article class="card glass "><h3>?? versus ||</h3><p><code>||</code> replaces every falsy value, so <code>0 || 85</code> is <code>85</code> and a student's zero marks would be overwritten. <code>??</code> only falls back for <code>null</code> and <code>undefined</code>. In the merge, only <code>undefined</code> means "this field was not provided"; everything else, including <code>0</code>, <code>false</code>, <code>''</code> and <code>null</code>, is a real value.</p></article>
+      <article class="card glass wide"><h3>Feature map</h3><div class="tbl-wrap"><table><thead><tr><th>Feature</th><th>Where it appears</th></tr></thead><tbody>
+<tr><td>Object destructuring</td><td><code>const { name: studentName, marks = 100, nickname = '…' } = student</code> (rename + defaults)</td></tr>
+<tr><td>Nested destructuring</td><td><code>const { address: { city: oldCity, sector }, contact: { email } } = student</code></td></tr>
+<tr><td>Object rest</td><td><code>const { address, contact, ...basicInfo } = student</code></td></tr>
+<tr><td>Array destructuring</td><td>skipped element, default value and a swap: <code>[left, right] = [right, left]</code></td></tr>
+<tr><td>Rest parameters</td><td><code>pickFields(source, ...fields)</code></td></tr>
+<tr><td>Spread</td><td><code>{ ...target }</code> in <code>mergeDeep</code>, <code>[...keys, 'extra']</code></td></tr>
+<tr><td>Optional chaining</td><td><code>update?.contact?.phone</code>, <code>student.guardian?.name</code></td></tr>
+<tr><td>Nullish coalescing</td><td><code>zeroUpdate.marks ?? scored.marks</code></td></tr>
+<tr><td>Property shorthand</td><td><code>{ id, studentName, oldCity }</code></td></tr>
+</tbody></table></div></article>
+    </div>
+  </section>
+
+  <nav class="pager">
+    <a class="glass" href="task2.html" style="--a1:#a78bfa;--a2:#f472b6"><small>← Previous · Task 02</small><strong>Performance Engine</strong></a>
+    <a class="glass next" href="task4.html" style="--a1:#fbbf24;--a2:#f97316"><small>Next · Task 04 →</small><strong>User Hierarchy</strong></a>
+  </nav>
+</main>
+<footer><b>CampusFlow</b> · JavaScript Lab 05 · Haseeb Jalil · Air University</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

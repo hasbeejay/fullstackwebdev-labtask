@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task 07 · Promise Registration | JavaScript Lab 05</title>
+<meta name="description" content="The registration workflow as a Promise chain, post-registration services with allSettled and course lookup with Promise.any, with the choices justified.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237c9cff'/%3E%3Cstop offset='1' stop-color='%23c084fc'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='monospace' font-size='28' font-weight='800' text-anchor='middle' fill='%230a0d1a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body style="--a1:#60a5fa;--a2:#a78bfa">
+<div class="bg"></div>
+<header class="nav glass">
+  <a class="brand" href="index.html"><span class="brand-mark">JS</span><span>CampusFlow <small>· Lab 05</small></span></a>
+  <nav class="nav-links">
+    <a class="keep" href="index.html">Overview</a>
+    
+    <div class="dots"><a href="task1.html" class="" title="Admission Engine">1</a><a href="task2.html" class="" title="Performance Engine">2</a><a href="task3.html" class="" title="Profile Update Service">3</a><a href="task4.html" class="" title="User Hierarchy">4</a><a href="task5.html" class="" title="Transcript Modules">5</a><a href="task6.html" class="" title="Callback Registration">6</a><a href="task7.html" class="on" title="Promise Registration">7</a><a href="task8.html" class="" title="API Aggregator">8</a></div>
+  </nav>
+</header>
+<main class="wrap">
+
+  <section class="hero glass">
+    <a class="back" href="index.html">← Lab 05 overview</a>
+    <p class="eyebrow">Task 07 · Promise chains · allSettled · any</p>
+    <h1>Promise-Based Multi-Service Registration Engine</h1>
+    <p class="lead">The registration workflow rebuilt with Promises: a chain for the dependent steps, Promise.allSettled for the independent notifications, and Promise.any to accept the first successful course server.</p>
+    <div class="chips"><span class="chip">new Promise</span><span class="chip">.then()</span><span class="chip">.catch()</span><span class="chip">.finally()</span><span class="chip">allSettled</span><span class="chip">any</span><span class="chip">race</span></div>
+    <div class="stats">
+      <div class="stat"><b>1</b><span>File</span></div>
+      <div class="stat"><b>212</b><span>Lines of code</span></div>
+      <div class="stat"><b>38</b><span>Output lines</span></div>
+      <div class="stat"><b>0</b><span>Packages</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="solution">
+    <div class="sec-head"><span class="num">07 / CODE</span><h2>Solution code</h2>
+      <p>The complete, runnable solution. Everything below ran in Node.js exactly as shown.</p></div>
+    <div class="panel glass" data-files>
+      
+      <div class="file-panel on" data-panel="task7.js">
+  <div class="file-bar"><span>task7.js</span><span class="lang">JavaScript · ES module</span><button class="copy" data-copy="raw10">Copy</button><a href="solutions/task7.js" download>Download</a></div>
+  <pre class="code"><code><span class="line"><span class="tok-c">// Task 7 - Promise-Based Multi-Service Registration Engine</span></span><span class="line"><span class="tok-c">// Every service takes ONE context object and resolves with an enriched copy of it,</span></span><span class="line"><span class="tok-c">// so the chain can be written point-free: .then(getCourse).then(checkPrerequisites) ...</span></span><span class="line"> </span><span class="line"><span class="tok-k">const</span> STUDENTS = {</span><span class="line">  <span class="tok-n">101</span>: { id: <span class="tok-n">101</span>, name: <span class="tok-s">'Ali'</span>, completed: [<span class="tok-s">'CS301'</span>, <span class="tok-s">'CS302'</span>] },</span><span class="line">  <span class="tok-n">102</span>: { id: <span class="tok-n">102</span>, name: <span class="tok-s">'Sara'</span>, completed: [<span class="tok-s">'CS101'</span>] }</span><span class="line">};</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> COURSES = {</span><span class="line">  CS401: { code: <span class="tok-s">'CS401'</span>, prerequisites: [<span class="tok-s">'CS301'</span>, <span class="tok-s">'CS302'</span>], seatsLeft: <span class="tok-n">5</span> },</span><span class="line">  CS402: { code: <span class="tok-s">'CS402'</span>, prerequisites: [<span class="tok-s">'CS301'</span>], seatsLeft: <span class="tok-n">0</span> }</span><span class="line">};</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> DELAY_MS = <span class="tok-n">10</span>;</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// Services (Promise creation with resolve / reject).</span></span><span class="line"><span class="tok-c">// setTimeout receives a named function plus its arguments - nothing is captured.</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">function</span> <span class="tok-f">settleGetStudent</span>(resolve, reject, context) {</span><span class="line">  <span class="tok-k">const</span> student = STUDENTS[context.studentId];</span><span class="line">  <span class="tok-k">if</span> (student === <span class="tok-k">undefined</span>) {</span><span class="line">    <span class="tok-f">reject</span>(<span class="tok-k">new</span> <span class="tok-f">Error</span>(<span class="tok-s">`Student ${context.studentId} does not exist`</span>));</span><span class="line">    <span class="tok-k">return</span>;</span><span class="line">  }</span><span class="line">  <span class="tok-f">resolve</span>({ ...context, student });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">getStudent</span>(context) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-k">new</span> <span class="tok-f">Promise</span>(<span class="tok-k">function</span> (resolve, reject) {</span><span class="line">    <span class="tok-f">setTimeout</span>(settleGetStudent, DELAY_MS, resolve, reject, context);</span><span class="line">  });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">settleGetCourse</span>(resolve, reject, context) {</span><span class="line">  <span class="tok-k">const</span> course = COURSES[context.courseCode];</span><span class="line">  <span class="tok-k">if</span> (course === <span class="tok-k">undefined</span>) {</span><span class="line">    <span class="tok-f">reject</span>(<span class="tok-k">new</span> <span class="tok-f">Error</span>(<span class="tok-s">`Course ${context.courseCode} does not exist`</span>));</span><span class="line">    <span class="tok-k">return</span>;</span><span class="line">  }</span><span class="line">  <span class="tok-f">resolve</span>({ ...context, course });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">getCourse</span>(context) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-k">new</span> <span class="tok-f">Promise</span>(<span class="tok-k">function</span> (resolve, reject) {</span><span class="line">    <span class="tok-f">setTimeout</span>(settleGetCourse, DELAY_MS, resolve, reject, context);</span><span class="line">  });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">settleCheckPrerequisites</span>(resolve, reject, context) {</span><span class="line">  <span class="tok-k">const</span> missing = context.course.prerequisites.<span class="tok-f">filter</span>((code) =&gt; !context.student.completed.<span class="tok-f">includes</span>(code));</span><span class="line">  <span class="tok-k">if</span> (missing.length &gt; <span class="tok-n">0</span>) {</span><span class="line">    <span class="tok-f">reject</span>(<span class="tok-k">new</span> <span class="tok-f">Error</span>(<span class="tok-s">`Prerequisite not completed: ${missing.join(', ')}`</span>));</span><span class="line">    <span class="tok-k">return</span>;</span><span class="line">  }</span><span class="line">  <span class="tok-f">resolve</span>(context);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">checkPrerequisites</span>(context) {</span><span class="line">  <span class="tok-c">// Guard: reject (instead of throwing inside a timer) when the previous stage passed on nothing</span></span><span class="line">  <span class="tok-k">if</span> (context === <span class="tok-k">undefined</span> || context.course === <span class="tok-k">undefined</span>) {</span><span class="line">    <span class="tok-k">return</span> <span class="tok-t">Promise</span>.<span class="tok-f">reject</span>(</span><span class="line">      <span class="tok-k">new</span> <span class="tok-f">TypeError</span>(<span class="tok-s">'checkPrerequisites received no course data - did a previous .then() forget to return?'</span>)</span><span class="line">    );</span><span class="line">  }</span><span class="line">  <span class="tok-k">return</span> <span class="tok-k">new</span> <span class="tok-f">Promise</span>(<span class="tok-k">function</span> (resolve, reject) {</span><span class="line">    <span class="tok-f">setTimeout</span>(settleCheckPrerequisites, DELAY_MS, resolve, reject, context);</span><span class="line">  });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">settleCheckSeats</span>(resolve, reject, context) {</span><span class="line">  <span class="tok-k">if</span> (context.course.seatsLeft &lt;= <span class="tok-n">0</span>) {</span><span class="line">    <span class="tok-f">reject</span>(<span class="tok-k">new</span> <span class="tok-f">Error</span>(<span class="tok-s">`Course ${context.course.code} is full`</span>));</span><span class="line">    <span class="tok-k">return</span>;</span><span class="line">  }</span><span class="line">  <span class="tok-f">resolve</span>(context);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">checkSeats</span>(context) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-k">new</span> <span class="tok-f">Promise</span>(<span class="tok-k">function</span> (resolve, reject) {</span><span class="line">    <span class="tok-f">setTimeout</span>(settleCheckSeats, DELAY_MS, resolve, reject, context);</span><span class="line">  });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">settleRegisterStudent</span>(resolve, context) {</span><span class="line">  <span class="tok-f">resolve</span>({ studentId: context.student.id, course: context.course.code, status: <span class="tok-s">'REGISTERED'</span> });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">registerStudent</span>(context) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-k">new</span> <span class="tok-f">Promise</span>(<span class="tok-k">function</span> (resolve) {</span><span class="line">    <span class="tok-f">setTimeout</span>(settleRegisterStudent, DELAY_MS, resolve, context);</span><span class="line">  });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// Post-registration services: SMS is deliberately unreliable</span></span><span class="line"><span class="tok-k">function</span> <span class="tok-f">settleNotification</span>(resolve, reject, serviceName, shouldFail, registration) {</span><span class="line">  <span class="tok-k">if</span> (shouldFail) {</span><span class="line">    <span class="tok-f">reject</span>(<span class="tok-k">new</span> <span class="tok-f">Error</span>(<span class="tok-s">`${serviceName} gateway timeout`</span>));</span><span class="line">    <span class="tok-k">return</span>;</span><span class="line">  }</span><span class="line">  <span class="tok-f">resolve</span>(<span class="tok-s">`${serviceName} sent for student ${registration.studentId}`</span>);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">sendEmail</span>(registration) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-k">new</span> <span class="tok-f">Promise</span>(<span class="tok-k">function</span> (resolve, reject) {</span><span class="line">    <span class="tok-f">setTimeout</span>(settleNotification, DELAY_MS, resolve, reject, <span class="tok-s">'Email'</span>, <span class="tok-k">false</span>, registration);</span><span class="line">  });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">sendSMS</span>(registration) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-k">new</span> <span class="tok-f">Promise</span>(<span class="tok-k">function</span> (resolve, reject) {</span><span class="line">    <span class="tok-f">setTimeout</span>(settleNotification, DELAY_MS * <span class="tok-n">2</span>, resolve, reject, <span class="tok-s">'SMS'</span>, <span class="tok-k">true</span>, registration);</span><span class="line">  });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">writeAuditLog</span>(registration) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-k">new</span> <span class="tok-f">Promise</span>(<span class="tok-k">function</span> (resolve, reject) {</span><span class="line">    <span class="tok-f">setTimeout</span>(settleNotification, DELAY_MS * <span class="tok-n">3</span>, resolve, reject, <span class="tok-s">'Audit'</span>, <span class="tok-k">false</span>, registration);</span><span class="line">  });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// Part A - the registration chain. Every .then() RETURNS the next promise.</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">registerFlow</span>(studentId, courseCode) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-f">getStudent</span>({ studentId, courseCode })</span><span class="line">    .<span class="tok-f">then</span>(getCourse)</span><span class="line">    .<span class="tok-f">then</span>(checkPrerequisites)</span><span class="line">    .<span class="tok-f">then</span>(checkSeats)</span><span class="line">    .<span class="tok-f">then</span>(registerStudent);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">runScenario</span>(scenario) {</span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">`\n&gt;&gt;&gt; ${scenario.label}`</span>);</span><span class="line">  <span class="tok-k">return</span> <span class="tok-f">registerFlow</span>(scenario.studentId, scenario.courseCode)</span><span class="line">    .<span class="tok-f">then</span>((confirmation) =&gt; console.<span class="tok-f">log</span>(<span class="tok-s">'  OK:'</span>, confirmation))</span><span class="line">    .<span class="tok-k">catch</span>((error) =&gt; console.<span class="tok-f">log</span>(<span class="tok-s">`  FAILED: ${error.message}`</span>))</span><span class="line">    .<span class="tok-k">finally</span>(() =&gt; console.<span class="tok-f">log</span>(<span class="tok-s">'  [finally] attempt finished'</span>));</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">chainScenario</span>(chain, scenario) {</span><span class="line">  <span class="tok-k">return</span> chain.<span class="tok-f">then</span>(runScenario.<span class="tok-f">bind</span>(<span class="tok-k">null</span>, scenario));</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> scenarios = [</span><span class="line">  { label: <span class="tok-s">'SUCCESS (101 -&gt; CS401)'</span>, studentId: <span class="tok-n">101</span>, courseCode: <span class="tok-s">'CS401'</span> },</span><span class="line">  { label: <span class="tok-s">'UNKNOWN STUDENT (999 -&gt; CS401)'</span>, studentId: <span class="tok-n">999</span>, courseCode: <span class="tok-s">'CS401'</span> },</span><span class="line">  { label: <span class="tok-s">'PREREQUISITE MISSING (102 -&gt; CS401)'</span>, studentId: <span class="tok-n">102</span>, courseCode: <span class="tok-s">'CS401'</span> },</span><span class="line">  { label: <span class="tok-s">'COURSE FULL (101 -&gt; CS402)'</span>, studentId: <span class="tok-n">101</span>, courseCode: <span class="tok-s">'CS402'</span> }</span><span class="line">];</span><span class="line"> </span><span class="line"><span class="tok-c">// What happens when a .then() forgets to return: the next stage receives undefined.</span></span><span class="line"><span class="tok-k">function</span> <span class="tok-f">brokenGetCourse</span>(context) {</span><span class="line">  <span class="tok-f">getCourse</span>(context);                <span class="tok-c">// BUG: promise is created but NOT returned</span></span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">demoMissingReturn</span>() {</span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">'\n=== PART A (bug demo): .then() without return ==='</span>);</span><span class="line">  <span class="tok-k">return</span> <span class="tok-f">getStudent</span>({ studentId: <span class="tok-n">101</span>, courseCode: <span class="tok-s">'CS401'</span> })</span><span class="line">    .<span class="tok-f">then</span>(brokenGetCourse)</span><span class="line">    .<span class="tok-f">then</span>(checkPrerequisites)        <span class="tok-c">// receives undefined instead of the context</span></span><span class="line">    .<span class="tok-k">catch</span>((error) =&gt; console.<span class="tok-f">log</span>(<span class="tok-s">`  ${error.name}: ${error.message}`</span>))</span><span class="line">    .<span class="tok-k">finally</span>(() =&gt; console.<span class="tok-f">log</span>(<span class="tok-s">'  -&gt; the data was lost at the missing return, so the next stage had nothing to work with'</span>));</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// Part B - Promise.allSettled: we want the status of ALL three services</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">const</span> SERVICE_NAMES = [<span class="tok-s">'Email'</span>, <span class="tok-s">'SMS'</span>, <span class="tok-s">'Audit'</span>];</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">toStatusEntry</span>(outcome, index) {</span><span class="line">  <span class="tok-k">return</span> { service: SERVICE_NAMES[index], status: outcome.status };</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">demoPostRegistration</span>(registration) {</span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">'\n=== PART B: Promise.allSettled for post-registration services ==='</span>);</span><span class="line">  <span class="tok-k">return</span> <span class="tok-t">Promise</span>.<span class="tok-f">allSettled</span>([<span class="tok-f">sendEmail</span>(registration), <span class="tok-f">sendSMS</span>(registration), <span class="tok-f">writeAuditLog</span>(registration)])</span><span class="line">    .<span class="tok-f">then</span>((outcomes) =&gt; {</span><span class="line">      console.<span class="tok-f">log</span>(outcomes.<span class="tok-f">map</span>(toStatusEntry));</span><span class="line">      <span class="tok-k">const</span> failed = outcomes.<span class="tok-f">filter</span>((outcome) =&gt; outcome.status === <span class="tok-s">'rejected'</span>);</span><span class="line">      failed.<span class="tok-f">forEach</span>((outcome) =&gt; console.<span class="tok-f">log</span>(<span class="tok-s">'  failure reason:'</span>, outcome.reason.message));</span><span class="line">    });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// Part C - two independent course servers</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">function</span> <span class="tok-f">settleServer</span>(resolve, reject, serverName, shouldFail, courseCode) {</span><span class="line">  <span class="tok-k">if</span> (shouldFail) {</span><span class="line">    <span class="tok-f">reject</span>(<span class="tok-k">new</span> <span class="tok-f">Error</span>(<span class="tok-s">`${serverName} is down`</span>));</span><span class="line">    <span class="tok-k">return</span>;</span><span class="line">  }</span><span class="line">  <span class="tok-f">resolve</span>({ server: serverName, course: COURSES[courseCode] });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">fetchCourseFromServer</span>(serverName, delay, shouldFail, courseCode) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-k">new</span> <span class="tok-f">Promise</span>(<span class="tok-k">function</span> (resolve, reject) {</span><span class="line">    <span class="tok-f">setTimeout</span>(settleServer, delay, resolve, reject, serverName, shouldFail, courseCode);</span><span class="line">  });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">demoServerSelection</span>() {</span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">'\n=== PART C: first SUCCESSFUL result ==='</span>);</span><span class="line">  <span class="tok-c">// Server A fails fast (10ms), server B succeeds slower (40ms).</span></span><span class="line"> </span><span class="line">  <span class="tok-k">const</span> attemptRace = <span class="tok-t">Promise</span>.<span class="tok-f">race</span>([</span><span class="line">    <span class="tok-f">fetchCourseFromServer</span>(<span class="tok-s">'Server A'</span>, <span class="tok-n">10</span>, <span class="tok-k">true</span>, <span class="tok-s">'CS401'</span>),</span><span class="line">    <span class="tok-f">fetchCourseFromServer</span>(<span class="tok-s">'Server B'</span>, <span class="tok-n">40</span>, <span class="tok-k">false</span>, <span class="tok-s">'CS401'</span>)</span><span class="line">  ])</span><span class="line">    .<span class="tok-f">then</span>((result) =&gt; console.<span class="tok-f">log</span>(<span class="tok-s">'  Promise.race -&gt;'</span>, result.server))</span><span class="line">    .<span class="tok-k">catch</span>((error) =&gt; console.<span class="tok-f">log</span>(<span class="tok-s">`  Promise.race -&gt; REJECTED (${error.message}) even though Server B was fine`</span>));</span><span class="line"> </span><span class="line">  <span class="tok-k">return</span> attemptRace</span><span class="line">    .<span class="tok-f">then</span>(() =&gt;</span><span class="line">      <span class="tok-t">Promise</span>.<span class="tok-f">any</span>([</span><span class="line">        <span class="tok-f">fetchCourseFromServer</span>(<span class="tok-s">'Server A'</span>, <span class="tok-n">10</span>, <span class="tok-k">true</span>, <span class="tok-s">'CS401'</span>),</span><span class="line">        <span class="tok-f">fetchCourseFromServer</span>(<span class="tok-s">'Server B'</span>, <span class="tok-n">40</span>, <span class="tok-k">false</span>, <span class="tok-s">'CS401'</span>)</span><span class="line">      ])</span><span class="line">    )</span><span class="line">    .<span class="tok-f">then</span>((result) =&gt; console.<span class="tok-f">log</span>(<span class="tok-s">`  Promise.any  -&gt; ${result.server} (course ${result.course.code}) - the failed server was ignored`</span>))</span><span class="line">    .<span class="tok-f">then</span>(() =&gt;</span><span class="line">      <span class="tok-t">Promise</span>.<span class="tok-f">any</span>([</span><span class="line">        <span class="tok-f">fetchCourseFromServer</span>(<span class="tok-s">'Server A'</span>, <span class="tok-n">10</span>, <span class="tok-k">true</span>, <span class="tok-s">'CS401'</span>),</span><span class="line">        <span class="tok-f">fetchCourseFromServer</span>(<span class="tok-s">'Server B'</span>, <span class="tok-n">20</span>, <span class="tok-k">true</span>, <span class="tok-s">'CS401'</span>)</span><span class="line">      ])</span><span class="line">    )</span><span class="line">    .<span class="tok-k">catch</span>((error) =&gt; {</span><span class="line">      console.<span class="tok-f">log</span>(<span class="tok-s">`  Promise.any when BOTH fail -&gt; ${error.name}: ${error.message}`</span>);</span><span class="line">      error.errors.<span class="tok-f">forEach</span>((inner) =&gt; console.<span class="tok-f">log</span>(<span class="tok-s">'    -'</span>, inner.message));</span><span class="line">    });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// Run everything in order</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'=== PART A: registration chain ==='</span>);</span><span class="line">scenarios</span><span class="line">  .<span class="tok-f">reduce</span>(chainScenario, <span class="tok-t">Promise</span>.<span class="tok-f">resolve</span>())</span><span class="line">  .<span class="tok-f">then</span>(demoMissingReturn)</span><span class="line">  .<span class="tok-f">then</span>(() =&gt; <span class="tok-f">registerFlow</span>(<span class="tok-n">101</span>, <span class="tok-s">'CS401'</span>))</span><span class="line">  .<span class="tok-f">then</span>(demoPostRegistration)</span><span class="line">  .<span class="tok-f">then</span>(demoServerSelection)</span><span class="line">  .<span class="tok-k">finally</span>(() =&gt; console.<span class="tok-f">log</span>(<span class="tok-s">'\nAll Promise demos completed.'</span>));</span></code></pre>
+  <textarea id="raw10" hidden readonly>// Task 7 - Promise-Based Multi-Service Registration Engine
+// Every service takes ONE context object and resolves with an enriched copy of it,
+// so the chain can be written point-free: .then(getCourse).then(checkPrerequisites) ...
+
+const STUDENTS = {
+  101: { id: 101, name: 'Ali', completed: ['CS301', 'CS302'] },
+  102: { id: 102, name: 'Sara', completed: ['CS101'] }
+};
+
+const COURSES = {
+  CS401: { code: 'CS401', prerequisites: ['CS301', 'CS302'], seatsLeft: 5 },
+  CS402: { code: 'CS402', prerequisites: ['CS301'], seatsLeft: 0 }
+};
+
+const DELAY_MS = 10;
+
+// ---------------------------------------------------------------------------
+// Services (Promise creation with resolve / reject).
+// setTimeout receives a named function plus its arguments - nothing is captured.
+// ---------------------------------------------------------------------------
+function settleGetStudent(resolve, reject, context) {
+  const student = STUDENTS[context.studentId];
+  if (student === undefined) {
+    reject(new Error(`Student ${context.studentId} does not exist`));
+    return;
+  }
+  resolve({ ...context, student });
+}
+
+export function getStudent(context) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(settleGetStudent, DELAY_MS, resolve, reject, context);
+  });
+}
+
+function settleGetCourse(resolve, reject, context) {
+  const course = COURSES[context.courseCode];
+  if (course === undefined) {
+    reject(new Error(`Course ${context.courseCode} does not exist`));
+    return;
+  }
+  resolve({ ...context, course });
+}
+
+export function getCourse(context) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(settleGetCourse, DELAY_MS, resolve, reject, context);
+  });
+}
+
+function settleCheckPrerequisites(resolve, reject, context) {
+  const missing = context.course.prerequisites.filter((code) =&gt; !context.student.completed.includes(code));
+  if (missing.length &gt; 0) {
+    reject(new Error(`Prerequisite not completed: ${missing.join(', ')}`));
+    return;
+  }
+  resolve(context);
+}
+
+export function checkPrerequisites(context) {
+  // Guard: reject (instead of throwing inside a timer) when the previous stage passed on nothing
+  if (context === undefined || context.course === undefined) {
+    return Promise.reject(
+      new TypeError('checkPrerequisites received no course data - did a previous .then() forget to return?')
+    );
+  }
+  return new Promise(function (resolve, reject) {
+    setTimeout(settleCheckPrerequisites, DELAY_MS, resolve, reject, context);
+  });
+}
+
+function settleCheckSeats(resolve, reject, context) {
+  if (context.course.seatsLeft &lt;= 0) {
+    reject(new Error(`Course ${context.course.code} is full`));
+    return;
+  }
+  resolve(context);
+}
+
+export function checkSeats(context) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(settleCheckSeats, DELAY_MS, resolve, reject, context);
+  });
+}
+
+function settleRegisterStudent(resolve, context) {
+  resolve({ studentId: context.student.id, course: context.course.code, status: 'REGISTERED' });
+}
+
+export function registerStudent(context) {
+  return new Promise(function (resolve) {
+    setTimeout(settleRegisterStudent, DELAY_MS, resolve, context);
+  });
+}
+
+// Post-registration services: SMS is deliberately unreliable
+function settleNotification(resolve, reject, serviceName, shouldFail, registration) {
+  if (shouldFail) {
+    reject(new Error(`${serviceName} gateway timeout`));
+    return;
+  }
+  resolve(`${serviceName} sent for student ${registration.studentId}`);
+}
+
+export function sendEmail(registration) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(settleNotification, DELAY_MS, resolve, reject, 'Email', false, registration);
+  });
+}
+
+export function sendSMS(registration) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(settleNotification, DELAY_MS * 2, resolve, reject, 'SMS', true, registration);
+  });
+}
+
+export function writeAuditLog(registration) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(settleNotification, DELAY_MS * 3, resolve, reject, 'Audit', false, registration);
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Part A - the registration chain. Every .then() RETURNS the next promise.
+// ---------------------------------------------------------------------------
+export function registerFlow(studentId, courseCode) {
+  return getStudent({ studentId, courseCode })
+    .then(getCourse)
+    .then(checkPrerequisites)
+    .then(checkSeats)
+    .then(registerStudent);
+}
+
+function runScenario(scenario) {
+  console.log(`\n&gt;&gt;&gt; ${scenario.label}`);
+  return registerFlow(scenario.studentId, scenario.courseCode)
+    .then((confirmation) =&gt; console.log('  OK:', confirmation))
+    .catch((error) =&gt; console.log(`  FAILED: ${error.message}`))
+    .finally(() =&gt; console.log('  [finally] attempt finished'));
+}
+
+function chainScenario(chain, scenario) {
+  return chain.then(runScenario.bind(null, scenario));
+}
+
+const scenarios = [
+  { label: 'SUCCESS (101 -&gt; CS401)', studentId: 101, courseCode: 'CS401' },
+  { label: 'UNKNOWN STUDENT (999 -&gt; CS401)', studentId: 999, courseCode: 'CS401' },
+  { label: 'PREREQUISITE MISSING (102 -&gt; CS401)', studentId: 102, courseCode: 'CS401' },
+  { label: 'COURSE FULL (101 -&gt; CS402)', studentId: 101, courseCode: 'CS402' }
+];
+
+// What happens when a .then() forgets to return: the next stage receives undefined.
+function brokenGetCourse(context) {
+  getCourse(context);                // BUG: promise is created but NOT returned
+}
+
+function demoMissingReturn() {
+  console.log('\n=== PART A (bug demo): .then() without return ===');
+  return getStudent({ studentId: 101, courseCode: 'CS401' })
+    .then(brokenGetCourse)
+    .then(checkPrerequisites)        // receives undefined instead of the context
+    .catch((error) =&gt; console.log(`  ${error.name}: ${error.message}`))
+    .finally(() =&gt; console.log('  -&gt; the data was lost at the missing return, so the next stage had nothing to work with'));
+}
+
+// ---------------------------------------------------------------------------
+// Part B - Promise.allSettled: we want the status of ALL three services
+// ---------------------------------------------------------------------------
+const SERVICE_NAMES = ['Email', 'SMS', 'Audit'];
+
+function toStatusEntry(outcome, index) {
+  return { service: SERVICE_NAMES[index], status: outcome.status };
+}
+
+function demoPostRegistration(registration) {
+  console.log('\n=== PART B: Promise.allSettled for post-registration services ===');
+  return Promise.allSettled([sendEmail(registration), sendSMS(registration), writeAuditLog(registration)])
+    .then((outcomes) =&gt; {
+      console.log(outcomes.map(toStatusEntry));
+      const failed = outcomes.filter((outcome) =&gt; outcome.status === 'rejected');
+      failed.forEach((outcome) =&gt; console.log('  failure reason:', outcome.reason.message));
+    });
+}
+
+// ---------------------------------------------------------------------------
+// Part C - two independent course servers
+// ---------------------------------------------------------------------------
+function settleServer(resolve, reject, serverName, shouldFail, courseCode) {
+  if (shouldFail) {
+    reject(new Error(`${serverName} is down`));
+    return;
+  }
+  resolve({ server: serverName, course: COURSES[courseCode] });
+}
+
+function fetchCourseFromServer(serverName, delay, shouldFail, courseCode) {
+  return new Promise(function (resolve, reject) {
+    setTimeout(settleServer, delay, resolve, reject, serverName, shouldFail, courseCode);
+  });
+}
+
+function demoServerSelection() {
+  console.log('\n=== PART C: first SUCCESSFUL result ===');
+  // Server A fails fast (10ms), server B succeeds slower (40ms).
+
+  const attemptRace = Promise.race([
+    fetchCourseFromServer('Server A', 10, true, 'CS401'),
+    fetchCourseFromServer('Server B', 40, false, 'CS401')
+  ])
+    .then((result) =&gt; console.log('  Promise.race -&gt;', result.server))
+    .catch((error) =&gt; console.log(`  Promise.race -&gt; REJECTED (${error.message}) even though Server B was fine`));
+
+  return attemptRace
+    .then(() =&gt;
+      Promise.any([
+        fetchCourseFromServer('Server A', 10, true, 'CS401'),
+        fetchCourseFromServer('Server B', 40, false, 'CS401')
+      ])
+    )
+    .then((result) =&gt; console.log(`  Promise.any  -&gt; ${result.server} (course ${result.course.code}) - the failed server was ignored`))
+    .then(() =&gt;
+      Promise.any([
+        fetchCourseFromServer('Server A', 10, true, 'CS401'),
+        fetchCourseFromServer('Server B', 20, true, 'CS401')
+      ])
+    )
+    .catch((error) =&gt; {
+      console.log(`  Promise.any when BOTH fail -&gt; ${error.name}: ${error.message}`);
+      error.errors.forEach((inner) =&gt; console.log('    -', inner.message));
+    });
+}
+
+// ---------------------------------------------------------------------------
+// Run everything in order
+// ---------------------------------------------------------------------------
+console.log('=== PART A: registration chain ===');
+scenarios
+  .reduce(chainScenario, Promise.resolve())
+  .then(demoMissingReturn)
+  .then(() =&gt; registerFlow(101, 'CS401'))
+  .then(demoPostRegistration)
+  .then(demoServerSelection)
+  .finally(() =&gt; console.log('\nAll Promise demos completed.'));
+</textarea>
+</div>
+    </div>
+  </section>
+
+  <section class="block" id="output">
+    <div class="sec-head"><span class="num">07 / OUTPUT</span><h2>Console output</h2>
+      <p>Captured from a real run of <code>node task7.js</code> on Node.js. View the screenshot or switch to selectable text.</p></div>
+    <div class="term glass" data-term>
+      <div class="term-bar"><i></i><i></i><i></i><span class="term-title">node task7.js</span>
+        <div class="term-tabs"><button class="on" data-view="shot">Screenshot</button><button data-view="text">Text</button></div></div>
+      <div class="out-view on" data-show="shot"><a href="images/task7-output.png" target="_blank" rel="noopener"><img src="images/task7-output.png" alt="Task 7 console output" loading="lazy"></a></div>
+      <div class="out-view" data-show="text"><pre class="out"><span class="prompt">$ <b>node task7.js</b></span>
+<span class="out-h">=== PART A: registration chain ===</span>
+
+<span class="out-h">&gt;&gt;&gt; SUCCESS (101 -&gt; CS401)</span>
+  <span class="o-ok">OK</span>: { studentId: 101, course: 'CS401', status: '<span class="o-ok">REGISTERED</span>' }
+  <span class="o-dim">[finally]</span> attempt finished
+
+<span class="out-h">&gt;&gt;&gt; UNKNOWN STUDENT (999 -&gt; CS401)</span>
+  <span class="o-bad">FAILED</span>: Student 999 does not exist
+  <span class="o-dim">[finally]</span> attempt finished
+
+<span class="out-h">&gt;&gt;&gt; PREREQUISITE MISSING (102 -&gt; CS401)</span>
+  <span class="o-bad">FAILED</span>: Prerequisite not completed: CS301, CS302
+  <span class="o-dim">[finally]</span> attempt finished
+
+<span class="out-h">&gt;&gt;&gt; COURSE FULL (101 -&gt; CS402)</span>
+  <span class="o-bad">FAILED</span>: Course CS402 is full
+  <span class="o-dim">[finally]</span> attempt finished
+
+<span class="out-h">=== PART A (bug demo): .then() without return ===</span>
+  <span class="o-bad">TypeError</span>: checkPrerequisites received no course data - did a previous .then() forget to return?
+  -&gt; the data was lost at the missing return, so the next stage had nothing to work with
+
+<span class="out-h">=== PART B: Promise.allSettled for post-registration services ===</span>
+[
+  { service: 'Email', status: '<span class="o-ok">fulfilled</span>' },
+  { service: 'SMS', status: '<span class="o-bad">rejected</span>' },
+  { service: 'Audit', status: '<span class="o-ok">fulfilled</span>' }
+]
+  failure reason: SMS gateway timeout
+
+<span class="out-h">=== PART C: first SUCCESSFUL result ===</span>
+  Promise.race -&gt; <span class="o-bad">REJECTED</span> (Server A is down) even though Server B was fine
+  Promise.any  -&gt; Server B (course CS401) - the failed server was ignored
+  Promise.any when BOTH fail -&gt; <span class="o-bad">AggregateError</span>: All promises were <span class="o-bad">rejected</span>
+    - Server A is down
+    - Server B is down
+
+All Promise demos completed.</pre></div>
+    </div>
+  </section>
+
+  <section class="block" id="explain">
+    <div class="sec-head"><span class="num">07 / NOTES</span><h2>Requirements &amp; explanation</h2></div>
+    <div class="card glass" style="margin-bottom:18px">
+      <h3>Requirements covered</h3>
+      <div class="check-grid"><div class="check"><span>Eight Promise-based services built with <code>resolve()</code> and <code>reject()</code></span></div><div class="check"><span>Chain: getStudent → getCourse → checkPrerequisites → checkSeats → registerStudent</span></div><div class="check"><span>Data propagates between stages; every <code>.then()</code> returns its next promise</span></div><div class="check"><span><code>.then()</code>, <code>.catch()</code> and <code>.finally()</code> used appropriately</span></div><div class="check"><span>Email, SMS and audit log reported with a combinator that tolerates failure</span></div><div class="check"><span>First <b>successful</b> course server accepted, with the choice justified</span></div></div>
+    </div>
+    <div class="grid">
+      <article class="card glass wide"><h3>Choosing the right combinator</h3><div class="tbl-wrap"><table><thead><tr><th>Situation</th><th>Choice</th><th>Why</th></tr></thead><tbody>
+<tr><td>Steps depend on each other</td><td><code>.then()</code> chain</td><td>Each stage needs the previous stage's data, so they must run in order. No combinator is needed.</td></tr>
+<tr><td>Email, SMS, audit: independent, need every outcome</td><td><code>Promise.allSettled</code></td><td>It never rejects and reports <code>fulfilled</code> or <code>rejected</code> for each. <code>Promise.all</code> would reject at the first failure and hide the other two results.</td></tr>
+<tr><td>Two course servers: first <b>successful</b> answer</td><td><code>Promise.any</code></td><td>It ignores rejections and resolves with the first fulfilment. <code>Promise.race</code> settles with the first result of <b>either</b> kind, so a fast failing server would win and the request would fail even though the other server was fine.</td></tr>
+</tbody></table></div>
+<p>If <b>both</b> servers fail, <code>Promise.any</code> rejects with an <code>AggregateError</code> whose <code>errors</code> array lists each reason; the demo prints it.</p></article>
+      <article class="card glass "><h3>The missing-return bug</h3><p>A <code>.then()</code> callback that creates a promise but does not <b>return</b> it hands <code>undefined</code> to the next stage, because the chain does not wait for the forgotten promise. The demo shows <code>brokenGetCourse</code> losing the course data, and the next stage rejecting with a clear <code>TypeError</code> instead of crashing.</p>
+<p>The real chain avoids the problem by giving every service the same shape: one context object in, an enriched copy out, so it reads as <code>.then(getCourse).then(checkPrerequisites)…</code> with no inline callbacks to forget a return in.</p></article>
+    </div>
+  </section>
+
+  <nav class="pager">
+    <a class="glass" href="task6.html" style="--a1:#fb923c;--a2:#f43f5e"><small>← Previous · Task 06</small><strong>Callback Registration</strong></a>
+    <a class="glass next" href="task8.html" style="--a1:#22d3ee;--a2:#34d399"><small>Next · Task 08 →</small><strong>API Aggregator</strong></a>
+  </nav>
+</main>
+<footer><b>CampusFlow</b> · JavaScript Lab 05 · Haseeb Jalil · Air University</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

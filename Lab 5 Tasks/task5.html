@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task 05 · Transcript Modules | JavaScript Lab 05</title>
+<meta name="description" content="Four ES modules that parse JSON safely, validate transcripts, throw meaningful Error / TypeError / RangeError and build a JSON report.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237c9cff'/%3E%3Cstop offset='1' stop-color='%23c084fc'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='monospace' font-size='28' font-weight='800' text-anchor='middle' fill='%230a0d1a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body style="--a1:#34d399;--a2:#22d3ee">
+<div class="bg"></div>
+<header class="nav glass">
+  <a class="brand" href="index.html"><span class="brand-mark">JS</span><span>CampusFlow <small>· Lab 05</small></span></a>
+  <nav class="nav-links">
+    <a class="keep" href="index.html">Overview</a>
+    
+    <div class="dots"><a href="task1.html" class="" title="Admission Engine">1</a><a href="task2.html" class="" title="Performance Engine">2</a><a href="task3.html" class="" title="Profile Update Service">3</a><a href="task4.html" class="" title="User Hierarchy">4</a><a href="task5.html" class="on" title="Transcript Modules">5</a><a href="task6.html" class="" title="Callback Registration">6</a><a href="task7.html" class="" title="Promise Registration">7</a><a href="task8.html" class="" title="API Aggregator">8</a></div>
+  </nav>
+</header>
+<main class="wrap">
+
+  <section class="hero glass">
+    <a class="back" href="index.html">← Lab 05 overview</a>
+    <p class="eyebrow">Task 05 · ES modules · JSON · Error handling</p>
+    <h1>Modular Transcript Processing &amp; Fault-Tolerant JSON</h1>
+    <p class="lead">The transcript system split across four ES modules. It parses JSON safely, rejects every kind of bad data with a meaningful error type, calculates averages and GPA, and turns the final report back into JSON.</p>
+    <div class="chips"><span class="chip">export default</span><span class="chip">named exports</span><span class="chip">import … as</span><span class="chip">JSON.parse</span><span class="chip">try / catch / finally</span><span class="chip">RangeError</span></div>
+    <div class="stats">
+      <div class="stat"><b>4</b><span>Modules</span></div>
+      <div class="stat"><b>200</b><span>Lines of code</span></div>
+      <div class="stat"><b>86</b><span>Output lines</span></div>
+      <div class="stat"><b>0</b><span>Packages</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="solution">
+    <div class="sec-head"><span class="num">05 / CODE</span><h2>Solution code</h2>
+      <p>Four separate ES modules, as the task requires. Switch tabs to read each file.</p></div>
+    <div class="panel glass" data-files>
+      <div class="tabs"><button class="tab on" data-tab="main.js">main.js</button><button class="tab " data-tab="Student.js">Student.js</button><button class="tab " data-tab="gradeUtils.js">gradeUtils.js</button><button class="tab " data-tab="transcriptService.js">transcriptService.js</button></div>
+      <div class="file-panel on" data-panel="main.js">
+  <div class="file-bar"><span>task5/main.js</span><span class="lang">JavaScript · ES module</span><button class="copy" data-copy="raw5">Copy</button><a href="solutions/task5/main.js" download>Download</a></div>
+  <pre class="code"><code><span class="line"><span class="tok-c">// main.js - the caller: demonstrates try / catch / finally with the transcript service</span></span><span class="line"><span class="tok-k">import</span> <span class="tok-t">Student</span> <span class="tok-k">from</span> <span class="tok-s">'./Student.js'</span>;                                    <span class="tok-c">// default import</span></span><span class="line"><span class="tok-k">import</span> { processTranscript, reportToJSON } <span class="tok-k">from</span> <span class="tok-s">'./transcriptService.js'</span>;   <span class="tok-c">// named imports</span></span><span class="line"><span class="tok-k">import</span> { calculateGrade as gradeOf } <span class="tok-k">from</span> <span class="tok-s">'./gradeUtils.js'</span>;           <span class="tok-c">// aliased named import</span></span><span class="line"> </span><span class="line"><span class="tok-k">const</span> rawData = <span class="tok-s">`</span></span><span class="line"><span class="tok-s">[</span></span><span class="line"><span class="tok-s">  {</span></span><span class="line"><span class="tok-s">    &quot;id&quot;: 101,</span></span><span class="line"><span class="tok-s">    &quot;name&quot;: &quot;Ali&quot;,</span></span><span class="line"><span class="tok-s">    &quot;courses&quot;: [</span></span><span class="line"><span class="tok-s">      { &quot;code&quot;: &quot;CS301&quot;, &quot;marks&quot;: 81 },</span></span><span class="line"><span class="tok-s">      { &quot;code&quot;: &quot;CS302&quot;, &quot;marks&quot;: 74 }</span></span><span class="line"><span class="tok-s">    ]</span></span><span class="line"><span class="tok-s">  },</span></span><span class="line"><span class="tok-s">  {</span></span><span class="line"><span class="tok-s">    &quot;id&quot;: 102,</span></span><span class="line"><span class="tok-s">    &quot;name&quot;: &quot;Sara&quot;,</span></span><span class="line"><span class="tok-s">    &quot;courses&quot;: [</span></span><span class="line"><span class="tok-s">      { &quot;code&quot;: &quot;CS301&quot;, &quot;marks&quot;: 93 },</span></span><span class="line"><span class="tok-s">      { &quot;code&quot;: &quot;CS302&quot;, &quot;marks&quot;: 88 },</span></span><span class="line"><span class="tok-s">      { &quot;code&quot;: &quot;CS303&quot;, &quot;marks&quot;: 49 }</span></span><span class="line"><span class="tok-s">    ]</span></span><span class="line"><span class="tok-s">  }</span></span><span class="line"><span class="tok-s">]`</span>;</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> testCases = [</span><span class="line">  { label: <span class="tok-s">'VALID transcript'</span>, input: rawData },</span><span class="line">  { label: <span class="tok-s">'MALFORMED JSON (missing closing bracket)'</span>, input: <span class="tok-s">'[{ &quot;id&quot;: 1, &quot;name&quot;: &quot;Ali&quot;, &quot;courses&quot;: [] }'</span> },</span><span class="line">  { label: <span class="tok-s">'MISSING student id'</span>, input: <span class="tok-s">'[{ &quot;name&quot;: &quot;Ali&quot;, &quot;courses&quot;: [] }]'</span> },</span><span class="line">  {</span><span class="line">    label: <span class="tok-s">'DUPLICATE student id'</span>,</span><span class="line">    input: <span class="tok-s">'[{ &quot;id&quot;: 7, &quot;name&quot;: &quot;A&quot;, &quot;courses&quot;: [] }, { &quot;id&quot;: 7, &quot;name&quot;: &quot;B&quot;, &quot;courses&quot;: [] }]'</span></span><span class="line">  },</span><span class="line">  {</span><span class="line">    label: <span class="tok-s">'MARKS above 100'</span>,</span><span class="line">    input: <span class="tok-s">'[{ &quot;id&quot;: 1, &quot;name&quot;: &quot;Ali&quot;, &quot;courses&quot;: [{ &quot;code&quot;: &quot;CS301&quot;, &quot;marks&quot;: 101 }] }]'</span></span><span class="line">  },</span><span class="line">  {</span><span class="line">    label: <span class="tok-s">'MARKS below 0'</span>,</span><span class="line">    input: <span class="tok-s">'[{ &quot;id&quot;: 1, &quot;name&quot;: &quot;Ali&quot;, &quot;courses&quot;: [{ &quot;code&quot;: &quot;CS301&quot;, &quot;marks&quot;: -4 }] }]'</span></span><span class="line">  },</span><span class="line">  {</span><span class="line">    label: <span class="tok-s">'MISSING course code'</span>,</span><span class="line">    input: <span class="tok-s">'[{ &quot;id&quot;: 1, &quot;name&quot;: &quot;Ali&quot;, &quot;courses&quot;: [{ &quot;marks&quot;: 70 }] }]'</span></span><span class="line">  },</span><span class="line">  { label: <span class="tok-s">'WRONG input type (not a string)'</span>, input: <span class="tok-n">42</span> }</span><span class="line">];</span><span class="line"> </span><span class="line"><span class="tok-k">for</span> (<span class="tok-k">const</span> testCase <span class="tok-k">of</span> testCases) {</span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">`\n--- ${testCase.label} ---`</span>);</span><span class="line">  <span class="tok-k">try</span> {</span><span class="line">    <span class="tok-k">const</span> report = <span class="tok-f">processTranscript</span>(testCase.input);</span><span class="line">    <span class="tok-k">const</span> json = <span class="tok-f">reportToJSON</span>(report);</span><span class="line"> </span><span class="line">    console.<span class="tok-f">log</span>(<span class="tok-s">`Processed ${report.totalStudents} student(s), class average ${report.classAverage}`</span>);</span><span class="line">    report.students.<span class="tok-f">forEach</span>((s) =&gt; console.<span class="tok-f">log</span>(<span class="tok-s">`  ${s.name}: average ${s.average}, GPA ${s.gpa}`</span>));</span><span class="line"> </span><span class="line">    <span class="tok-c">// prove the JSON survives a round trip</span></span><span class="line">    console.<span class="tok-f">log</span>(<span class="tok-s">'JSON round-trip equal:'</span>, JSON.<span class="tok-f">stringify</span>(JSON.<span class="tok-f">parse</span>(json)) === JSON.<span class="tok-f">stringify</span>(report));</span><span class="line">    <span class="tok-k">if</span> (testCase.label === <span class="tok-s">'VALID transcript'</span>) console.<span class="tok-f">log</span>(json);</span><span class="line">  } <span class="tok-k">catch</span> (error) {</span><span class="line">    <span class="tok-c">// a different error type tells the caller what kind of problem happened</span></span><span class="line">    console.<span class="tok-f">log</span>(<span class="tok-s">`${error.name}: ${error.message}`</span>);</span><span class="line">  } <span class="tok-k">finally</span> {</span><span class="line">    console.<span class="tok-f">log</span>(<span class="tok-s">'[finally] case finished, resources released'</span>);</span><span class="line">  }</span><span class="line">}</span><span class="line"> </span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'\n--- MODULE FEATURES ---'</span>);</span><span class="line"><span class="tok-k">const</span> demoStudent = <span class="tok-k">new</span> <span class="tok-f">Student</span>(<span class="tok-n">900</span>, <span class="tok-s">'Demo'</span>, [{ code: <span class="tok-s">'CS100'</span>, marks: <span class="tok-n">86</span> }]);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'default import Student -&gt;'</span>, demoStudent <span class="tok-k">instanceof</span> <span class="tok-t">Student</span>, <span class="tok-s">'| average:'</span>, demoStudent.average);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'aliased import gradeOf(86) -&gt;'</span>, <span class="tok-f">gradeOf</span>(<span class="tok-n">86</span>));</span></code></pre>
+  <textarea id="raw5" hidden readonly>// main.js - the caller: demonstrates try / catch / finally with the transcript service
+import Student from './Student.js';                                    // default import
+import { processTranscript, reportToJSON } from './transcriptService.js';   // named imports
+import { calculateGrade as gradeOf } from './gradeUtils.js';           // aliased named import
+
+const rawData = `
+[
+  {
+    &quot;id&quot;: 101,
+    &quot;name&quot;: &quot;Ali&quot;,
+    &quot;courses&quot;: [
+      { &quot;code&quot;: &quot;CS301&quot;, &quot;marks&quot;: 81 },
+      { &quot;code&quot;: &quot;CS302&quot;, &quot;marks&quot;: 74 }
+    ]
+  },
+  {
+    &quot;id&quot;: 102,
+    &quot;name&quot;: &quot;Sara&quot;,
+    &quot;courses&quot;: [
+      { &quot;code&quot;: &quot;CS301&quot;, &quot;marks&quot;: 93 },
+      { &quot;code&quot;: &quot;CS302&quot;, &quot;marks&quot;: 88 },
+      { &quot;code&quot;: &quot;CS303&quot;, &quot;marks&quot;: 49 }
+    ]
+  }
+]`;
+
+const testCases = [
+  { label: 'VALID transcript', input: rawData },
+  { label: 'MALFORMED JSON (missing closing bracket)', input: '[{ &quot;id&quot;: 1, &quot;name&quot;: &quot;Ali&quot;, &quot;courses&quot;: [] }' },
+  { label: 'MISSING student id', input: '[{ &quot;name&quot;: &quot;Ali&quot;, &quot;courses&quot;: [] }]' },
+  {
+    label: 'DUPLICATE student id',
+    input: '[{ &quot;id&quot;: 7, &quot;name&quot;: &quot;A&quot;, &quot;courses&quot;: [] }, { &quot;id&quot;: 7, &quot;name&quot;: &quot;B&quot;, &quot;courses&quot;: [] }]'
+  },
+  {
+    label: 'MARKS above 100',
+    input: '[{ &quot;id&quot;: 1, &quot;name&quot;: &quot;Ali&quot;, &quot;courses&quot;: [{ &quot;code&quot;: &quot;CS301&quot;, &quot;marks&quot;: 101 }] }]'
+  },
+  {
+    label: 'MARKS below 0',
+    input: '[{ &quot;id&quot;: 1, &quot;name&quot;: &quot;Ali&quot;, &quot;courses&quot;: [{ &quot;code&quot;: &quot;CS301&quot;, &quot;marks&quot;: -4 }] }]'
+  },
+  {
+    label: 'MISSING course code',
+    input: '[{ &quot;id&quot;: 1, &quot;name&quot;: &quot;Ali&quot;, &quot;courses&quot;: [{ &quot;marks&quot;: 70 }] }]'
+  },
+  { label: 'WRONG input type (not a string)', input: 42 }
+];
+
+for (const testCase of testCases) {
+  console.log(`\n--- ${testCase.label} ---`);
+  try {
+    const report = processTranscript(testCase.input);
+    const json = reportToJSON(report);
+
+    console.log(`Processed ${report.totalStudents} student(s), class average ${report.classAverage}`);
+    report.students.forEach((s) =&gt; console.log(`  ${s.name}: average ${s.average}, GPA ${s.gpa}`));
+
+    // prove the JSON survives a round trip
+    console.log('JSON round-trip equal:', JSON.stringify(JSON.parse(json)) === JSON.stringify(report));
+    if (testCase.label === 'VALID transcript') console.log(json);
+  } catch (error) {
+    // a different error type tells the caller what kind of problem happened
+    console.log(`${error.name}: ${error.message}`);
+  } finally {
+    console.log('[finally] case finished, resources released');
+  }
+}
+
+console.log('\n--- MODULE FEATURES ---');
+const demoStudent = new Student(900, 'Demo', [{ code: 'CS100', marks: 86 }]);
+console.log('default import Student -&gt;', demoStudent instanceof Student, '| average:', demoStudent.average);
+console.log('aliased import gradeOf(86) -&gt;', gradeOf(86));
+</textarea>
+</div>
+<div class="file-panel " data-panel="Student.js">
+  <div class="file-bar"><span>task5/Student.js</span><span class="lang">JavaScript · ES module</span><button class="copy" data-copy="raw6">Copy</button><a href="solutions/task5/Student.js" download>Download</a></div>
+  <pre class="code"><code><span class="line"><span class="tok-c">// Student.js - default export: the Student class</span></span><span class="line"><span class="tok-k">import</span> { calculateAverage, calculateGPA, calculateGrade } <span class="tok-k">from</span> <span class="tok-s">'./gradeUtils.js'</span>;</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">default</span> <span class="tok-k">class</span> <span class="tok-t">Student</span> {</span><span class="line">  <span class="tok-f">constructor</span>(id, name, courses = []) {</span><span class="line">    <span class="tok-k">this</span>.id = id;</span><span class="line">    <span class="tok-k">this</span>.name = name;</span><span class="line">    <span class="tok-k">this</span>.courses = courses;          <span class="tok-c">// [{ code, marks }]</span></span><span class="line">  }</span><span class="line"> </span><span class="line">  <span class="tok-k">get</span> <span class="tok-f">average</span>() {</span><span class="line">    <span class="tok-k">return</span> <span class="tok-f">calculateAverage</span>(<span class="tok-k">this</span>.courses.<span class="tok-f">map</span>((course) =&gt; course.marks));</span><span class="line">  }</span><span class="line"> </span><span class="line">  <span class="tok-k">get</span> <span class="tok-f">gpa</span>() {</span><span class="line">    <span class="tok-k">return</span> <span class="tok-f">calculateGPA</span>(<span class="tok-k">this</span>.courses.<span class="tok-f">map</span>((course) =&gt; course.marks));</span><span class="line">  }</span><span class="line"> </span><span class="line">  <span class="tok-c">// A plain, JSON-friendly snapshot of the student</span></span><span class="line">  <span class="tok-f">toReport</span>() {</span><span class="line">    <span class="tok-k">return</span> {</span><span class="line">      id: <span class="tok-k">this</span>.id,</span><span class="line">      name: <span class="tok-k">this</span>.name,</span><span class="line">      courses: <span class="tok-k">this</span>.courses.<span class="tok-f">map</span>((course) =&gt; ({ ...course, grade: <span class="tok-f">calculateGrade</span>(course.marks) })),</span><span class="line">      average: <span class="tok-k">this</span>.average,</span><span class="line">      gpa: <span class="tok-k">this</span>.gpa</span><span class="line">    };</span><span class="line">  }</span><span class="line">}</span></code></pre>
+  <textarea id="raw6" hidden readonly>// Student.js - default export: the Student class
+import { calculateAverage, calculateGPA, calculateGrade } from './gradeUtils.js';
+
+export default class Student {
+  constructor(id, name, courses = []) {
+    this.id = id;
+    this.name = name;
+    this.courses = courses;          // [{ code, marks }]
+  }
+
+  get average() {
+    return calculateAverage(this.courses.map((course) =&gt; course.marks));
+  }
+
+  get gpa() {
+    return calculateGPA(this.courses.map((course) =&gt; course.marks));
+  }
+
+  // A plain, JSON-friendly snapshot of the student
+  toReport() {
+    return {
+      id: this.id,
+      name: this.name,
+      courses: this.courses.map((course) =&gt; ({ ...course, grade: calculateGrade(course.marks) })),
+      average: this.average,
+      gpa: this.gpa
+    };
+  }
+}
+</textarea>
+</div>
+<div class="file-panel " data-panel="gradeUtils.js">
+  <div class="file-bar"><span>task5/gradeUtils.js</span><span class="lang">JavaScript · ES module</span><button class="copy" data-copy="raw7">Copy</button><a href="solutions/task5/gradeUtils.js" download>Download</a></div>
+  <pre class="code"><code><span class="line"><span class="tok-c">// gradeUtils.js - named exports only</span></span><span class="line"> </span><span class="line"><span class="tok-k">const</span> GRADE_POLICY = [</span><span class="line">  { min: <span class="tok-n">85</span>, grade: <span class="tok-s">'A'</span>, points: <span class="tok-n">4.0</span> },</span><span class="line">  { min: <span class="tok-n">80</span>, grade: <span class="tok-s">'A-'</span>, points: <span class="tok-n">3.67</span> },</span><span class="line">  { min: <span class="tok-n">75</span>, grade: <span class="tok-s">'B+'</span>, points: <span class="tok-n">3.33</span> },</span><span class="line">  { min: <span class="tok-n">70</span>, grade: <span class="tok-s">'B'</span>, points: <span class="tok-n">3.0</span> },</span><span class="line">  { min: <span class="tok-n">65</span>, grade: <span class="tok-s">'B-'</span>, points: <span class="tok-n">2.67</span> },</span><span class="line">  { min: <span class="tok-n">60</span>, grade: <span class="tok-s">'C+'</span>, points: <span class="tok-n">2.33</span> },</span><span class="line">  { min: <span class="tok-n">50</span>, grade: <span class="tok-s">'C'</span>, points: <span class="tok-n">2.0</span> },</span><span class="line">  { min: <span class="tok-n">0</span>, grade: <span class="tok-s">'F'</span>, points: <span class="tok-n">0.0</span> }</span><span class="line">];</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> round2 = (value) =&gt; <span class="tok-t">Math</span>.<span class="tok-f">round</span>(value * <span class="tok-n">100</span>) / <span class="tok-n">100</span>;</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">findBand</span>(marks) {</span><span class="line">  <span class="tok-k">if</span> (<span class="tok-k">typeof</span> marks !== <span class="tok-s">'number'</span> || <span class="tok-t">Number</span>.<span class="tok-f">isNaN</span>(marks)) {</span><span class="line">    <span class="tok-k">throw</span> <span class="tok-k">new</span> <span class="tok-f">TypeError</span>(<span class="tok-s">`marks must be a number, received ${typeof marks}`</span>);</span><span class="line">  }</span><span class="line">  <span class="tok-k">if</span> (marks &lt; <span class="tok-n">0</span> || marks &gt; <span class="tok-n">100</span>) {</span><span class="line">    <span class="tok-k">throw</span> <span class="tok-k">new</span> <span class="tok-f">RangeError</span>(<span class="tok-s">`marks must be between 0 and 100, received ${marks}`</span>);</span><span class="line">  }</span><span class="line">  <span class="tok-k">return</span> GRADE_POLICY.<span class="tok-f">find</span>((band) =&gt; marks &gt;= band.min);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">calculateGrade</span>(marks) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-f">findBand</span>(marks).grade;</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">calculateGradePoints</span>(marks) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-f">findBand</span>(marks).points;</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">calculateAverage</span>(values) {</span><span class="line">  <span class="tok-k">if</span> (!<span class="tok-t">Array</span>.<span class="tok-f">isArray</span>(values)) <span class="tok-k">throw</span> <span class="tok-k">new</span> <span class="tok-f">TypeError</span>(<span class="tok-s">'calculateAverage expects an array'</span>);</span><span class="line">  <span class="tok-k">if</span> (values.length === <span class="tok-n">0</span>) <span class="tok-k">return</span> <span class="tok-n">0</span>;</span><span class="line">  <span class="tok-k">return</span> <span class="tok-f">round2</span>(values.<span class="tok-f">reduce</span>((sum, value) =&gt; sum + value, <span class="tok-n">0</span>) / values.length);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">calculateGPA</span>(marksList) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-f">calculateAverage</span>(marksList.<span class="tok-f">map</span>((marks) =&gt; <span class="tok-f">calculateGradePoints</span>(marks)));</span><span class="line">}</span></code></pre>
+  <textarea id="raw7" hidden readonly>// gradeUtils.js - named exports only
+
+const GRADE_POLICY = [
+  { min: 85, grade: 'A', points: 4.0 },
+  { min: 80, grade: 'A-', points: 3.67 },
+  { min: 75, grade: 'B+', points: 3.33 },
+  { min: 70, grade: 'B', points: 3.0 },
+  { min: 65, grade: 'B-', points: 2.67 },
+  { min: 60, grade: 'C+', points: 2.33 },
+  { min: 50, grade: 'C', points: 2.0 },
+  { min: 0, grade: 'F', points: 0.0 }
+];
+
+const round2 = (value) =&gt; Math.round(value * 100) / 100;
+
+function findBand(marks) {
+  if (typeof marks !== 'number' || Number.isNaN(marks)) {
+    throw new TypeError(`marks must be a number, received ${typeof marks}`);
+  }
+  if (marks &lt; 0 || marks &gt; 100) {
+    throw new RangeError(`marks must be between 0 and 100, received ${marks}`);
+  }
+  return GRADE_POLICY.find((band) =&gt; marks &gt;= band.min);
+}
+
+export function calculateGrade(marks) {
+  return findBand(marks).grade;
+}
+
+export function calculateGradePoints(marks) {
+  return findBand(marks).points;
+}
+
+export function calculateAverage(values) {
+  if (!Array.isArray(values)) throw new TypeError('calculateAverage expects an array');
+  if (values.length === 0) return 0;
+  return round2(values.reduce((sum, value) =&gt; sum + value, 0) / values.length);
+}
+
+export function calculateGPA(marksList) {
+  return calculateAverage(marksList.map((marks) =&gt; calculateGradePoints(marks)));
+}
+</textarea>
+</div>
+<div class="file-panel " data-panel="transcriptService.js">
+  <div class="file-bar"><span>task5/transcriptService.js</span><span class="lang">JavaScript · ES module</span><button class="copy" data-copy="raw8">Copy</button><a href="solutions/task5/transcriptService.js" download>Download</a></div>
+  <pre class="code"><code><span class="line"><span class="tok-c">// transcriptService.js - parsing, validation and report generation</span></span><span class="line"><span class="tok-k">import</span> <span class="tok-t">Student</span> <span class="tok-k">from</span> <span class="tok-s">'./Student.js'</span>;                                   <span class="tok-c">// default import</span></span><span class="line"><span class="tok-k">import</span> { calculateAverage as averageOf } <span class="tok-k">from</span> <span class="tok-s">'./gradeUtils.js'</span>;      <span class="tok-c">// named import with an alias</span></span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">isObject</span>(value) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-k">typeof</span> value === <span class="tok-s">'object'</span> &amp;&amp; value !== <span class="tok-k">null</span> &amp;&amp; !<span class="tok-t">Array</span>.<span class="tok-f">isArray</span>(value);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// 1. Parse JSON safely: SyntaxError is converted into a clearer, domain-level Error</span></span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">parseTranscript</span>(jsonText) {</span><span class="line">  <span class="tok-k">if</span> (<span class="tok-k">typeof</span> jsonText !== <span class="tok-s">'string'</span>) {</span><span class="line">    <span class="tok-k">throw</span> <span class="tok-k">new</span> <span class="tok-f">TypeError</span>(<span class="tok-s">`Transcript data must be a JSON string, received ${typeof jsonText}`</span>);</span><span class="line">  }</span><span class="line">  <span class="tok-k">try</span> {</span><span class="line">    <span class="tok-k">return</span> JSON.<span class="tok-f">parse</span>(jsonText);</span><span class="line">  } <span class="tok-k">catch</span> (error) {</span><span class="line">    <span class="tok-k">throw</span> <span class="tok-k">new</span> <span class="tok-f">Error</span>(<span class="tok-s">`Malformed JSON: ${error.message}`</span>, { cause: error });</span><span class="line">  }</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// 2. Validate the parsed data and build Student objects</span></span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">buildStudents</span>(data) {</span><span class="line">  <span class="tok-k">if</span> (!<span class="tok-t">Array</span>.<span class="tok-f">isArray</span>(data)) {</span><span class="line">    <span class="tok-k">throw</span> <span class="tok-k">new</span> <span class="tok-f">TypeError</span>(<span class="tok-s">'Transcript root must be an array of students'</span>);</span><span class="line">  }</span><span class="line"> </span><span class="line">  <span class="tok-k">const</span> seenIds = <span class="tok-k">new</span> <span class="tok-f">Set</span>();</span><span class="line"> </span><span class="line">  <span class="tok-k">return</span> data.<span class="tok-f">map</span>((entry, index) =&gt; {</span><span class="line">    <span class="tok-k">const</span> where = <span class="tok-s">`student at index ${index}`</span>;</span><span class="line"> </span><span class="line">    <span class="tok-k">if</span> (!<span class="tok-f">isObject</span>(entry)) <span class="tok-k">throw</span> <span class="tok-k">new</span> <span class="tok-f">TypeError</span>(<span class="tok-s">`${where} must be an object`</span>);</span><span class="line"> </span><span class="line">    <span class="tok-k">const</span> { id, name, courses } = entry;</span><span class="line"> </span><span class="line">    <span class="tok-k">if</span> (id === <span class="tok-k">undefined</span> || id === <span class="tok-k">null</span> || id === <span class="tok-s">''</span>) {</span><span class="line">      <span class="tok-k">throw</span> <span class="tok-k">new</span> <span class="tok-f">TypeError</span>(<span class="tok-s">`${where} has a missing id`</span>);</span><span class="line">    }</span><span class="line">    <span class="tok-k">if</span> (seenIds.<span class="tok-f">has</span>(id)) {</span><span class="line">      <span class="tok-k">throw</span> <span class="tok-k">new</span> <span class="tok-f">Error</span>(<span class="tok-s">`Duplicate student id: ${id}`</span>);</span><span class="line">    }</span><span class="line">    seenIds.<span class="tok-f">add</span>(id);</span><span class="line"> </span><span class="line">    <span class="tok-k">if</span> (<span class="tok-k">typeof</span> name !== <span class="tok-s">'string'</span> || name.<span class="tok-f">trim</span>() === <span class="tok-s">''</span>) {</span><span class="line">      <span class="tok-k">throw</span> <span class="tok-k">new</span> <span class="tok-f">TypeError</span>(<span class="tok-s">`student ${id} has a missing name`</span>);</span><span class="line">    }</span><span class="line">    <span class="tok-k">if</span> (!<span class="tok-t">Array</span>.<span class="tok-f">isArray</span>(courses)) {</span><span class="line">      <span class="tok-k">throw</span> <span class="tok-k">new</span> <span class="tok-f">TypeError</span>(<span class="tok-s">`student ${id} must have a courses array`</span>);</span><span class="line">    }</span><span class="line"> </span><span class="line">    courses.<span class="tok-f">forEach</span>((course, courseIndex) =&gt; {</span><span class="line">      <span class="tok-k">const</span> courseWhere = <span class="tok-s">`student ${id}, course at index ${courseIndex}`</span>;</span><span class="line"> </span><span class="line">      <span class="tok-k">if</span> (!<span class="tok-f">isObject</span>(course)) <span class="tok-k">throw</span> <span class="tok-k">new</span> <span class="tok-f">TypeError</span>(<span class="tok-s">`${courseWhere} must be an object`</span>);</span><span class="line">      <span class="tok-k">if</span> (<span class="tok-k">typeof</span> course.code !== <span class="tok-s">'string'</span> || course.code.<span class="tok-f">trim</span>() === <span class="tok-s">''</span>) {</span><span class="line">        <span class="tok-k">throw</span> <span class="tok-k">new</span> <span class="tok-f">TypeError</span>(<span class="tok-s">`${courseWhere} has a missing course code`</span>);</span><span class="line">      }</span><span class="line">      <span class="tok-k">if</span> (<span class="tok-k">typeof</span> course.marks !== <span class="tok-s">'number'</span> || <span class="tok-t">Number</span>.<span class="tok-f">isNaN</span>(course.marks)) {</span><span class="line">        <span class="tok-k">throw</span> <span class="tok-k">new</span> <span class="tok-f">TypeError</span>(<span class="tok-s">`${courseWhere} (${course.code}) marks must be a number`</span>);</span><span class="line">      }</span><span class="line">      <span class="tok-k">if</span> (course.marks &lt; <span class="tok-n">0</span> || course.marks &gt; <span class="tok-n">100</span>) {</span><span class="line">        <span class="tok-k">throw</span> <span class="tok-k">new</span> <span class="tok-f">RangeError</span>(<span class="tok-s">`${courseWhere} (${course.code}) marks ${course.marks} are outside 0-100`</span>);</span><span class="line">      }</span><span class="line">    });</span><span class="line"> </span><span class="line">    <span class="tok-k">return</span> <span class="tok-k">new</span> <span class="tok-f">Student</span>(id, name.<span class="tok-f">trim</span>(), courses);</span><span class="line">  });</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// 3. Generate a plain JavaScript report object</span></span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">buildReport</span>(students) {</span><span class="line">  <span class="tok-k">const</span> reports = students.<span class="tok-f">map</span>((student) =&gt; student.<span class="tok-f">toReport</span>());</span><span class="line">  <span class="tok-k">return</span> {</span><span class="line">    totalStudents: reports.length,</span><span class="line">    classAverage: <span class="tok-f">averageOf</span>(reports.<span class="tok-f">map</span>((report) =&gt; report.average)),</span><span class="line">    students: reports</span><span class="line">  };</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// 4. Convert the final report back to JSON</span></span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">reportToJSON</span>(report) {</span><span class="line">  <span class="tok-k">return</span> JSON.<span class="tok-f">stringify</span>(report, <span class="tok-k">null</span>, <span class="tok-n">2</span>);</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// Convenience pipeline: JSON text in -&gt; report object out</span></span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">processTranscript</span>(jsonText) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-f">buildReport</span>(<span class="tok-f">buildStudents</span>(<span class="tok-f">parseTranscript</span>(jsonText)));</span><span class="line">}</span></code></pre>
+  <textarea id="raw8" hidden readonly>// transcriptService.js - parsing, validation and report generation
+import Student from './Student.js';                                   // default import
+import { calculateAverage as averageOf } from './gradeUtils.js';      // named import with an alias
+
+function isObject(value) {
+  return typeof value === 'object' &amp;&amp; value !== null &amp;&amp; !Array.isArray(value);
+}
+
+// 1. Parse JSON safely: SyntaxError is converted into a clearer, domain-level Error
+export function parseTranscript(jsonText) {
+  if (typeof jsonText !== 'string') {
+    throw new TypeError(`Transcript data must be a JSON string, received ${typeof jsonText}`);
+  }
+  try {
+    return JSON.parse(jsonText);
+  } catch (error) {
+    throw new Error(`Malformed JSON: ${error.message}`, { cause: error });
+  }
+}
+
+// 2. Validate the parsed data and build Student objects
+export function buildStudents(data) {
+  if (!Array.isArray(data)) {
+    throw new TypeError('Transcript root must be an array of students');
+  }
+
+  const seenIds = new Set();
+
+  return data.map((entry, index) =&gt; {
+    const where = `student at index ${index}`;
+
+    if (!isObject(entry)) throw new TypeError(`${where} must be an object`);
+
+    const { id, name, courses } = entry;
+
+    if (id === undefined || id === null || id === '') {
+      throw new TypeError(`${where} has a missing id`);
+    }
+    if (seenIds.has(id)) {
+      throw new Error(`Duplicate student id: ${id}`);
+    }
+    seenIds.add(id);
+
+    if (typeof name !== 'string' || name.trim() === '') {
+      throw new TypeError(`student ${id} has a missing name`);
+    }
+    if (!Array.isArray(courses)) {
+      throw new TypeError(`student ${id} must have a courses array`);
+    }
+
+    courses.forEach((course, courseIndex) =&gt; {
+      const courseWhere = `student ${id}, course at index ${courseIndex}`;
+
+      if (!isObject(course)) throw new TypeError(`${courseWhere} must be an object`);
+      if (typeof course.code !== 'string' || course.code.trim() === '') {
+        throw new TypeError(`${courseWhere} has a missing course code`);
+      }
+      if (typeof course.marks !== 'number' || Number.isNaN(course.marks)) {
+        throw new TypeError(`${courseWhere} (${course.code}) marks must be a number`);
+      }
+      if (course.marks &lt; 0 || course.marks &gt; 100) {
+        throw new RangeError(`${courseWhere} (${course.code}) marks ${course.marks} are outside 0-100`);
+      }
+    });
+
+    return new Student(id, name.trim(), courses);
+  });
+}
+
+// 3. Generate a plain JavaScript report object
+export function buildReport(students) {
+  const reports = students.map((student) =&gt; student.toReport());
+  return {
+    totalStudents: reports.length,
+    classAverage: averageOf(reports.map((report) =&gt; report.average)),
+    students: reports
+  };
+}
+
+// 4. Convert the final report back to JSON
+export function reportToJSON(report) {
+  return JSON.stringify(report, null, 2);
+}
+
+// Convenience pipeline: JSON text in -&gt; report object out
+export function processTranscript(jsonText) {
+  return buildReport(buildStudents(parseTranscript(jsonText)));
+}
+</textarea>
+</div>
+    </div>
+  </section>
+
+  <section class="block" id="output">
+    <div class="sec-head"><span class="num">05 / OUTPUT</span><h2>Console output</h2>
+      <p>Captured from a real run of <code>node task5/main.js</code> on Node.js. View the screenshot or switch to selectable text.</p></div>
+    <div class="term glass" data-term>
+      <div class="term-bar"><i></i><i></i><i></i><span class="term-title">node task5/main.js</span>
+        <div class="term-tabs"><button class="on" data-view="shot">Screenshot</button><button data-view="text">Text</button></div></div>
+      <div class="out-view on" data-show="shot"><a href="images/task5-output.png" target="_blank" rel="noopener"><img src="images/task5-output.png" alt="Task 5 console output" loading="lazy"></a></div>
+      <div class="out-view" data-show="text"><pre class="out"><span class="prompt">$ <b>node task5/main.js</b></span>
+
+<span class="out-h">--- VALID transcript ---</span>
+Processed 2 student(s), class average 77.09
+  Ali: average 77.5, GPA 3.34
+  Sara: average 76.67, GPA 2.67
+JSON round-trip equal: true
+{
+  &quot;totalStudents&quot;: 2,
+  &quot;classAverage&quot;: 77.09,
+  &quot;students&quot;: [
+    {
+      &quot;id&quot;: 101,
+      &quot;name&quot;: &quot;Ali&quot;,
+      &quot;courses&quot;: [
+        {
+          &quot;code&quot;: &quot;CS301&quot;,
+          &quot;marks&quot;: 81,
+          &quot;grade&quot;: &quot;A-&quot;
+        },
+        {
+          &quot;code&quot;: &quot;CS302&quot;,
+          &quot;marks&quot;: 74,
+          &quot;grade&quot;: &quot;B&quot;
+        }
+      ],
+      &quot;average&quot;: 77.5,
+      &quot;gpa&quot;: 3.34
+    },
+    {
+      &quot;id&quot;: 102,
+      &quot;name&quot;: &quot;Sara&quot;,
+      &quot;courses&quot;: [
+        {
+          &quot;code&quot;: &quot;CS301&quot;,
+          &quot;marks&quot;: 93,
+          &quot;grade&quot;: &quot;A&quot;
+        },
+        {
+          &quot;code&quot;: &quot;CS302&quot;,
+          &quot;marks&quot;: 88,
+          &quot;grade&quot;: &quot;A&quot;
+        },
+        {
+          &quot;code&quot;: &quot;CS303&quot;,
+          &quot;marks&quot;: 49,
+          &quot;grade&quot;: &quot;F&quot;
+        }
+      ],
+      &quot;average&quot;: 76.67,
+      &quot;gpa&quot;: 2.67
+    }
+  ]
+}
+<span class="o-dim">[finally]</span> case finished, resources released
+
+<span class="out-h">--- MALFORMED JSON (missing closing bracket) ---</span>
+<span class="o-bad">Error</span>: Malformed JSON: Expected ',' or ']' after array element in JSON at position 42 (line 1 column 43)
+<span class="o-dim">[finally]</span> case finished, resources released
+
+<span class="out-h">--- MISSING student id ---</span>
+<span class="o-bad">TypeError</span>: student at index 0 has a missing id
+<span class="o-dim">[finally]</span> case finished, resources released
+
+<span class="out-h">--- DUPLICATE student id ---</span>
+<span class="o-bad">Error</span>: Duplicate student id: 7
+<span class="o-dim">[finally]</span> case finished, resources released
+
+<span class="out-h">--- MARKS above 100 ---</span>
+<span class="o-bad">RangeError</span>: student 1, course at index 0 (CS301) marks 101 are outside 0-100
+<span class="o-dim">[finally]</span> case finished, resources released
+
+<span class="out-h">--- MARKS below 0 ---</span>
+<span class="o-bad">RangeError</span>: student 1, course at index 0 (CS301) marks -4 are outside 0-100
+<span class="o-dim">[finally]</span> case finished, resources released
+
+<span class="out-h">--- MISSING course code ---</span>
+<span class="o-bad">TypeError</span>: student 1, course at index 0 has a missing course code
+<span class="o-dim">[finally]</span> case finished, resources released
+
+<span class="out-h">--- WRONG input type (not a string) ---</span>
+<span class="o-bad">TypeError</span>: Transcript data must be a JSON string, received number
+<span class="o-dim">[finally]</span> case finished, resources released
+
+<span class="out-h">--- MODULE FEATURES ---</span>
+default import Student -&gt; true | average: 86
+aliased import gradeOf(86) -&gt; A</pre></div>
+    </div>
+  </section>
+
+  <section class="block" id="explain">
+    <div class="sec-head"><span class="num">05 / NOTES</span><h2>Requirements &amp; explanation</h2></div>
+    <div class="card glass" style="margin-bottom:18px">
+      <h3>Requirements covered</h3>
+      <div class="check-grid"><div class="check"><span>Four files: <code>main.js</code>, <code>Student.js</code>, <code>gradeUtils.js</code>, <code>transcriptService.js</code></span></div><div class="check"><span><code>Student</code> is a default export; grade helpers are named exports</span></div><div class="check"><span>Default import, named imports <b>and</b> an aliased import (<code>calculateAverage as averageOf</code>)</span></div><div class="check"><span>Malformed JSON, missing IDs, duplicate IDs, bad marks and missing course codes all rejected</span></div><div class="check"><span>Average and GPA per student, report object, report converted back to JSON</span></div><div class="check"><span>Caller demonstrates <code>try</code>, <code>catch</code> and <code>finally</code></span></div></div>
+    </div>
+    <div class="grid">
+      <article class="card glass wide"><h3>Who imports what</h3><div class="tbl-wrap"><table><thead><tr><th>File</th><th>Exports</th><th>Imports</th></tr></thead><tbody>
+<tr><td>gradeUtils.js</td><td>named: <code>calculateGrade</code>, <code>calculateGradePoints</code>, <code>calculateAverage</code>, <code>calculateGPA</code></td><td>nothing</td></tr>
+<tr><td>Student.js</td><td><code>export default class Student</code></td><td>named imports from gradeUtils</td></tr>
+<tr><td>transcriptService.js</td><td>named: <code>parseTranscript</code>, <code>buildStudents</code>, <code>buildReport</code>, <code>reportToJSON</code>, <code>processTranscript</code></td><td>default <code>Student</code>; <code>calculateAverage as averageOf</code></td></tr>
+<tr><td>main.js</td><td>nothing (entry point)</td><td>default <code>Student</code>; named service functions; <code>calculateGrade as gradeOf</code></td></tr>
+</tbody></table></div></article>
+      <article class="card glass wide"><h3>Which error for which problem</h3><div class="tbl-wrap"><table><thead><tr><th>Problem</th><th>Error type</th></tr></thead><tbody>
+<tr><td>Malformed JSON text</td><td><code>Error</code> (wraps the <code>SyntaxError</code> as its <code>cause</code>)</td></tr>
+<tr><td>Missing student id, missing course code, wrong shape or type</td><td><code>TypeError</code></td></tr>
+<tr><td>Duplicate student id</td><td><code>Error</code></td></tr>
+<tr><td>Marks below 0 or above 100</td><td><code>RangeError</code></td></tr>
+</tbody></table></div>
+<p>A <code>RangeError</code> means "the type is right but the value is outside the allowed range", while a <code>TypeError</code> means the value is not the kind of thing expected. The caller can react differently to each.</p></article>
+      <article class="card glass "><h3>try / catch / finally</h3><p>Every test case in <code>main.js</code> runs inside <code>try</code>. A failure is caught and printed as <code>name: message</code>, and the <code>finally</code> block runs after <b>both</b> success and failure, which is where cleanup (closing a file, releasing a lock) belongs. The output shows <code>[finally]</code> after every case.</p></article>
+    </div>
+  </section>
+
+  <nav class="pager">
+    <a class="glass" href="task4.html" style="--a1:#fbbf24;--a2:#f97316"><small>← Previous · Task 04</small><strong>User Hierarchy</strong></a>
+    <a class="glass next" href="task6.html" style="--a1:#fb923c;--a2:#f43f5e"><small>Next · Task 06 →</small><strong>Callback Registration</strong></a>
+  </nav>
+</main>
+<footer><b>CampusFlow</b> · JavaScript Lab 05 · Haseeb Jalil · Air University</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

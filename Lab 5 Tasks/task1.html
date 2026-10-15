@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Task 01 · Admission Engine | JavaScript Lab 05</title>
+<meta name="description" content="Untrusted form strings are converted, validated and scored. Merit is only calculated once a record is proven valid, then every applicant gets a status and the office gets a summary.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237c9cff'/%3E%3Cstop offset='1' stop-color='%23c084fc'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='18' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='monospace' font-size='28' font-weight='800' text-anchor='middle' fill='%230a0d1a'%3EJS%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body style="--a1:#38bdf8;--a2:#818cf8">
+<div class="bg"></div>
+<header class="nav glass">
+  <a class="brand" href="index.html"><span class="brand-mark">JS</span><span>CampusFlow <small>· Lab 05</small></span></a>
+  <nav class="nav-links">
+    <a class="keep" href="index.html">Overview</a>
+    
+    <div class="dots"><a href="task1.html" class="on" title="Admission Engine">1</a><a href="task2.html" class="" title="Performance Engine">2</a><a href="task3.html" class="" title="Profile Update Service">3</a><a href="task4.html" class="" title="User Hierarchy">4</a><a href="task5.html" class="" title="Transcript Modules">5</a><a href="task6.html" class="" title="Callback Registration">6</a><a href="task7.html" class="" title="Promise Registration">7</a><a href="task8.html" class="" title="API Aggregator">8</a></div>
+  </nav>
+</header>
+<main class="wrap">
+
+  <section class="hero glass">
+    <a class="back" href="index.html">← Lab 05 overview</a>
+    <p class="eyebrow">Task 01 · Type conversion · Validation · Control flow</p>
+    <h1>Admission Decision &amp; Data Sanitization Engine</h1>
+    <p class="lead">Form values arrive as strings, so nothing is trusted until it has been converted and validated. Merit is calculated only after a record is proven valid, then each applicant receives a status and the admissions office gets a summary.</p>
+    <div class="chips"><span class="chip">Number()</span><span class="chip">truthy / falsy</span><span class="chip">switch</span><span class="chip">ternary</span><span class="chip">guard clauses</span><span class="chip">for…of</span></div>
+    <div class="stats">
+      <div class="stat"><b>1</b><span>File</span></div>
+      <div class="stat"><b>182</b><span>Lines of code</span></div>
+      <div class="stat"><b>34</b><span>Output lines</span></div>
+      <div class="stat"><b>0</b><span>Packages</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="solution">
+    <div class="sec-head"><span class="num">01 / CODE</span><h2>Solution code</h2>
+      <p>The complete, runnable solution. Everything below ran in Node.js exactly as shown.</p></div>
+    <div class="panel glass" data-files>
+      
+      <div class="file-panel on" data-panel="task1.js">
+  <div class="file-bar"><span>task1.js</span><span class="lang">JavaScript · ES module</span><button class="copy" data-copy="raw1">Copy</button><a href="solutions/task1.js" download>Download</a></div>
+  <pre class="code"><code><span class="line"><span class="tok-c">// Task 1 - Admission Decision and Data Sanitization Engine</span></span><span class="line"><span class="tok-c">// Form values arrive as strings, so nothing is trusted until it is converted and validated.</span></span><span class="line"> </span><span class="line"><span class="tok-k">const</span> SUPPORTED_PROGRAMS = [<span class="tok-s">'BSCS'</span>, <span class="tok-s">'BSSE'</span>, <span class="tok-s">'BSAI'</span>];</span><span class="line"><span class="tok-k">const</span> WEIGHTS = { matric: <span class="tok-n">0.2</span>, intermediate: <span class="tok-n">0.3</span>, entryTest: <span class="tok-n">0.5</span> };</span><span class="line"><span class="tok-k">const</span> RULES = {</span><span class="line">  minMerit: <span class="tok-n">70</span>,          <span class="tok-c">// eligibility</span></span><span class="line">  minEntryTest: <span class="tok-n">60</span>,      <span class="tok-c">// eligibility</span></span><span class="line">  minIntermediate: <span class="tok-n">60</span>,   <span class="tok-c">// eligibility</span></span><span class="line">  selectedMerit: <span class="tok-n">75</span>      <span class="tok-c">// SELECTED needs merit &gt;= 75 AND the fee paid, otherwise WAITING</span></span><span class="line">};</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> round2 = (value) =&gt; <span class="tok-t">Math</span>.<span class="tok-f">round</span>(value * <span class="tok-n">100</span>) / <span class="tok-n">100</span>;</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------- explicit conversion helpers ----------</span></span><span class="line"> </span><span class="line"><span class="tok-c">// Converts a raw form value to a number. Problems are pushed onto `errors`.</span></span><span class="line"><span class="tok-k">function</span> <span class="tok-f">convertNumber</span>(rawValue, label, errors) {</span><span class="line">  <span class="tok-c">// Guard clause: undefined, null, '' and '   ' all count as &quot;missing&quot;</span></span><span class="line">  <span class="tok-k">if</span> (rawValue === <span class="tok-k">undefined</span> || rawValue === <span class="tok-k">null</span> || <span class="tok-f">String</span>(rawValue).<span class="tok-f">trim</span>() === <span class="tok-s">''</span>) {</span><span class="line">    errors.<span class="tok-f">push</span>(<span class="tok-s">`${label} is missing`</span>);</span><span class="line">    <span class="tok-k">return</span> <span class="tok-k">null</span>;</span><span class="line">  }</span><span class="line">  <span class="tok-k">const</span> converted = <span class="tok-f">Number</span>(<span class="tok-f">String</span>(rawValue).<span class="tok-f">trim</span>());</span><span class="line">  <span class="tok-k">if</span> (!<span class="tok-t">Number</span>.<span class="tok-f">isFinite</span>(converted)) {            <span class="tok-c">// catches NaN and Infinity</span></span><span class="line">    errors.<span class="tok-f">push</span>(<span class="tok-s">`${label} is not a valid number (&quot;${rawValue}&quot;)`</span>);</span><span class="line">    <span class="tok-k">return</span> <span class="tok-k">null</span>;</span><span class="line">  }</span><span class="line">  <span class="tok-k">return</span> converted;</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">checkRange</span>(value, label, min, max, errors) {</span><span class="line">  <span class="tok-k">if</span> (value === <span class="tok-k">null</span>) <span class="tok-k">return</span>;                   <span class="tok-c">// already reported as missing / invalid</span></span><span class="line">  <span class="tok-k">if</span> (value &lt; min || value &gt; max) {</span><span class="line">    errors.<span class="tok-f">push</span>(<span class="tok-s">`${label} must be between ${min} and ${max} (got ${value})`</span>);</span><span class="line">  }</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// switch statement: only the literal strings 'true' / 'false' are accepted</span></span><span class="line"><span class="tok-k">function</span> <span class="tok-f">convertBoolean</span>(rawValue, label, errors) {</span><span class="line">  <span class="tok-k">switch</span> (<span class="tok-f">String</span>(rawValue).<span class="tok-f">trim</span>().<span class="tok-f">toLowerCase</span>()) {</span><span class="line">    <span class="tok-k">case</span> <span class="tok-s">'true'</span>:</span><span class="line">      <span class="tok-k">return</span> <span class="tok-k">true</span>;</span><span class="line">    <span class="tok-k">case</span> <span class="tok-s">'false'</span>:</span><span class="line">      <span class="tok-k">return</span> <span class="tok-k">false</span>;</span><span class="line">    <span class="tok-k">default</span>:</span><span class="line">      errors.<span class="tok-f">push</span>(<span class="tok-s">`${label} must be &quot;true&quot; or &quot;false&quot;`</span>);</span><span class="line">      <span class="tok-k">return</span> <span class="tok-k">null</span>;</span><span class="line">  }</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">convertProgram</span>(rawValue, errors) {</span><span class="line">  <span class="tok-k">const</span> program = <span class="tok-f">String</span>(rawValue ?? <span class="tok-s">''</span>).<span class="tok-f">trim</span>().<span class="tok-f">toUpperCase</span>();</span><span class="line">  <span class="tok-k">if</span> (program === <span class="tok-s">''</span>) {</span><span class="line">    errors.<span class="tok-f">push</span>(<span class="tok-s">'program is missing'</span>);</span><span class="line">    <span class="tok-k">return</span> <span class="tok-k">null</span>;</span><span class="line">  }</span><span class="line">  <span class="tok-k">if</span> (!SUPPORTED_PROGRAMS.<span class="tok-f">includes</span>(program)) {</span><span class="line">    errors.<span class="tok-f">push</span>(<span class="tok-s">`program &quot;${program}&quot; is not supported`</span>);</span><span class="line">    <span class="tok-k">return</span> <span class="tok-k">null</span>;</span><span class="line">  }</span><span class="line">  <span class="tok-k">return</span> program;</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------- business rules ----------</span></span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">calculateMerit</span>(matric, intermediate, entryTest) {</span><span class="line">  <span class="tok-k">return</span> <span class="tok-f">round2</span>(</span><span class="line">    matric * WEIGHTS.matric + intermediate * WEIGHTS.intermediate + entryTest * WEIGHTS.entryTest</span><span class="line">  );</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">function</span> <span class="tok-f">decideStatus</span>(merit, intermediate, entryTest, feePaid) {</span><span class="line">  <span class="tok-k">const</span> eligible =</span><span class="line">    merit &gt;= RULES.minMerit &amp;&amp; entryTest &gt;= RULES.minEntryTest &amp;&amp; intermediate &gt;= RULES.minIntermediate;</span><span class="line"> </span><span class="line">  <span class="tok-k">if</span> (!eligible) <span class="tok-k">return</span> <span class="tok-s">'REJECTED'</span>;</span><span class="line">  <span class="tok-c">// ternary: strong merit AND paid fee -&gt; SELECTED, otherwise the applicant is held on the waiting list</span></span><span class="line">  <span class="tok-k">return</span> merit &gt;= RULES.selectedMerit &amp;&amp; feePaid ? <span class="tok-s">'SELECTED'</span> : <span class="tok-s">'WAITING'</span>;</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// Validates one applicant and returns a NEW result object (the source is never touched).</span></span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">processApplicant</span>(applicant) {</span><span class="line">  <span class="tok-c">// Guard clause: the record itself might be null, a number, an array ...</span></span><span class="line">  <span class="tok-k">if</span> (<span class="tok-k">typeof</span> applicant !== <span class="tok-s">'object'</span> || applicant === <span class="tok-k">null</span> || <span class="tok-t">Array</span>.<span class="tok-f">isArray</span>(applicant)) {</span><span class="line">    <span class="tok-k">return</span> {</span><span class="line">      id: <span class="tok-k">null</span>, name: <span class="tok-k">null</span>, program: <span class="tok-k">null</span>, valid: <span class="tok-k">false</span>, merit: <span class="tok-k">null</span>,</span><span class="line">      status: <span class="tok-s">'INVALID DATA'</span>, errors: [<span class="tok-s">'record is not an object'</span>]</span><span class="line">    };</span><span class="line">  }</span><span class="line"> </span><span class="line">  <span class="tok-k">const</span> errors = [];</span><span class="line"> </span><span class="line">  <span class="tok-c">// truthy / falsy: !value is true for undefined, null and ''</span></span><span class="line">  <span class="tok-k">if</span> (!applicant.id) errors.<span class="tok-f">push</span>(<span class="tok-s">'id is missing'</span>);</span><span class="line">  <span class="tok-k">if</span> (!applicant.name || <span class="tok-f">String</span>(applicant.name).<span class="tok-f">trim</span>() === <span class="tok-s">''</span>) errors.<span class="tok-f">push</span>(<span class="tok-s">'name is missing'</span>);</span><span class="line"> </span><span class="line">  <span class="tok-k">const</span> age = <span class="tok-f">convertNumber</span>(applicant.age, <span class="tok-s">'age'</span>, errors);</span><span class="line">  <span class="tok-k">const</span> matric = <span class="tok-f">convertNumber</span>(applicant.matricMarks, <span class="tok-s">'matricMarks'</span>, errors);</span><span class="line">  <span class="tok-k">const</span> intermediate = <span class="tok-f">convertNumber</span>(applicant.intermediateMarks, <span class="tok-s">'intermediateMarks'</span>, errors);</span><span class="line">  <span class="tok-k">const</span> entryTest = <span class="tok-f">convertNumber</span>(applicant.entryTest, <span class="tok-s">'entryTest'</span>, errors);</span><span class="line"> </span><span class="line">  <span class="tok-f">checkRange</span>(age, <span class="tok-s">'age'</span>, <span class="tok-n">17</span>, <span class="tok-n">30</span>, errors);</span><span class="line">  <span class="tok-f">checkRange</span>(matric, <span class="tok-s">'matricMarks'</span>, <span class="tok-n">0</span>, <span class="tok-n">100</span>, errors);</span><span class="line">  <span class="tok-f">checkRange</span>(intermediate, <span class="tok-s">'intermediateMarks'</span>, <span class="tok-n">0</span>, <span class="tok-n">100</span>, errors);</span><span class="line">  <span class="tok-f">checkRange</span>(entryTest, <span class="tok-s">'entryTest'</span>, <span class="tok-n">0</span>, <span class="tok-n">100</span>, errors);</span><span class="line"> </span><span class="line">  <span class="tok-k">const</span> program = <span class="tok-f">convertProgram</span>(applicant.program, errors);</span><span class="line">  <span class="tok-k">const</span> feePaid = <span class="tok-f">convertBoolean</span>(applicant.feePaid, <span class="tok-s">'feePaid'</span>, errors);</span><span class="line"> </span><span class="line">  <span class="tok-k">const</span> result = {</span><span class="line">    id: applicant.id ?? <span class="tok-k">null</span>,</span><span class="line">    name: applicant.name ?? <span class="tok-k">null</span>,</span><span class="line">    program: program ?? <span class="tok-f">String</span>(applicant.program ?? <span class="tok-s">''</span>).<span class="tok-f">trim</span>().<span class="tok-f">toUpperCase</span>(),</span><span class="line">    valid: errors.length === <span class="tok-n">0</span>,</span><span class="line">    merit: <span class="tok-k">null</span>,</span><span class="line">    status: <span class="tok-s">'INVALID DATA'</span>,</span><span class="line">    errors</span><span class="line">  };</span><span class="line"> </span><span class="line">  <span class="tok-c">// Guard clause: merit is calculated only AFTER the record is known to be valid</span></span><span class="line">  <span class="tok-k">if</span> (!result.valid) <span class="tok-k">return</span> result;</span><span class="line"> </span><span class="line">  result.merit = <span class="tok-f">calculateMerit</span>(matric, intermediate, entryTest);</span><span class="line">  result.status = <span class="tok-f">decideStatus</span>(result.merit, intermediate, entryTest, feePaid);</span><span class="line">  <span class="tok-k">return</span> result;</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">processApplicants</span>(applicants) {</span><span class="line">  <span class="tok-k">const</span> results = [];</span><span class="line">  <span class="tok-k">for</span> (<span class="tok-k">const</span> applicant <span class="tok-k">of</span> applicants) {</span><span class="line">    results.<span class="tok-f">push</span>(<span class="tok-f">processApplicant</span>(applicant));</span><span class="line">  }</span><span class="line">  <span class="tok-k">return</span> results;</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-k">export</span> <span class="tok-k">function</span> <span class="tok-f">summarize</span>(results) {</span><span class="line">  <span class="tok-k">let</span> valid = <span class="tok-n">0</span>;</span><span class="line">  <span class="tok-k">let</span> invalid = <span class="tok-n">0</span>;</span><span class="line">  <span class="tok-k">let</span> totalMerit = <span class="tok-n">0</span>;</span><span class="line">  <span class="tok-k">let</span> highest = <span class="tok-k">null</span>;</span><span class="line">  <span class="tok-k">let</span> lowest = <span class="tok-k">null</span>;</span><span class="line">  <span class="tok-k">const</span> programs = <span class="tok-k">new</span> <span class="tok-f">Map</span>();</span><span class="line"> </span><span class="line">  <span class="tok-k">for</span> (<span class="tok-k">const</span> result <span class="tok-k">of</span> results) {</span><span class="line">    <span class="tok-k">const</span> key = result.program === <span class="tok-s">''</span> ? <span class="tok-s">'MISSING'</span> : result.program ?? <span class="tok-s">'MISSING'</span>;</span><span class="line">    programs.<span class="tok-f">set</span>(key, (programs.<span class="tok-k">get</span>(key) ?? <span class="tok-n">0</span>) + <span class="tok-n">1</span>);</span><span class="line"> </span><span class="line">    <span class="tok-k">if</span> (!result.valid) {</span><span class="line">      invalid++;</span><span class="line">      <span class="tok-k">continue</span>;</span><span class="line">    }</span><span class="line">    valid++;</span><span class="line">    totalMerit += result.merit;</span><span class="line">    <span class="tok-k">if</span> (highest === <span class="tok-k">null</span> || result.merit &gt; highest.merit) highest = result;</span><span class="line">    <span class="tok-k">if</span> (lowest === <span class="tok-k">null</span> || result.merit &lt; lowest.merit) lowest = result;</span><span class="line">  }</span><span class="line"> </span><span class="line">  <span class="tok-k">return</span> {</span><span class="line">    validApplicants: valid,</span><span class="line">    invalidApplicants: invalid,</span><span class="line">    highestMerit: highest === <span class="tok-k">null</span> ? <span class="tok-k">null</span> : { id: highest.id, name: highest.name, merit: highest.merit },</span><span class="line">    lowestMerit: lowest === <span class="tok-k">null</span> ? <span class="tok-k">null</span> : { id: lowest.id, name: lowest.name, merit: lowest.merit },</span><span class="line">    averageMerit: valid === <span class="tok-n">0</span> ? <span class="tok-k">null</span> : <span class="tok-f">round2</span>(totalMerit / valid),</span><span class="line">    applicantsPerProgram: <span class="tok-t">Object</span>.<span class="tok-f">fromEntries</span>(programs)</span><span class="line">  };</span><span class="line">}</span><span class="line"> </span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-c">// Demonstration: normal, boundary and invalid test cases</span></span><span class="line"><span class="tok-c">// ---------------------------------------------------------------------------</span></span><span class="line"><span class="tok-k">const</span> applicants = [</span><span class="line">  <span class="tok-c">// --- the three records from the case study ---</span></span><span class="line">  { id: <span class="tok-s">'A101'</span>, name: <span class="tok-s">'Sara Khan'</span>, age: <span class="tok-s">'19'</span>, matricMarks: <span class="tok-s">'91'</span>, intermediateMarks: <span class="tok-s">'87'</span>, entryTest: <span class="tok-s">'78'</span>, program: <span class="tok-s">'BSCS'</span>, feePaid: <span class="tok-s">'true'</span> },</span><span class="line">  { id: <span class="tok-s">'A102'</span>, name: <span class="tok-s">'Ahmed Ali'</span>, age: <span class="tok-s">'twenty'</span>, matricMarks: <span class="tok-s">'88'</span>, intermediateMarks: <span class="tok-s">''</span>, entryTest: <span class="tok-s">'72'</span>, program: <span class="tok-s">'BSSE'</span>, feePaid: <span class="tok-s">'false'</span> },</span><span class="line">  { id: <span class="tok-s">'A103'</span>, name: <span class="tok-s">'Hassan'</span>, age: <span class="tok-s">'18'</span>, matricMarks: <span class="tok-s">'76'</span>, intermediateMarks: <span class="tok-s">'83'</span>, entryTest: <span class="tok-s">'91'</span>, program: <span class="tok-s">'BSAI'</span>, feePaid: <span class="tok-s">'true'</span> },</span><span class="line">  <span class="tok-c">// --- boundary cases ---</span></span><span class="line">  { id: <span class="tok-s">'B201'</span>, name: <span class="tok-s">'Merit Exactly 70'</span>, age: <span class="tok-s">'17'</span>, matricMarks: <span class="tok-s">'70'</span>, intermediateMarks: <span class="tok-s">'70'</span>, entryTest: <span class="tok-s">'70'</span>, program: <span class="tok-s">'BSCS'</span>, feePaid: <span class="tok-s">'true'</span> },</span><span class="line">  { id: <span class="tok-s">'B202'</span>, name: <span class="tok-s">'Entry Test 59'</span>, age: <span class="tok-s">'30'</span>, matricMarks: <span class="tok-s">'100'</span>, intermediateMarks: <span class="tok-s">'100'</span>, entryTest: <span class="tok-s">'59'</span>, program: <span class="tok-s">'BSSE'</span>, feePaid: <span class="tok-s">'true'</span> },</span><span class="line">  { id: <span class="tok-s">'B203'</span>, name: <span class="tok-s">'Intermediate 59'</span>, age: <span class="tok-s">'20'</span>, matricMarks: <span class="tok-s">'95'</span>, intermediateMarks: <span class="tok-s">'59'</span>, entryTest: <span class="tok-s">'95'</span>, program: <span class="tok-s">'BSAI'</span>, feePaid: <span class="tok-s">'true'</span> },</span><span class="line">  { id: <span class="tok-s">'B204'</span>, name: <span class="tok-s">'Strong But Unpaid'</span>, age: <span class="tok-s">'21'</span>, matricMarks: <span class="tok-s">'90'</span>, intermediateMarks: <span class="tok-s">'90'</span>, entryTest: <span class="tok-s">'90'</span>, program: <span class="tok-s">'BSCS'</span>, feePaid: <span class="tok-s">'false'</span> },</span><span class="line">  { id: <span class="tok-s">'B205'</span>, name: <span class="tok-s">'Perfect Scores'</span>, age: <span class="tok-s">'22'</span>, matricMarks: <span class="tok-s">'100'</span>, intermediateMarks: <span class="tok-s">'100'</span>, entryTest: <span class="tok-s">'100'</span>, program: <span class="tok-s">'bsse'</span>, feePaid: <span class="tok-s">'true'</span> },</span><span class="line">  <span class="tok-c">// --- invalid cases ---</span></span><span class="line">  { id: <span class="tok-s">'C301'</span>, name: <span class="tok-s">'Too Young'</span>, age: <span class="tok-s">'16'</span>, matricMarks: <span class="tok-s">'80'</span>, intermediateMarks: <span class="tok-s">'80'</span>, entryTest: <span class="tok-s">'80'</span>, program: <span class="tok-s">'BSCS'</span>, feePaid: <span class="tok-s">'true'</span> },</span><span class="line">  { id: <span class="tok-s">'C302'</span>, name: <span class="tok-s">'Marks Over 100'</span>, age: <span class="tok-s">'19'</span>, matricMarks: <span class="tok-s">'101'</span>, intermediateMarks: <span class="tok-s">'80'</span>, entryTest: <span class="tok-s">'80'</span>, program: <span class="tok-s">'BSCS'</span>, feePaid: <span class="tok-s">'true'</span> },</span><span class="line">  { id: <span class="tok-s">'C303'</span>, name: <span class="tok-s">'Wrong Program'</span>, age: <span class="tok-s">'19'</span>, matricMarks: <span class="tok-s">'80'</span>, intermediateMarks: <span class="tok-s">'80'</span>, entryTest: <span class="tok-s">'80'</span>, program: <span class="tok-s">'BBA'</span>, feePaid: <span class="tok-s">'true'</span> },</span><span class="line">  { id: <span class="tok-s">'C304'</span>, name: <span class="tok-s">'Bad Fee Flag'</span>, age: <span class="tok-s">'19'</span>, matricMarks: <span class="tok-s">'80'</span>, intermediateMarks: <span class="tok-s">'80'</span>, entryTest: <span class="tok-s">'80'</span>, program: <span class="tok-s">'BSCS'</span>, feePaid: <span class="tok-s">'maybe'</span> },</span><span class="line">  { id: <span class="tok-s">''</span>, name: <span class="tok-s">'   '</span>, age: <span class="tok-k">null</span>, matricMarks: <span class="tok-k">undefined</span>, intermediateMarks: <span class="tok-s">'abc'</span>, entryTest: <span class="tok-s">'-5'</span>, program: <span class="tok-s">''</span>, feePaid: <span class="tok-s">''</span> },</span><span class="line">  <span class="tok-k">null</span></span><span class="line">];</span><span class="line"> </span><span class="line"><span class="tok-c">// Freeze everything: if the engine tried to mutate the input it would throw in strict (module) mode.</span></span><span class="line"><span class="tok-k">const</span> snapshotBefore = JSON.<span class="tok-f">stringify</span>(applicants);</span><span class="line"><span class="tok-k">for</span> (<span class="tok-k">const</span> applicant <span class="tok-k">of</span> applicants) {</span><span class="line">  <span class="tok-k">if</span> (applicant !== <span class="tok-k">null</span>) <span class="tok-t">Object</span>.<span class="tok-f">freeze</span>(applicant);</span><span class="line">}</span><span class="line"><span class="tok-t">Object</span>.<span class="tok-f">freeze</span>(applicants);</span><span class="line"> </span><span class="line"><span class="tok-k">const</span> results = <span class="tok-f">processApplicants</span>(applicants);</span><span class="line"> </span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'=== APPLICANT RESULTS ==='</span>);</span><span class="line"><span class="tok-k">for</span> (<span class="tok-k">const</span> r <span class="tok-k">of</span> results) {</span><span class="line">  <span class="tok-k">const</span> meritText = r.merit === <span class="tok-k">null</span> ? <span class="tok-s">'  -  '</span> : r.merit.<span class="tok-f">toFixed</span>(<span class="tok-n">2</span>).<span class="tok-f">padStart</span>(<span class="tok-n">6</span>);</span><span class="line">  console.<span class="tok-f">log</span>(<span class="tok-s">`${String(r.id).padEnd(5)} ${String(r.name).trim().padEnd(18)} ${String(r.program).padEnd(6)} merit=${meritText}  ${r.status}`</span>);</span><span class="line">  <span class="tok-k">if</span> (r.errors.length &gt; <span class="tok-n">0</span>) {</span><span class="line">    console.<span class="tok-f">log</span>(<span class="tok-s">`        errors: ${r.errors.join('; ')}`</span>);</span><span class="line">  }</span><span class="line">}</span><span class="line"> </span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'\n=== SUMMARY ==='</span>);</span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-f">summarize</span>(results));</span><span class="line"> </span><span class="line">console.<span class="tok-f">log</span>(<span class="tok-s">'\nSource data unchanged:'</span>, JSON.<span class="tok-f">stringify</span>(applicants) === snapshotBefore);</span></code></pre>
+  <textarea id="raw1" hidden readonly>// Task 1 - Admission Decision and Data Sanitization Engine
+// Form values arrive as strings, so nothing is trusted until it is converted and validated.
+
+const SUPPORTED_PROGRAMS = ['BSCS', 'BSSE', 'BSAI'];
+const WEIGHTS = { matric: 0.2, intermediate: 0.3, entryTest: 0.5 };
+const RULES = {
+  minMerit: 70,          // eligibility
+  minEntryTest: 60,      // eligibility
+  minIntermediate: 60,   // eligibility
+  selectedMerit: 75      // SELECTED needs merit &gt;= 75 AND the fee paid, otherwise WAITING
+};
+
+const round2 = (value) =&gt; Math.round(value * 100) / 100;
+
+// ---------- explicit conversion helpers ----------
+
+// Converts a raw form value to a number. Problems are pushed onto `errors`.
+function convertNumber(rawValue, label, errors) {
+  // Guard clause: undefined, null, '' and '   ' all count as &quot;missing&quot;
+  if (rawValue === undefined || rawValue === null || String(rawValue).trim() === '') {
+    errors.push(`${label} is missing`);
+    return null;
+  }
+  const converted = Number(String(rawValue).trim());
+  if (!Number.isFinite(converted)) {            // catches NaN and Infinity
+    errors.push(`${label} is not a valid number (&quot;${rawValue}&quot;)`);
+    return null;
+  }
+  return converted;
+}
+
+function checkRange(value, label, min, max, errors) {
+  if (value === null) return;                   // already reported as missing / invalid
+  if (value &lt; min || value &gt; max) {
+    errors.push(`${label} must be between ${min} and ${max} (got ${value})`);
+  }
+}
+
+// switch statement: only the literal strings 'true' / 'false' are accepted
+function convertBoolean(rawValue, label, errors) {
+  switch (String(rawValue).trim().toLowerCase()) {
+    case 'true':
+      return true;
+    case 'false':
+      return false;
+    default:
+      errors.push(`${label} must be &quot;true&quot; or &quot;false&quot;`);
+      return null;
+  }
+}
+
+function convertProgram(rawValue, errors) {
+  const program = String(rawValue ?? '').trim().toUpperCase();
+  if (program === '') {
+    errors.push('program is missing');
+    return null;
+  }
+  if (!SUPPORTED_PROGRAMS.includes(program)) {
+    errors.push(`program &quot;${program}&quot; is not supported`);
+    return null;
+  }
+  return program;
+}
+
+// ---------- business rules ----------
+
+function calculateMerit(matric, intermediate, entryTest) {
+  return round2(
+    matric * WEIGHTS.matric + intermediate * WEIGHTS.intermediate + entryTest * WEIGHTS.entryTest
+  );
+}
+
+function decideStatus(merit, intermediate, entryTest, feePaid) {
+  const eligible =
+    merit &gt;= RULES.minMerit &amp;&amp; entryTest &gt;= RULES.minEntryTest &amp;&amp; intermediate &gt;= RULES.minIntermediate;
+
+  if (!eligible) return 'REJECTED';
+  // ternary: strong merit AND paid fee -&gt; SELECTED, otherwise the applicant is held on the waiting list
+  return merit &gt;= RULES.selectedMerit &amp;&amp; feePaid ? 'SELECTED' : 'WAITING';
+}
+
+// Validates one applicant and returns a NEW result object (the source is never touched).
+export function processApplicant(applicant) {
+  // Guard clause: the record itself might be null, a number, an array ...
+  if (typeof applicant !== 'object' || applicant === null || Array.isArray(applicant)) {
+    return {
+      id: null, name: null, program: null, valid: false, merit: null,
+      status: 'INVALID DATA', errors: ['record is not an object']
+    };
+  }
+
+  const errors = [];
+
+  // truthy / falsy: !value is true for undefined, null and ''
+  if (!applicant.id) errors.push('id is missing');
+  if (!applicant.name || String(applicant.name).trim() === '') errors.push('name is missing');
+
+  const age = convertNumber(applicant.age, 'age', errors);
+  const matric = convertNumber(applicant.matricMarks, 'matricMarks', errors);
+  const intermediate = convertNumber(applicant.intermediateMarks, 'intermediateMarks', errors);
+  const entryTest = convertNumber(applicant.entryTest, 'entryTest', errors);
+
+  checkRange(age, 'age', 17, 30, errors);
+  checkRange(matric, 'matricMarks', 0, 100, errors);
+  checkRange(intermediate, 'intermediateMarks', 0, 100, errors);
+  checkRange(entryTest, 'entryTest', 0, 100, errors);
+
+  const program = convertProgram(applicant.program, errors);
+  const feePaid = convertBoolean(applicant.feePaid, 'feePaid', errors);
+
+  const result = {
+    id: applicant.id ?? null,
+    name: applicant.name ?? null,
+    program: program ?? String(applicant.program ?? '').trim().toUpperCase(),
+    valid: errors.length === 0,
+    merit: null,
+    status: 'INVALID DATA',
+    errors
+  };
+
+  // Guard clause: merit is calculated only AFTER the record is known to be valid
+  if (!result.valid) return result;
+
+  result.merit = calculateMerit(matric, intermediate, entryTest);
+  result.status = decideStatus(result.merit, intermediate, entryTest, feePaid);
+  return result;
+}
+
+export function processApplicants(applicants) {
+  const results = [];
+  for (const applicant of applicants) {
+    results.push(processApplicant(applicant));
+  }
+  return results;
+}
+
+export function summarize(results) {
+  let valid = 0;
+  let invalid = 0;
+  let totalMerit = 0;
+  let highest = null;
+  let lowest = null;
+  const programs = new Map();
+
+  for (const result of results) {
+    const key = result.program === '' ? 'MISSING' : result.program ?? 'MISSING';
+    programs.set(key, (programs.get(key) ?? 0) + 1);
+
+    if (!result.valid) {
+      invalid++;
+      continue;
+    }
+    valid++;
+    totalMerit += result.merit;
+    if (highest === null || result.merit &gt; highest.merit) highest = result;
+    if (lowest === null || result.merit &lt; lowest.merit) lowest = result;
+  }
+
+  return {
+    validApplicants: valid,
+    invalidApplicants: invalid,
+    highestMerit: highest === null ? null : { id: highest.id, name: highest.name, merit: highest.merit },
+    lowestMerit: lowest === null ? null : { id: lowest.id, name: lowest.name, merit: lowest.merit },
+    averageMerit: valid === 0 ? null : round2(totalMerit / valid),
+    applicantsPerProgram: Object.fromEntries(programs)
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Demonstration: normal, boundary and invalid test cases
+// ---------------------------------------------------------------------------
+const applicants = [
+  // --- the three records from the case study ---
+  { id: 'A101', name: 'Sara Khan', age: '19', matricMarks: '91', intermediateMarks: '87', entryTest: '78', program: 'BSCS', feePaid: 'true' },
+  { id: 'A102', name: 'Ahmed Ali', age: 'twenty', matricMarks: '88', intermediateMarks: '', entryTest: '72', program: 'BSSE', feePaid: 'false' },
+  { id: 'A103', name: 'Hassan', age: '18', matricMarks: '76', intermediateMarks: '83', entryTest: '91', program: 'BSAI', feePaid: 'true' },
+  // --- boundary cases ---
+  { id: 'B201', name: 'Merit Exactly 70', age: '17', matricMarks: '70', intermediateMarks: '70', entryTest: '70', program: 'BSCS', feePaid: 'true' },
+  { id: 'B202', name: 'Entry Test 59', age: '30', matricMarks: '100', intermediateMarks: '100', entryTest: '59', program: 'BSSE', feePaid: 'true' },
+  { id: 'B203', name: 'Intermediate 59', age: '20', matricMarks: '95', intermediateMarks: '59', entryTest: '95', program: 'BSAI', feePaid: 'true' },
+  { id: 'B204', name: 'Strong But Unpaid', age: '21', matricMarks: '90', intermediateMarks: '90', entryTest: '90', program: 'BSCS', feePaid: 'false' },
+  { id: 'B205', name: 'Perfect Scores', age: '22', matricMarks: '100', intermediateMarks: '100', entryTest: '100', program: 'bsse', feePaid: 'true' },
+  // --- invalid cases ---
+  { id: 'C301', name: 'Too Young', age: '16', matricMarks: '80', intermediateMarks: '80', entryTest: '80', program: 'BSCS', feePaid: 'true' },
+  { id: 'C302', name: 'Marks Over 100', age: '19', matricMarks: '101', intermediateMarks: '80', entryTest: '80', program: 'BSCS', feePaid: 'true' },
+  { id: 'C303', name: 'Wrong Program', age: '19', matricMarks: '80', intermediateMarks: '80', entryTest: '80', program: 'BBA', feePaid: 'true' },
+  { id: 'C304', name: 'Bad Fee Flag', age: '19', matricMarks: '80', intermediateMarks: '80', entryTest: '80', program: 'BSCS', feePaid: 'maybe' },
+  { id: '', name: '   ', age: null, matricMarks: undefined, intermediateMarks: 'abc', entryTest: '-5', program: '', feePaid: '' },
+  null
+];
+
+// Freeze everything: if the engine tried to mutate the input it would throw in strict (module) mode.
+const snapshotBefore = JSON.stringify(applicants);
+for (const applicant of applicants) {
+  if (applicant !== null) Object.freeze(applicant);
+}
+Object.freeze(applicants);
+
+const results = processApplicants(applicants);
+
+console.log('=== APPLICANT RESULTS ===');
+for (const r of results) {
+  const meritText = r.merit === null ? '  -  ' : r.merit.toFixed(2).padStart(6);
+  console.log(`${String(r.id).padEnd(5)} ${String(r.name).trim().padEnd(18)} ${String(r.program).padEnd(6)} merit=${meritText}  ${r.status}`);
+  if (r.errors.length &gt; 0) {
+    console.log(`        errors: ${r.errors.join('; ')}`);
+  }
+}
+
+console.log('\n=== SUMMARY ===');
+console.log(summarize(results));
+
+console.log('\nSource data unchanged:', JSON.stringify(applicants) === snapshotBefore);
+</textarea>
+</div>
+    </div>
+  </section>
+
+  <section class="block" id="output">
+    <div class="sec-head"><span class="num">01 / OUTPUT</span><h2>Console output</h2>
+      <p>Captured from a real run of <code>node task1.js</code> on Node.js. View the screenshot or switch to selectable text.</p></div>
+    <div class="term glass" data-term>
+      <div class="term-bar"><i></i><i></i><i></i><span class="term-title">node task1.js</span>
+        <div class="term-tabs"><button class="on" data-view="shot">Screenshot</button><button data-view="text">Text</button></div></div>
+      <div class="out-view on" data-show="shot"><a href="images/task1-output.png" target="_blank" rel="noopener"><img src="images/task1-output.png" alt="Task 1 console output" loading="lazy"></a></div>
+      <div class="out-view" data-show="text"><pre class="out"><span class="prompt">$ <b>node task1.js</b></span>
+<span class="out-h">=== APPLICANT RESULTS ===</span>
+A101  Sara Khan          BSCS   merit= 83.30  <span class="o-ok">SELECTED</span>
+A102  Ahmed Ali          BSSE   merit=  -    <span class="o-bad">INVALID DATA</span>
+        errors: age is not a valid number (&quot;twenty&quot;); intermediateMarks is missing
+A103  Hassan             BSAI   merit= 85.60  <span class="o-ok">SELECTED</span>
+B201  Merit Exactly 70   BSCS   merit= 70.00  <span class="o-warn">WAITING</span>
+B202  Entry Test 59      BSSE   merit= 79.50  <span class="o-bad">REJECTED</span>
+B203  Intermediate 59    BSAI   merit= 84.20  <span class="o-bad">REJECTED</span>
+B204  Strong But Unpaid  BSCS   merit= 90.00  <span class="o-warn">WAITING</span>
+B205  Perfect Scores     BSSE   merit=100.00  <span class="o-ok">SELECTED</span>
+C301  Too Young          BSCS   merit=  -    <span class="o-bad">INVALID DATA</span>
+        errors: age must be between 17 and 30 (got 16)
+C302  Marks Over 100     BSCS   merit=  -    <span class="o-bad">INVALID DATA</span>
+        errors: matricMarks must be between 0 and 100 (got 101)
+C303  Wrong Program      BBA    merit=  -    <span class="o-bad">INVALID DATA</span>
+        errors: program &quot;BBA&quot; is not supported
+C304  Bad Fee Flag       BSCS   merit=  -    <span class="o-bad">INVALID DATA</span>
+        errors: feePaid must be &quot;true&quot; or &quot;false&quot;
+                                merit=  -    <span class="o-bad">INVALID DATA</span>
+        errors: id is missing; name is missing; age is missing; matricMarks is missing; intermediateMarks is not a valid number (&quot;abc&quot;); entryTest must be between 0 and 100 (got -5); program is missing; feePaid must be &quot;true&quot; or &quot;false&quot;
+null  null               null   merit=  -    <span class="o-bad">INVALID DATA</span>
+        errors: record is not an object
+
+<span class="out-h">=== SUMMARY ===</span>
+{
+  validApplicants: 7,
+  invalidApplicants: 7,
+  highestMerit: { id: 'B205', name: 'Perfect Scores', merit: 100 },
+  lowestMerit: { id: 'B201', name: 'Merit Exactly 70', merit: 70 },
+  averageMerit: 84.66,
+  applicantsPerProgram: { BSCS: 6, BSSE: 3, BSAI: 2, BBA: 1, MISSING: 2 }
+}
+
+Source data unchanged: true</pre></div>
+    </div>
+  </section>
+
+  <section class="block" id="explain">
+    <div class="sec-head"><span class="num">01 / NOTES</span><h2>Requirements &amp; explanation</h2></div>
+    <div class="card glass" style="margin-bottom:18px">
+      <h3>Requirements covered</h3>
+      <div class="check-grid"><div class="check"><span>Explicit conversion with <code>Number()</code>, with missing values and <code>NaN</code> detected</span></div><div class="check"><span>Marks between 0–100, age between 17–30, program in BSCS / BSSE / BSAI</span></div><div class="check"><span>Validity decided <b>before</b> merit: Matric 20% + Intermediate 30% + Entry Test 50%</span></div><div class="check"><span>Eligible only if merit ≥ 70, entry test ≥ 60 and intermediate ≥ 60</span></div><div class="check"><span>Status: SELECTED, WAITING, REJECTED or INVALID DATA</span></div><div class="check"><span>Summary: valid / invalid counts, highest, lowest, average and per-program counts</span></div><div class="check"><span>Source data frozen with <code>Object.freeze</code> and proven unchanged</span></div></div>
+    </div>
+    <div class="grid">
+      <article class="card glass "><h3>SELECTED vs WAITING</h3><p>An eligible applicant is <b>SELECTED</b> when merit is <code>≥ 75</code> <b>and</b> the fee is paid. Everyone else who is eligible is <b>WAITING</b>: a borderline merit of 70–74.99, or a strong applicant whose fee is still unpaid.</p>
+<p>The reasoning: a seat cannot be confirmed without the fee, and borderline candidates are kept in reserve in case seats open up. Not eligible means <b>REJECTED</b>; broken data means <b>INVALID DATA</b>.</p></article>
+      <article class="card glass "><h3>Why empty strings are checked first</h3><p><code>Number('')</code> is <code>0</code>, not <code>NaN</code>, so a blank Intermediate mark would silently become a perfect-looking zero. A guard clause catches <code>undefined</code>, <code>null</code> and blank strings <b>before</b> conversion, and only then is <code>Number()</code> applied.</p>
+<p>Marks are compared with strict checks, not truthiness, because <code>0</code> is a legitimate mark. Truthiness is used only for <code>id</code> and <code>name</code>, where an empty value really does mean missing.</p></article>
+      <article class="card glass "><h3>Test data: normal, boundary, invalid</h3><ul>
+<li><b>Normal:</b> the three records from the case study.</li>
+<li><b>Boundary:</b> merit exactly 70, entry test 59, intermediate 59, age 17 and 30, perfect scores, lowercase program name.</li>
+<li><b>Invalid:</b> age 16, marks 101, unsupported program, bad fee flag, a record that is wrong in every field, and <code>null</code>.</li>
+</ul></article>
+      <article class="card glass "><h3>Guard clauses keep the flow flat</h3><p><code>processApplicant()</code> returns early for a non-object record and again for any record with validation errors. The merit and status code at the bottom therefore only ever sees clean numbers, and no <code>NaN</code> can leak into the summary.</p></article>
+    </div>
+  </section>
+
+  <nav class="pager">
+    <a class="glass ghost"></a>
+    <a class="glass next" href="task2.html" style="--a1:#a78bfa;--a2:#f472b6"><small>Next · Task 02 →</small><strong>Performance Engine</strong></a>
+  </nav>
+</main>
+<footer><b>CampusFlow</b> · JavaScript Lab 05 · Haseeb Jalil · Air University</footer>
+<script src="assets/app.js"></script>
+</body>
+</html>
