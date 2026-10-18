@@ -119,6 +119,25 @@ const LABS = [
   status: 'Completed',
   colors: ['#8EE3D0', '#102A43'],
 },
+   {
+  id: 6,
+  title: 'Asynchronous JavaScript — Async/Await & Promise.all',
+  description: 'Lab 6 focuses on asynchronous JavaScript through two hands-on tasks: fetching a validated user object with async/await and error handling, and running parallel operations with Promise.all, accepting or rejecting the combined result based on the validity of both responses.',
+  repo: 'https://github.com/hasbeejay/fullstackwebdev-labtask/tree/main/Lab%206%20Tasks',
+  objectives: [
+    'Implement an async/await function that fetches data from an API and returns a valid user object',
+    'Handle failed requests, bad HTTP statuses, and corrupt data with try/catch and meaningful errors',
+    'Validate fetched data before resolving a promise',
+    'Run multiple asynchronous operations concurrently using Promise.all',
+    'Accept or reject the main promise based on the validity of both fetched results'
+  ],
+  outcome: 'A set of two asynchronous JavaScript tasks demonstrating validated API fetching with async/await and concurrent promise handling with Promise.all, presented on a showcase page with source code, live runs, and output screenshots.',
+  tech: ['JavaScript ES6+', 'Node.js', 'Async/Await', 'Promises', 'Promise.all'],
+  liveUrl: 'Lab 6 Tasks/index.html',
+  date: '',
+  status: 'Completed',
+  colors: ['#B8A9FF', '#1B1740'],
+},
 ];
 
 /* ==========================================================
