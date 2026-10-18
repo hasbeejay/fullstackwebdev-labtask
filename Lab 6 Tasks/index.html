@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab 6 · Asynchronous JavaScript — Haseeb Jalil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0d1c; --text:#e8ebf7; --muted:#9aa3c7;
+  --glass:rgba(255,255,255,.06); --stroke:rgba(255,255,255,.12);
+  --a:#7c8cff; --b:#c27bff; --c:#4fe0c0; --err:#ff7d8d;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh;overflow-x:hidden}
+body::before,body::after{content:"";position:fixed;z-index:-1;border-radius:50%;filter:blur(110px);opacity:.45}
+body::before{width:520px;height:520px;background:#4b5bff;top:-140px;left:-120px}
+body::after{width:560px;height:560px;background:#a23bff;bottom:-180px;right:-140px;opacity:.35}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+nav{position:sticky;top:0;z-index:20;backdrop-filter:blur(16px);background:rgba(10,13,28,.6);border-bottom:1px solid var(--stroke)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{font-weight:800;letter-spacing:.3px}
+.brand span{background:linear-gradient(90deg,var(--a),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent}
+nav ul{display:flex;gap:22px;list-style:none;font-size:.92rem}
+nav a{color:var(--muted);text-decoration:none;transition:.2s}
+nav a:hover{color:#fff}
+header.hero{padding:84px 0 50px;text-align:center}
+.pill{display:inline-block;padding:6px 16px;border:1px solid var(--stroke);background:var(--glass);border-radius:99px;font-size:.8rem;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
+h1{font-size:clamp(2.2rem,5.4vw,3.8rem);line-height:1.1;margin:22px 0 14px;font-weight:800}
+h1 em{font-style:normal;background:linear-gradient(90deg,var(--a),var(--b),var(--c));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--muted);max-width:620px;margin:0 auto}
+.card{background:var(--glass);border:1px solid var(--stroke);border-radius:20px;backdrop-filter:blur(18px);box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;margin-top:42px;overflow:hidden;background:var(--stroke)}
+.info div{background:rgba(14,18,38,.85);padding:18px 22px;text-align:left}
+.info small{display:block;color:var(--muted);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase}
+.info b{font-size:1.1rem;font-weight:600}
+section{padding:46px 0}
+.sec-head{display:flex;align-items:center;gap:16px;margin-bottom:10px}
+.num{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-weight:800;background:linear-gradient(135deg,var(--a),var(--b));box-shadow:0 8px 22px rgba(124,140,255,.4)}
+h2{font-size:1.6rem}
+.desc{color:var(--muted);margin:6px 0 22px;max-width:760px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.tags span{font-size:.76rem;padding:4px 12px;border-radius:99px;border:1px solid var(--stroke);color:var(--c);background:rgba(79,224,192,.07);font-family:'JetBrains Mono',monospace}
+.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:22px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}nav ul{display:none}}
+.panel{overflow:hidden;display:flex;flex-direction:column}
+.bar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--stroke);font-size:.8rem;color:var(--muted)}
+.dot{width:11px;height:11px;border-radius:50%}
+.dot:nth-child(1){background:#ff5f57}.dot:nth-child(2){background:#febc2e}.dot:nth-child(3){background:#28c840}
+.bar .t{margin-left:8px;font-family:'JetBrains Mono',monospace}
+.bar button{margin-left:auto;background:var(--glass);border:1px solid var(--stroke);color:var(--text);padding:5px 12px;border-radius:8px;font-size:.75rem;cursor:pointer;transition:.2s}
+.bar button:hover{background:rgba(255,255,255,.14)}
+pre{font-family:'JetBrains Mono',monospace;font-size:.78rem;line-height:1.65;padding:18px;overflow:auto;max-height:560px;color:#d5dbff;white-space:pre}
+pre.out{min-height:200px;max-height:420px;color:#c9f5e8}
+.shot{padding:16px}
+.shot img{width:100%;border-radius:12px;border:1px solid var(--stroke);display:block}
+.shot p{font-size:.78rem;color:var(--muted);margin-top:10px;text-align:center}
+.right{display:flex;flex-direction:column;gap:22px}
+.err{color:var(--err)}
+footer{text-align:center;padding:40px 0 60px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--stroke);margin-top:30px}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <div class="brand">Lab&nbsp;6 <span>· Async JS</span></div>
+  <ul><li><a href="#task1">Task 1</a></li><li><a href="#task2">Task 2</a></li></ul>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="pill">Full Stack Web Development · Lab 6</span>
+  <h1>Asynchronous <em>JavaScript</em></h1>
+  <p class="sub">Async / await and Promise.all in practice — source code, live runs and captured console output for each task.</p>
+  <div class="card info">
+    <div><small>Student Name</small><b>Haseeb Jalil</b></div>
+    <div><small>Registration No.</small><b>241908</b></div>
+    <div><small>University</small><b>Air University</b></div>
+    <div><small>Tasks</small><b>2 completed</b></div>
+  </div>
+</div></header>
+
+<main class="wrap">
+
+<section id="task1">
+  <div class="sec-head"><div class="num">1</div><h2>Async / Await — Fetch a User</h2></div>
+  <p class="desc">An <code>async</code> function that fetches a user from an API and returns a valid user object on success. If the request fails, the status is bad, or the data is not a valid user, it throws a clear error.</p>
+  <div class="tags"><span>async / await</span><span>fetch</span><span>try / catch</span><span>validation</span></div>
+  <div class="grid">
+    <div class="card panel">
+      <div class="bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="t">task1.js</span></div>
+      <pre><code>/* ------------------------------------------------------------------
+   Lab 6 - Task 1
+   Async / Await: fetch a user from an API.
+   - Resolves with a VALID user object when the fetch succeeds.
+   - Throws (rejects) with a meaningful error when it fails.
+   Student: Haseeb Jalil | Reg No: 241908
+------------------------------------------------------------------- */
+
+const API_BASE = &quot;https://jsonplaceholder.typicode.com&quot;;
+
+// Set to true to hit the real API (needs internet). false = built-in mock API,
+// which behaves the same way (delay, 200 / 404 / network failure) so the
+// output is repeatable.
+const USE_REAL_API = false;
+
+/* ---------- tiny mock of an API (used when USE_REAL_API = false) ---------- */
+const MOCK_USERS = {
+  1: { id: 1, name: &quot;Haseeb Jalil&quot;, username: &quot;haseeb&quot;, email: &quot;241908@students.au.edu.pk&quot;, phone: &quot;0300-0000000&quot; },
+  2: { id: 2, name: &quot;Ayesha Khan&quot;, username: &quot;ayesha&quot;, email: &quot;ayesha@example.com&quot;, phone: &quot;0311-1111111&quot; },
+  3: { id: 3, name: &quot;Bilal Ahmed&quot;, username: &quot;bilal&quot;, email: &quot;not-an-email&quot;, phone: &quot;0322-2222222&quot; }, // corrupt record
+};
+
+function mockFetch(url) {
+  return new Promise((resolve, reject) =&gt; {
+    setTimeout(() =&gt; {
+      if (url.includes(&quot;offline&quot;)) return reject(new TypeError(&quot;Network request failed&quot;));
+      const id = Number(url.split(&quot;/&quot;).pop());
+      const user = MOCK_USERS[id];
+      if (!user) return resolve({ ok: false, status: 404, json: async () =&gt; ({}) });
+      resolve({ ok: true, status: 200, json: async () =&gt; user });
+    }, 400);
+  });
+}
+
+const request = (url) =&gt; (USE_REAL_API ? fetch(url) : mockFetch(url));
+
+/* ---------- validation: is this a real, usable user object? ---------- */
+function isValidUser(u) {
+  return (
+    u !== null &amp;&amp;
+    typeof u === &quot;object&quot; &amp;&amp;
+    Number.isInteger(u.id) &amp;&amp; u.id &gt; 0 &amp;&amp;
+    typeof u.name === &quot;string&quot; &amp;&amp; u.name.trim().length &gt; 0 &amp;&amp;
+    typeof u.email === &quot;string&quot; &amp;&amp; /^\S+@\S+\.\S+$/.test(u.email)
+  );
+}
+
+/* ---------- the async / await function ---------- */
+async function fetchUser(id) {
+  try {
+    const response = await request(`${API_BASE}/users/${id}`);
+
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`);
+    }
+
+    const user = await response.json();
+
+    if (!isValidUser(user)) {
+      throw new Error(&quot;Received data is not a valid user object&quot;);
+    }
+
+    return user; // success -&gt; valid user object
+  } catch (err) {
+    // failure -&gt; propagate a clear error to the caller
+    throw new Error(`fetchUser(${id}) failed: ${err.message}`);
+  }
+}
+
+/* ---------- demo ---------- */
+async function main(log = console.log) {
+  const cases = [
+    { label: &quot;Valid user (id 1)&quot;, id: 1 },
+    { label: &quot;Missing user (id 99) -&gt; 404&quot;, id: 99 },
+    { label: &quot;Corrupt record (id 3) -&gt; invalid data&quot;, id: 3 },
+    { label: &quot;Network failure&quot;, id: &quot;offline&quot; },
+  ];
+
+  for (const c of cases) {
+    log(`&gt; ${c.label}`);
+    try {
+      const user = await fetchUser(c.id);
+      log(&quot;  SUCCESS:&quot;, JSON.stringify(user));
+    } catch (err) {
+      log(&quot;  ERROR  :&quot;, err.message);
+    }
+    log(&quot;&quot;);
+  }
+}
+
+if (typeof module !== &quot;undefined&quot;) module.exports = { fetchUser, isValidUser, main };
+if (typeof window !== &quot;undefined&quot;) window.Task1 = { fetchUser, isValidUser, main };
+if (typeof require !== &quot;undefined&quot; &amp;&amp; require.main === module) main();
+</code></pre>
+    </div>
+    <div class="right">
+      <div class="card panel">
+        <div class="bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="t">console output (live)</span><button onclick="runTask(1)">▶ Run</button></div>
+        <pre class="out" id="out1">Press “Run” to execute task1.js in your browser…</pre>
+      </div>
+      <div class="card shot">
+        <img src="screenshots/task1-output.png" alt="Task 1 output screenshot">
+        <p>Output screenshot — <code>node task1.js</code></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="task2">
+  <div class="sec-head"><div class="num">2</div><h2>Promise.all — Validate Two Async Results</h2></div>
+  <p class="desc">Two asynchronous operations (user details and user posts) run in parallel through <code>Promise.all</code>. The main promise is <b>accepted</b> only when both results are valid, otherwise it is <b>rejected</b>.</p>
+  <div class="tags"><span>Promise.all</span><span>parallel fetch</span><span>resolve / reject</span><span>validation</span></div>
+  <div class="grid">
+    <div class="card panel">
+      <div class="bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="t">task2.js</span></div>
+      <pre><code>/* ------------------------------------------------------------------
+   Lab 6 - Task 2
+   Promise.all: run two async operations together, then accept or reject
+   the combined promise depending on whether BOTH fetched results are valid.
+   Student: Haseeb Jalil | Reg No: 241908
+------------------------------------------------------------------- */
+
+const delay = (ms) =&gt; new Promise((r) =&gt; setTimeout(r, ms));
+
+/* ---------- async operation #1: fetch user details ---------- */
+function fetchUserDetails(id) {
+  return delay(500).then(() =&gt; {
+    const users = {
+      1: { id: 1, name: &quot;Haseeb Jalil&quot;, email: &quot;241908@students.au.edu.pk&quot; },
+      2: { id: 2, name: &quot;&quot;, email: &quot;broken@example.com&quot; }, // invalid: empty name
+    };
+    if (!(id in users)) throw new Error(`User ${id} not found`);
+    return users[id];
+  });
+}
+
+/* ---------- async operation #2: fetch that user&#x27;s posts ---------- */
+function fetchUserPosts(id) {
+  return delay(800).then(() =&gt; {
+    const posts = {
+      1: [
+        { id: 101, userId: 1, title: &quot;Learning Promises&quot;, body: &quot;Promise.all waits for everything.&quot; },
+        { id: 102, userId: 1, title: &quot;Async / Await&quot;, body: &quot;Cleaner than .then chains.&quot; },
+      ],
+      2: [], // invalid: no posts
+    };
+    if (!(id in posts)) throw new Error(`Posts for user ${id} not found`);
+    return posts[id];
+  });
+}
+
+/* ---------- validators ---------- */
+const validDetails = (u) =&gt;
+  !!u &amp;&amp; Number.isInteger(u.id) &amp;&amp; typeof u.name === &quot;string&quot; &amp;&amp; u.name.trim() !== &quot;&quot; &amp;&amp;
+  typeof u.email === &quot;string&quot; &amp;&amp; /^\S+@\S+\.\S+$/.test(u.email);
+
+const validPosts = (p) =&gt;
+  Array.isArray(p) &amp;&amp; p.length &gt; 0 &amp;&amp;
+  p.every((x) =&gt; x &amp;&amp; typeof x.title === &quot;string&quot; &amp;&amp; x.title.trim() !== &quot;&quot;);
+
+/* ---------- main promise built on Promise.all ---------- */
+function loadUserDashboard(id) {
+  return Promise.all([fetchUserDetails(id), fetchUserPosts(id)]).then(
+    ([details, posts]) =&gt; {
+      if (!validDetails(details)) throw new Error(&quot;Invalid user details received&quot;);
+      if (!validPosts(posts))     throw new Error(&quot;Invalid posts received&quot;);
+      return { details, posts }; // ACCEPT: both are valid
+    }
+  ); // REJECT: either operation failed OR a validation above threw
+}
+
+/* ---------- demo ---------- */
+async function main(log = console.log) {
+  const cases = [
+    { label: &quot;User 1 -&gt; both valid&quot;, id: 1 },
+    { label: &quot;User 2 -&gt; empty name &amp; no posts (invalid)&quot;, id: 2 },
+    { label: &quot;User 7 -&gt; does not exist (operations fail)&quot;, id: 7 },
+  ];
+
+  for (const c of cases) {
+    log(`&gt; ${c.label}`);
+    const t0 = Date.now();
+    try {
+      const result = await loadUserDashboard(c.id);
+      log(`  ACCEPTED (${Date.now() - t0}ms): ${result.details.name} with ${result.posts.length} posts`);
+      result.posts.forEach((p) =&gt; log(`     - [${p.id}] ${p.title}`));
+    } catch (err) {
+      log(`  REJECTED (${Date.now() - t0}ms): ${err.message}`);
+    }
+    log(&quot;&quot;);
+  }
+}
+
+if (typeof module !== &quot;undefined&quot;) module.exports = { loadUserDashboard, main };
+if (typeof window !== &quot;undefined&quot;) window.Task2 = { loadUserDashboard, main };
+if (typeof require !== &quot;undefined&quot; &amp;&amp; require.main === module) main();
+</code></pre>
+    </div>
+    <div class="right">
+      <div class="card panel">
+        <div class="bar"><i class="dot"></i><i class="dot"></i><i class="dot"></i><span class="t">console output (live)</span><button onclick="runTask(2)">▶ Run</button></div>
+        <pre class="out" id="out2">Press “Run” to execute task2.js in your browser…</pre>
+      </div>
+      <div class="card shot">
+        <img src="screenshots/task2-output.png" alt="Task 2 output screenshot">
+        <p>Output screenshot — <code>node task2.js</code></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>Lab 6 · Asynchronous JavaScript · Haseeb Jalil · 241908</footer>
+
+<script src="task1.js"></script>
+<script src="task2.js"></script>
+<script>
+async function runTask(n){
+  const out = document.getElementById('out'+n);
+  out.textContent = '';
+  const log = (...a) => { out.textContent += a.join(' ') + '\n'; };
+  await window['Task'+n].main(log);
+  log('— done —');
+}
+</script>
+</body>
+</html>
