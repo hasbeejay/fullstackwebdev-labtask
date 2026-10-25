@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "name": "Aurora Wireless Headphones",
+    "category": "Audio",
+    "price": 129,
+    "rating": 4.8,
+    "stock": 15,
+    "emoji": "🎧",
+    "badge": "Bestseller",
+    "description": "High-fidelity audio with active noise cancellation, custom tuned 40mm drivers and 40-hour continuous battery life."
+  },
+  {
+    "id": 2,
+    "name": "Linen Lounge Chair",
+    "category": "Home",
+    "price": 249,
+    "rating": 4.8,
+    "stock": 8,
+    "emoji": "🪑",
+    "badge": "Crafted",
+    "description": "Ergonomic modern lounge chair crafted with natural breathable linen upholstery and solid oak tapered legs."
+  },
+  {
+    "id": 3,
+    "name": "Trailblazer Backpack",
+    "category": "Outdoor",
+    "price": 89,
+    "rating": 4.9,
+    "stock": 22,
+    "emoji": "🎒",
+    "badge": "Popular",
+    "description": "Weatherproof 30L trail backpack with ergonomic load-bearing harness, hydration bladder pass-through and padded laptop sleeve."
+  },
+  {
+    "id": 4,
+    "name": "Minimalist Desk Lamp",
+    "category": "Lighting",
+    "price": 45,
+    "rating": 4.7,
+    "stock": 30,
+    "emoji": "💡",
+    "badge": "Energy Saving",
+    "description": "Dimmable LED task lamp with solid brass stem, flicker-free warm illumination and intuitive touch brightness controls."
+  },
+  {
+    "id": 5,
+    "name": "Ceramic Coffee Dripper",
+    "category": "Kitchen",
+    "price": 34,
+    "rating": 4.6,
+    "stock": 18,
+    "emoji": "☕",
+    "badge": "Artisanal",
+    "description": "Hand-thrown matte ceramic pour-over cone engineered with spiral ribs for optimal extraction and artisanal coffee brewing."
+  },
+  {
+    "id": 6,
+    "name": "Mechanical Keyboard",
+    "category": "Tech",
+    "price": 159,
+    "rating": 4.9,
+    "stock": 12,
+    "emoji": "⌨️",
+    "badge": "New Arrival",
+    "description": "Compact 75% mechanical keyboard with hot-swappable lubricated switches, CNC anodized aluminum chassis, and PBT keycaps."
+  }
+]

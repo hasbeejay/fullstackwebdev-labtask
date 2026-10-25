@@ -138,6 +138,25 @@ const LABS = [
   status: 'Completed',
   colors: ['#B8A9FF', '#1B1740'],
 },
+  {
+    id: 7,
+    title: 'RESTful APIs — Student Management & Persistent E-Commerce',
+    description: 'Lab 7 focuses on backend REST API development with Node.js built-in HTTP module: Part 1 implements an in-memory Student Management System with 4 CRUD modules (Student, Teacher, Attendance, Marks). Part 2 implements an atomic file-persisted REST API for an E-Commerce Store with Products, Cart, Orders, and Auth.',
+    repo: 'https://github.com/hasbeejay/fullstackwebdev-labtask/tree/main/Lab%207%20Tasks',
+    objectives: [
+      'Build modular RESTful APIs using Node.js native http module without external frameworks',
+      'Implement full CRUD operations for Student, Teacher, Attendance, and Marks modules',
+      'Design atomic file persistence using fs/promises, temporary files, and serialized write queues',
+      'Implement E-Commerce REST endpoints for Products, Users, Cart, Checkout, and Reviews',
+      'Handle HTTP status codes, payload validations, query parameters, and CORS headers'
+    ],
+    outcome: 'Two complete backend REST API implementations featuring in-memory and persistent storage architectures with automated test suites and an interactive documentation showcase.',
+    tech: ['Node.js', 'Native HTTP', 'REST APIs', 'Atomic Persistence', 'CRUD Operations', 'Async/Await'],
+    liveUrl: 'Lab 7 Tasks/index.html',
+    date: '25/10/26',
+    status: 'Completed',
+    colors: ['#4facfe', '#0072ff'],
+  },
 ];
 
 /* ==========================================================

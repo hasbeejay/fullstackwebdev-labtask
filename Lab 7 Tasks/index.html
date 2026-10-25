@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab 7 · RESTful APIs &amp; Data Persistence — Haseeb Jalil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #090c1a;
+  --text: #e9ecf8;
+  --muted: #9aa3c8;
+  --glass: rgba(255, 255, 255, 0.05);
+  --glass-hover: rgba(255, 255, 255, 0.08);
+  --stroke: rgba(255, 255, 255, 0.12);
+  --a: #4facfe;
+  --b: #00f2fe;
+  --c: #a18cd1;
+  --accent: #38ef7d;
+  --err: #ff5f74;
+  --card-bg: rgba(14, 18, 38, 0.85);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+body::before, body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+}
+body::before {
+  width: 540px; height: 540px;
+  background: #0061ff;
+  top: -160px; left: -140px;
+  opacity: 0.35;
+}
+body::after {
+  width: 580px; height: 580px;
+  background: #60efff;
+  bottom: -200px; right: -160px;
+  opacity: 0.25;
+}
+.wrap { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+nav {
+  position: sticky; top: 0; z-index: 50;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: rgba(9, 12, 26, 0.7);
+  border-bottom: 1px solid var(--stroke);
+}
+nav .wrap {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px;
+}
+.brand {
+  font-weight: 800; font-size: 1.05rem; letter-spacing: 0.2px;
+  text-decoration: none; color: #fff; display: flex; align-items: center; gap: 8px;
+}
+.brand span {
+  background: linear-gradient(90deg, var(--a), var(--b));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+nav ul { display: flex; gap: 20px; list-style: none; font-size: 0.9rem; align-items: center; }
+nav a { color: var(--muted); text-decoration: none; transition: 0.2s; font-weight: 500; }
+nav a:hover { color: #fff; }
+.nav-btn {
+  padding: 6px 14px; border-radius: 8px; border: 1px solid var(--stroke);
+  background: var(--glass); color: var(--text); font-size: 0.82rem; transition: 0.2s;
+}
+.nav-btn:hover { background: rgba(255,255,255,0.15); }
+
+header.hero { padding: 80px 0 45px; text-align: center; }
+.pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px; border: 1px solid var(--stroke);
+  background: var(--glass); border-radius: 99px;
+  font-size: 0.78rem; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase;
+  font-weight: 600;
+}
+.pill-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+h1 {
+  font-size: clamp(2.3rem, 5.2vw, 4rem);
+  line-height: 1.1; margin: 22px 0 16px; font-weight: 800;
+}
+h1 em {
+  font-style: normal;
+  background: linear-gradient(90deg, var(--a), var(--b), #70a6ff);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.sub { color: var(--muted); max-width: 720px; margin: 0 auto; font-size: 1.08rem; }
+
+.card {
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: 20px;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+}
+.info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1px; margin-top: 45px; overflow: hidden; background: var(--stroke);
+}
+.info div { background: var(--card-bg); padding: 18px 22px; text-align: left; }
+.info small { display: block; color: var(--muted); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px; }
+.info b { font-size: 1.08rem; font-weight: 600; }
+
+section { padding: 48px 0; }
+.sec-head { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; }
+.num {
+  width: 48px; height: 48px; border-radius: 14px;
+  display: grid; place-items: center; font-weight: 800; font-size: 1.25rem;
+  background: linear-gradient(135deg, var(--a), #0072ff);
+  box-shadow: 0 8px 24px rgba(79, 172, 254, 0.4);
+}
+h2 { font-size: 1.75rem; font-weight: 700; }
+.desc { color: var(--muted); margin: 6px 0 20px; max-width: 820px; font-size: 0.98rem; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.tags span {
+  font-size: 0.76rem; padding: 5px 13px; border-radius: 99px;
+  border: 1px solid var(--stroke); color: #7fe3ff;
+  background: rgba(0, 198, 255, 0.08); font-family: 'JetBrains Mono', monospace;
+}
+.grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 24px; }
+@media (max-width: 960px) {
+  .grid { grid-template-columns: 1fr; }
+  nav ul { display: none; }
+}
+
+.panel { overflow: hidden; display: flex; flex-direction: column; }
+.bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 18px; border-bottom: 1px solid var(--stroke);
+  font-size: 0.82rem; color: var(--muted); background: rgba(0,0,0,0.2);
+}
+.dot { width: 11px; height: 11px; border-radius: 50%; }
+.dot:nth-child(1) { background: #ff5f57; }
+.dot:nth-child(2) { background: #febc2e; }
+.dot:nth-child(3) { background: #28c840; }
+.bar .t { margin-left: 8px; font-family: 'JetBrains Mono', monospace; font-weight: 500; color: #fff; }
+.bar .actions { margin-left: auto; display: flex; gap: 8px; }
+.bar button {
+  background: var(--glass); border: 1px solid var(--stroke);
+  color: var(--text); padding: 5px 12px; border-radius: 8px;
+  font-size: 0.76rem; cursor: pointer; transition: 0.2s; font-family: inherit;
+}
+.bar button:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
+
+pre {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem; line-height: 1.65; padding: 20px;
+  overflow: auto; max-height: 520px; color: #dce3ff; white-space: pre;
+}
+
+/* Interactive Simulator / Tester */
+.tester { padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+.req-bar {
+  display: flex; gap: 10px; align-items: center;
+}
+.method-badge {
+  padding: 7px 12px; border-radius: 8px; font-weight: 700;
+  font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;
+  background: #0072ff; color: #fff;
+}
+.method-badge.GET { background: #10b981; }
+.method-badge.POST { background: #3b82f6; }
+.method-badge.PATCH { background: #f59e0b; }
+.method-badge.PUT { background: #8b5cf6; }
+.method-badge.DELETE { background: #ef4444; }
+
+select.endpoint-select {
+  flex: 1; padding: 9px 12px; background: rgba(0,0,0,0.4);
+  border: 1px solid var(--stroke); border-radius: 8px;
+  color: #fff; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;
+  outline: none; cursor: pointer;
+}
+select.endpoint-select option { background: #13172e; color: #fff; }
+.btn-send {
+  padding: 9px 18px; border-radius: 8px; border: none;
+  background: linear-gradient(135deg, var(--a), #0072ff);
+  color: #fff; font-weight: 600; font-size: 0.82rem; cursor: pointer;
+  transition: 0.2s; box-shadow: 0 4px 14px rgba(0,114,255,0.4);
+}
+.btn-send:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,114,255,0.6); }
+
+.resp-header {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.78rem; color: var(--muted); font-family: 'JetBrains Mono', monospace;
+  padding-bottom: 6px; border-bottom: 1px dashed var(--stroke);
+}
+.status-pill {
+  padding: 2px 8px; border-radius: 4px; font-weight: 700;
+}
+.status-pill.s200 { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+.status-pill.s201 { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+
+.resp-box {
+  background: rgba(4, 7, 18, 0.7);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  padding: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: #93e6d8;
+  max-height: 340px;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+
+/* Tabs */
+.tabs { display: flex; border-bottom: 1px solid var(--stroke); background: rgba(0,0,0,0.25); }
+.tab-btn {
+  padding: 11px 18px; background: transparent; border: none;
+  color: var(--muted); font-size: 0.82rem; font-weight: 600; cursor: pointer;
+  border-bottom: 2px solid transparent; transition: 0.2s; font-family: inherit;
+}
+.tab-btn:hover { color: #fff; }
+.tab-btn.active { color: #fff; border-bottom-color: var(--a); background: rgba(255,255,255,0.03); }
+
+/* Comparison Table */
+.table-wrap { overflow-x: auto; margin-top: 18px; }
+table.compare-tbl {
+  width: 100%; border-collapse: collapse; text-align: left;
+  font-size: 0.88rem; background: var(--card-bg); border-radius: 14px; overflow: hidden;
+}
+table.compare-tbl th, table.compare-tbl td {
+  padding: 16px 20px; border-bottom: 1px solid var(--stroke);
+}
+table.compare-tbl th {
+  background: rgba(255,255,255,0.04); font-weight: 700; color: #fff;
+  font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.08em;
+}
+table.compare-tbl tr:last-child td { border-bottom: none; }
+table.compare-tbl td b { color: #fff; }
+
+.btn-link-action {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--a), #0072ff);
+  color: #fff; text-decoration: none; font-weight: 600; font-size: 0.88rem;
+  transition: 0.2s; box-shadow: 0 4px 16px rgba(0, 114, 255, 0.35);
+}
+.btn-link-action:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0, 114, 255, 0.5); }
+.btn-link-sec {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 18px; border-radius: 10px;
+  background: var(--glass); border: 1px solid var(--stroke);
+  color: var(--text); text-decoration: none; font-weight: 500; font-size: 0.88rem;
+  transition: 0.2s;
+}
+.btn-link-sec:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+footer {
+  text-align: center; padding: 48px 0 60px; color: var(--muted);
+  font-size: 0.85rem; border-top: 1px solid var(--stroke); margin-top: 60px;
+}
+footer a { color: var(--a); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a href="../index.html" class="brand">Lab <span>07</span> · RESTful APIs</a>
+  <ul>
+    <li><a href="#part1">Part 1 (In-Memory)</a></li>
+    <li><a href="#part2">Part 2 (Persistent)</a></li>
+    <li><a href="#architecture">Comparison</a></li>
+    <li><a href="../index.html" class="nav-btn">← Main Portfolio</a></li>
+  </ul>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <span class="pill"><span class="pill-dot"></span> Full Stack Web Development · Lab 07</span>
+  <h1>RESTful APIs &amp; <em>Data Persistence</em></h1>
+  <p class="sub">Two comprehensive backend implementations using native Node.js HTTP: an in-memory Student Management System with 4 CRUD modules, and an atomic file-backed persistent API for an E-Commerce store.</p>
+  
+  <div class="card info">
+    <div><small>Student Name</small><b>Haseeb Jalil</b></div>
+    <div><small>Registration No.</small><b>241908</b></div>
+    <div><small>Class &amp; Section</small><b>BSCS V-A</b></div>
+    <div><small>Instructor</small><b>Hafiz Obaid Ullah</b></div>
+    <div><small>Due Date</small><b>25/10/26</b></div>
+    <div><small>Status</small><b style="color:var(--accent);">Completed (100%)</b></div>
+  </div>
+</div></header>
+
+<main class="wrap">
+
+<!-- ====================================================================== -->
+<!-- PART 1: STUDENT MANAGEMENT SYSTEM (IN-MEMORY API) -->
+<!-- ====================================================================== -->
+<section id="part1">
+  <div class="sec-head">
+    <div class="num">1</div>
+    <div>
+      <h2>Part 1 · Student Management System (In-Memory API)</h2>
+    </div>
+  </div>
+  <p class="desc">
+    Modified and expanded from the uploaded in-memory code (<code>student-api/01-memory-api.js</code>) to construct a complete, modular Student Management System using native <code>node:http</code> without external packages. Features 4 comprehensive CRUD modules with query filtering, automated grade calculation, input validation, and CORS headers.
+  </p>
+  <div class="tags">
+    <span>Student (CRUD)</span>
+    <span>Teacher (CRUD)</span>
+    <span>Attendance (CRUD)</span>
+    <span>Marks (CRUD)</span>
+    <span>Native node:http</span>
+    <span>In-Memory State</span>
+    <span>35 Automated Tests</span>
+  </div>
+
+  <div class="grid">
+    <!-- Code Viewer -->
+    <div class="card panel">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchPart1Tab('server')">server.js</button>
+        <button class="tab-btn" onclick="switchPart1Tab('test')">test.js (35 Tests)</button>
+        <button class="tab-btn" onclick="switchPart1Tab('readme')">README.md</button>
+      </div>
+      <div class="bar">
+        <i class="dot"></i><i class="dot"></i><i class="dot"></i>
+        <span class="t" id="part1-filename">server.js</span>
+        <div class="actions">
+          <button onclick="copyCode('part1-code')">Copy Code</button>
+        </div>
+      </div>
+      <pre><code id="part1-code">// Lab Task #07 - Part 1: Student Management System (In-Memory API)
+// Native Node.js node:http implementation
+const http = require('node:http');
+
+// Modules: Student, Teacher, Attendance, Marks
+let students = [
+  { id: 1, name: 'Haseeb Jalil', rollNo: '241908', department: 'Computer Science', semester: '5th' },
+  { id: 2, name: 'Ayesha Khan', rollNo: '241912', department: 'Computer Science', semester: '5th' },
+  { id: 3, name: 'Bilal Ahmed', rollNo: '241855', department: 'Software Engineering', semester: '6th' }
+];
+
+let teachers = [
+  { id: 1, name: 'Hafiz Obaid Ullah', department: 'Computer Science', designation: 'Assistant Professor' },
+  { id: 2, name: 'Dr. Farhan Tariq', department: 'Software Engineering', designation: 'Associate Professor' }
+];
+
+let attendance = [
+  { id: 1, studentId: 1, course: 'Full Stack Web Dev', date: '2026-10-20', status: 'Present' }
+];
+
+let marks = [
+  { id: 1, studentId: 1, subject: 'Full Stack Web Dev', examType: 'Midterm', score: 92, totalMarks: 100, grade: 'A' }
+];
+
+// Handles:
+// GET /students, GET /students/:id, POST /students, PUT /students/:id, PATCH /students/:id, DELETE /students/:id
+// GET /teachers, GET /teachers/:id, POST /teachers, PUT /teachers/:id, PATCH /teachers/:id, DELETE /teachers/:id
+// GET /attendance, GET /attendance/:id, POST /attendance, PUT /attendance/:id, PATCH /attendance/:id, DELETE /attendance/:id
+// GET /marks, GET /marks/:id, POST /marks, PUT /marks/:id, PATCH /marks/:id, DELETE /marks/:id
+// Query filtering (?department=..., ?studentId=..., ?subject=...)</code></pre>
+    </div>
+
+    <!-- Live Interactive Explorer & Runner -->
+    <div class="card panel">
+      <div class="bar">
+        <i class="dot"></i><i class="dot"></i><i class="dot"></i>
+        <span class="t">Live In-Browser API Explorer</span>
+      </div>
+      <div class="tester">
+        <p style="font-size:0.84rem;color:var(--muted);">Select an endpoint or simulated operation below to test request formatting, status codes, and JSON response models:</p>
+        
+        <div class="req-bar">
+          <span class="method-badge GET" id="p1-badge">GET</span>
+          <select class="endpoint-select" id="p1-select" onchange="onP1EndpointChange()">
+            <option value="get_students">GET /students (List Students)</option>
+            <option value="get_student_1">GET /students/1 (Get Student by ID)</option>
+            <option value="post_student">POST /students (Create Student)</option>
+            <option value="patch_student">PATCH /students/1 (Update Semester)</option>
+            <option value="get_teachers">GET /teachers (List Teachers)</option>
+            <option value="post_teacher">POST /teachers (Add Faculty)</option>
+            <option value="get_attendance">GET /attendance?studentId=1</option>
+            <option value="post_attendance">POST /attendance (Mark Present)</option>
+            <option value="get_marks">GET /marks?subject=Full%20Stack</option>
+            <option value="post_marks">POST /marks (Record Score)</option>
+            <option value="get_health">GET /health (System Stats)</option>
+          </select>
+          <button class="btn-send" onclick="simulatePart1()">Execute</button>
+        </div>
+
+        <div class="resp-header">
+          <span>RESPONSE OUTPUT</span>
+          <span class="status-pill s200" id="p1-status">200 OK</span>
+        </div>
+        <div class="resp-box" id="p1-output">// Click "Execute" to run the selected endpoint...</div>
+
+        <div style="display:flex;gap:10px;margin-top:auto;flex-wrap:wrap;">
+          <a class="btn-link-sec" href="part 1/server.js" target="_blank">View server.js</a>
+          <a class="btn-link-sec" href="part 1/test.js" target="_blank">View test.js</a>
+          <a class="btn-link-sec" href="part 1/README.md" target="_blank">Part 1 Docs</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================== -->
+<!-- PART 2: PERSISTENT E-COMMERCE REST API -->
+<!-- ====================================================================== -->
+<section id="part2">
+  <div class="sec-head">
+    <div class="num" style="background:linear-gradient(135deg, #a18cd1, #fbc2eb);box-shadow:0 8px 24px rgba(161,140,209,0.4);">2</div>
+    <div>
+      <h2>Part 2 · Persistent E-Commerce REST API</h2>
+    </div>
+  </div>
+  <p class="desc">
+    Constructed for the E-Commerce Store designed in Lab 3. Features atomic file persistence using <code>fs/promises</code> and serialized async write queues, completely eliminating race conditions. Covers Products (CRUD &amp; stock), Users/Auth (registration &amp; login), Cart (subtotal &amp; free shipping over $150), Checkout/Orders (automatic stock deduction &amp; cart clearance), and Reviews.
+  </p>
+  <div class="tags">
+    <span>Persistent JSON Storage</span>
+    <span>Atomic Writes (UUID Temp + Rename)</span>
+    <span>Serialized Write Queue</span>
+    <span>Products CRUD</span>
+    <span>Cart &amp; Checkout Engine</span>
+    <span>Stock Decrementing</span>
+    <span>User Authentication</span>
+    <span>29 Automated Tests</span>
+  </div>
+
+  <div class="grid">
+    <!-- Code Viewer -->
+    <div class="card panel">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchPart2Tab('store')">store.js (Atomic Store)</button>
+        <button class="tab-btn" onclick="switchPart2Tab('app')">app.js (REST Router)</button>
+        <button class="tab-btn" onclick="switchPart2Tab('test')">test.js (29 Tests)</button>
+        <button class="tab-btn" onclick="switchPart2Tab('readme')">README.md</button>
+      </div>
+      <div class="bar">
+        <i class="dot"></i><i class="dot"></i><i class="dot"></i>
+        <span class="t" id="part2-filename">store.js</span>
+        <div class="actions">
+          <button onclick="copyCode('part2-code')">Copy Code</button>
+        </div>
+      </div>
+      <pre><code id="part2-code">// Lab 7 - Part 2: Persistent Store using atomic file writes
+// Atomic temp-file + rename, recursive mkdir, serialized write queue
+const fs = require('node:fs/promises');
+const path = require('node:path');
+const { randomUUID } = require('node:crypto');
+
+function createStore(file, initialData = []) {
+  let writeQueue = Promise.resolve();
+
+  async function loadFromFile() {
+    try {
+      return JSON.parse(await fs.readFile(file, 'utf8'));
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        await fs.mkdir(path.dirname(file), { recursive: true });
+        await fs.writeFile(file, JSON.stringify(initialData, null, 2), 'utf8');
+        return initialData;
+      }
+      throw error;
+    }
+  }
+
+  function edit(change) {
+    const operation = writeQueue.then(async () => {
+      const current = await loadFromFile();
+      const result = await change(current);
+      if (result && result.changed) {
+        const toSave = result.data !== undefined ? result.data : current;
+        await fs.mkdir(path.dirname(file), { recursive: true });
+        const temp = `${file}.${randomUUID()}.tmp`;
+        try {
+          await fs.writeFile(temp, JSON.stringify(toSave, null, 2), 'utf8');
+          await fs.rename(temp, file);
+        } catch (error) {
+          await fs.rm(temp, { force: true }).catch(() => {});
+          throw error;
+        }
+      }
+      return result ? result.value : null;
+    });
+    writeQueue = operation.then(() => undefined, () => undefined);
+    return operation;
+  }
+
+  return { list, edit, filePath: file };
+}</code></pre>
+    </div>
+
+    <!-- Live Interactive Explorer & Runner -->
+    <div class="card panel">
+      <div class="bar">
+        <i class="dot"></i><i class="dot"></i><i class="dot"></i>
+        <span class="t">Live In-Browser E-Com API Explorer</span>
+      </div>
+      <div class="tester">
+        <p style="font-size:0.84rem;color:var(--muted);">Select an e-commerce API endpoint below to inspect request payloads, simulated persistence, and computed order receipts:</p>
+        
+        <div class="req-bar">
+          <span class="method-badge GET" id="p2-badge">GET</span>
+          <select class="endpoint-select" id="p2-select" onchange="onP2EndpointChange()">
+            <option value="get_products">GET /products (All Products)</option>
+            <option value="filter_audio">GET /products?category=Audio</option>
+            <option value="post_product">POST /products (Add New Item)</option>
+            <option value="post_register">POST /users/register (Create User)</option>
+            <option value="post_login">POST /users/login (Authenticate)</option>
+            <option value="get_cart">GET /cart (Enriched Cart &amp; Totals)</option>
+            <option value="post_cart">POST /cart (Add Headphones)</option>
+            <option value="post_order">POST /orders (Checkout &amp; Stock Decrement)</option>
+            <option value="get_orders">GET /orders (Order History)</option>
+            <option value="post_review">POST /reviews (Submit Product Review)</option>
+          </select>
+          <button class="btn-send" onclick="simulatePart2()">Execute</button>
+        </div>
+
+        <div class="resp-header">
+          <span>RESPONSE OUTPUT</span>
+          <span class="status-pill s200" id="p2-status">200 OK</span>
+        </div>
+        <div class="resp-box" id="p2-output">// Click "Execute" to run the selected e-commerce endpoint...</div>
+
+        <div style="display:flex;gap:10px;margin-top:auto;flex-wrap:wrap;">
+          <a class="btn-link-action" href="part 2/ecom-store/ecom.html" target="_blank">Open E-Com Storefront ↗</a>
+          <a class="btn-link-sec" href="part 2/app.js" target="_blank">View app.js</a>
+          <a class="btn-link-sec" href="part 2/test.js" target="_blank">View test.js</a>
+          <a class="btn-link-sec" href="part 2/README.md" target="_blank">Part 2 Docs</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================================== -->
+<!-- ARCHITECTURE COMPARISON SECTION -->
+<!-- ====================================================================== -->
+<section id="architecture">
+  <div class="sec-head">
+    <div class="num" style="background:linear-gradient(135deg, #10b981, #059669);box-shadow:0 8px 24px rgba(16,185,129,0.4);">⚡</div>
+    <div>
+      <h2>Architectural Comparison · In-Memory vs. Persistent</h2>
+    </div>
+  </div>
+  <p class="desc">A comparative evaluation of the two backend architectures implemented in Lab 7.</p>
+
+  <div class="table-wrap card">
+    <table class="compare-tbl">
+      <thead>
+        <tr>
+          <th>Attribute</th>
+          <th>Part 1: In-Memory API</th>
+          <th>Part 2: Atomic Persistent File API</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Data Durability</b></td>
+          <td>Transient — data resets whenever the server process restarts</td>
+          <td><b style="color:var(--accent);">Permanent</b> — saved to disk in JSON files (<code>products.json</code>, etc.)</td>
+        </tr>
+        <tr>
+          <td><b>Write Mechanism</b></td>
+          <td>Direct JS array operations (<code>push</code>, <code>splice</code>)</td>
+          <td>Atomic temp-file write + rename (<code>fs.rename</code>) to prevent corrupt files</td>
+        </tr>
+        <tr>
+          <td><b>Concurrency Control</b></td>
+          <td>Single-threaded Node event loop</td>
+          <td>Serialized Promise Write Queue preventing interleaved writes</td>
+        </tr>
+        <tr>
+          <td><b>Latency &amp; Throughput</b></td>
+          <td>Microsecond reads/writes directly in RAM</td>
+          <td>Disk I/O latency on writes; cached in-memory list operations</td>
+        </tr>
+        <tr>
+          <td><b>Ideal Use Cases</b></td>
+          <td>Fast caches, session tokens, unit testing, transient state</td>
+          <td>Production catalogs, shopping carts, persistent order databases</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Lab Task #07 — Full Stack Web Development · Air University, Islamabad</p>
+    <p style="margin-top:6px;">Submitted by <strong style="color:#fff;">Haseeb Jalil (241908)</strong> to <strong style="color:#fff;">Hafiz Obaid Ullah</strong></p>
+  </div>
+</footer>
+
+<script>
+// Mock payloads & responses for in-browser instant preview
+const PART1_MOCKS = {
+  get_students: {
+    status: 200, statusText: '200 OK', badge: 'GET',
+    data: [
+      { id: 1, name: "Haseeb Jalil", rollNo: "241908", department: "Computer Science", semester: "5th", email: "241908@students.au.edu.pk" },
+      { id: 2, name: "Ayesha Khan", rollNo: "241912", department: "Computer Science", semester: "5th", email: "ayesha.khan@students.au.edu.pk" },
+      { id: 3, name: "Bilal Ahmed", rollNo: "241855", department: "Software Engineering", semester: "6th", email: "bilal.ahmed@students.au.edu.pk" },
+      { id: 4, name: "Fatima Noor", rollNo: "241930", department: "Computer Science", semester: "5th", email: "fatima.noor@students.au.edu.pk" }
+    ]
+  },
+  get_student_1: {
+    status: 200, statusText: '200 OK', badge: 'GET',
+    data: { id: 1, name: "Haseeb Jalil", rollNo: "241908", department: "Computer Science", semester: "5th", email: "241908@students.au.edu.pk" }
+  },
+  post_student: {
+    status: 201, statusText: '201 Created', badge: 'POST',
+    data: { id: 5, name: "Zainab Bibi", rollNo: "241999", department: "Artificial Intelligence", semester: "3rd", email: "zainab@students.au.edu.pk" }
+  },
+  patch_student: {
+    status: 200, statusText: '200 OK', badge: 'PATCH',
+    data: { id: 1, name: "Haseeb Jalil", rollNo: "241908", department: "Computer Science", semester: "6th", email: "241908@students.au.edu.pk" }
+  },
+  get_teachers: {
+    status: 200, statusText: '200 OK', badge: 'GET',
+    data: [
+      { id: 1, name: "Hafiz Obaid Ullah", department: "Computer Science", designation: "Assistant Professor", email: "obaidullah@au.edu.pk", phone: "051-9260001" },
+      { id: 2, name: "Dr. Farhan Tariq", department: "Software Engineering", designation: "Associate Professor", email: "farhan.tariq@au.edu.pk", phone: "051-9260002" },
+      { id: 3, name: "Prof. Sadia Rehman", department: "Computer Science", designation: "Lecturer", email: "sadia.rehman@au.edu.pk", phone: "051-9260003" }
+    ]
+  },
+  post_teacher: {
+    status: 201, statusText: '201 Created', badge: 'POST',
+    data: { id: 4, name: "Dr. Usman Ali", department: "Cyber Security", designation: "Assistant Professor", email: "usman.ali@au.edu.pk", phone: "051-9260010" }
+  },
+  get_attendance: {
+    status: 200, statusText: '200 OK', badge: 'GET',
+    data: [
+      { id: 1, studentId: 1, course: "Full Stack Web Development", date: "2026-10-20", status: "Present", remarks: "On time" },
+      { id: 4, studentId: 1, course: "Full Stack Web Development", date: "2026-10-22", status: "Present", remarks: "Active participation" }
+    ]
+  },
+  post_attendance: {
+    status: 201, statusText: '201 Created', badge: 'POST',
+    data: { id: 6, studentId: 1, course: "Full Stack Web Development", date: "2026-10-25", status: "Present", remarks: "Marked via API" }
+  },
+  get_marks: {
+    status: 200, statusText: '200 OK', badge: 'GET',
+    data: [
+      { id: 1, studentId: 1, subject: "Full Stack Web Development", examType: "Midterm", score: 92, totalMarks: 100, grade: "A" },
+      { id: 4, studentId: 1, subject: "Full Stack Web Development", examType: "Lab Task 6", score: 10, totalMarks: 10, grade: "A+" }
+    ]
+  },
+  post_marks: {
+    status: 201, statusText: '201 Created', badge: 'POST',
+    data: { id: 6, studentId: 1, subject: "Full Stack Web Development", examType: "Lab Task 7", score: 10, totalMarks: 10, grade: "A+" }
+  },
+  get_health: {
+    status: 200, statusText: '200 OK', badge: 'GET',
+    data: {
+      system: "Student Management System API",
+      author: "Haseeb Jalil (241908)",
+      lab: "Lab 07 - Part 1 (In-Memory REST API)",
+      status: "healthy",
+      counts: { students: 4, teachers: 3, attendance: 5, marks: 5 }
+    }
+  }
+};
+
+const PART2_MOCKS = {
+  get_products: {
+    status: 200, statusText: '200 OK', badge: 'GET',
+    data: [
+      { id: 1, name: "Aurora Wireless Headphones", category: "Audio", price: 129, rating: 4.8, stock: 15, emoji: "🎧", badge: "Bestseller" },
+      { id: 2, name: "Linen Lounge Chair", category: "Home", price: 249, rating: 4.8, stock: 8, emoji: "🪑", badge: "Crafted" },
+      { id: 3, name: "Trailblazer Backpack", category: "Outdoor", price: 89, rating: 4.9, stock: 22, emoji: "🎒", badge: "Popular" },
+      { id: 4, name: "Minimalist Desk Lamp", category: "Lighting", price: 45, rating: 4.7, stock: 30, emoji: "💡", badge: "Energy Saving" },
+      { id: 5, name: "Ceramic Coffee Dripper", category: "Kitchen", price: 34, rating: 4.6, stock: 18, emoji: "☕", badge: "Artisanal" },
+      { id: 6, name: "Mechanical Keyboard", category: "Tech", price: 159, rating: 4.9, stock: 12, emoji: "⌨️", badge: "New Arrival" }
+    ]
+  },
+  filter_audio: {
+    status: 200, statusText: '200 OK', badge: 'GET',
+    data: [
+      { id: 1, name: "Aurora Wireless Headphones", category: "Audio", price: 129, rating: 4.8, stock: 15, emoji: "🎧" }
+    ]
+  },
+  post_product: {
+    status: 201, statusText: '201 Created', badge: 'POST',
+    data: { id: 7, name: "Wireless Charging Pad", category: "Tech", price: 39, rating: 5.0, stock: 25, emoji: "⚡", badge: "Fast Charge" }
+  },
+  post_register: {
+    status: 201, statusText: '201 Created', badge: 'POST',
+    data: { id: 3, name: "Zainab Malik", email: "zainab@example.com", role: "customer", createdAt: "2026-10-25T11:00:00.000Z" }
+  },
+  post_login: {
+    status: 200, statusText: '200 OK', badge: 'POST',
+    data: {
+      message: "Login successful",
+      user: { id: 1, name: "Haseeb Jalil", email: "241908@students.au.edu.pk", role: "admin" },
+      token: "session_token_1_1761400000000"
+    }
+  },
+  get_cart: {
+    status: 200, statusText: '200 OK', badge: 'GET',
+    data: {
+      items: [
+        { productId: 1, name: "Aurora Wireless Headphones", price: 129, emoji: "🎧", quantity: 1, lineTotal: 129 },
+        { productId: 4, name: "Minimalist Desk Lamp", price: 45, emoji: "💡", quantity: 2, lineTotal: 90 }
+      ],
+      itemCount: 3,
+      subtotal: 219,
+      shipping: 0,
+      tax: 10.95,
+      total: 229.95,
+      freeShippingEligible: true
+    }
+  },
+  post_cart: {
+    status: 200, statusText: '200 OK', badge: 'POST',
+    data: {
+      message: "Item added to cart",
+      cart: [{ productId: 1, quantity: 2 }, { productId: 4, quantity: 2 }]
+    }
+  },
+  post_order: {
+    status: 201, statusText: '201 Created', badge: 'POST',
+    data: {
+      message: "Order placed successfully",
+      order: {
+        id: 1002,
+        orderNumber: "ORD-2026-1002",
+        customer: { name: "Haseeb Jalil", email: "241908@students.au.edu.pk", phone: "+92 300 0000000", city: "Islamabad" },
+        paymentMethod: "Credit Card",
+        items: [{ productId: 1, name: "Aurora Wireless Headphones", price: 129, quantity: 1, total: 129 }],
+        subtotal: 129,
+        shipping: 15,
+        tax: 6.45,
+        total: 150.45,
+        status: "Processing",
+        createdAt: "2026-10-25T16:30:00.000Z"
+      }
+    }
+  },
+  get_orders: {
+    status: 200, statusText: '200 OK', badge: 'GET',
+    data: [
+      { id: 1002, orderNumber: "ORD-2026-1002", customer: { name: "Haseeb Jalil" }, total: 150.45, status: "Processing" },
+      { id: 1001, orderNumber: "ORD-2026-1001", customer: { name: "Sarah Jenkins" }, total: 93.45, status: "Delivered" }
+    ]
+  },
+  post_review: {
+    status: 201, statusText: '201 Created', badge: 'POST',
+    data: { id: 4, productId: 1, userName: "Haseeb Jalil", rating: 5, comment: "Top notch sound and build quality!", date: "2026-10-25" }
+  }
+};
+
+function onP1EndpointChange() {
+  const sel = document.getElementById('p1-select').value;
+  const mock = PART1_MOCKS[sel];
+  if (mock) {
+    const badge = document.getElementById('p1-badge');
+    badge.textContent = mock.badge;
+    badge.className = 'method-badge ' + mock.badge;
+  }
+}
+
+async function simulatePart1() {
+  const sel = document.getElementById('p1-select').value;
+  const mock = PART1_MOCKS[sel];
+  const out = document.getElementById('p1-output');
+  const statusEl = document.getElementById('p1-status');
+  out.textContent = '// Sending request to API...';
+  
+  // Try live server first (if running on 3004)
+  try {
+    const liveMap = {
+      get_students: { path: '/students', method: 'GET' },
+      get_student_1: { path: '/students/1', method: 'GET' },
+      post_student: { path: '/students', method: 'POST', body: { name: "Zainab Bibi", rollNo: "241999", department: "AI", semester: "3rd" } },
+      patch_student: { path: '/students/1', method: 'PATCH', body: { semester: "6th" } },
+      get_teachers: { path: '/teachers', method: 'GET' },
+      post_teacher: { path: '/teachers', method: 'POST', body: { name: "Dr. Usman Ali", department: "Cyber Security", designation: "Assistant Professor" } },
+      get_attendance: { path: '/attendance?studentId=1', method: 'GET' },
+      post_attendance: { path: '/attendance', method: 'POST', body: { studentId: 1, course: "Full Stack Web Development", date: "2026-10-25", status: "Present" } },
+      get_marks: { path: '/marks?subject=Full%20Stack', method: 'GET' },
+      post_marks: { path: '/marks', method: 'POST', body: { studentId: 1, subject: "Full Stack Web Development", score: 10, totalMarks: 10 } },
+      get_health: { path: '/health', method: 'GET' }
+    };
+    const reqInfo = liveMap[sel];
+    if (reqInfo) {
+      const res = await fetch('http://localhost:3004' + reqInfo.path, {
+        method: reqInfo.method,
+        headers: { 'Content-Type': 'application/json' },
+        body: reqInfo.body ? JSON.stringify(reqInfo.body) : undefined
+      });
+      const json = await res.json();
+      statusEl.textContent = res.status + ' ' + res.statusText + ' (Live Server :3004)';
+      statusEl.className = 'status-pill s' + res.status;
+      out.textContent = JSON.stringify(json, null, 2);
+      return;
+    }
+  } catch (e) {
+    // Live server not running; use instant mock
+  }
+
+  setTimeout(() => {
+    statusEl.textContent = mock.statusText + ' (Simulated Run)';
+    statusEl.className = 'status-pill s' + mock.status;
+    out.textContent = JSON.stringify(mock.data, null, 2);
+  }, 120);
+}
+
+function onP2EndpointChange() {
+  const sel = document.getElementById('p2-select').value;
+  const mock = PART2_MOCKS[sel];
+  if (mock) {
+    const badge = document.getElementById('p2-badge');
+    badge.textContent = mock.badge;
+    badge.className = 'method-badge ' + mock.badge;
+  }
+}
+
+async function simulatePart2() {
+  const sel = document.getElementById('p2-select').value;
+  const mock = PART2_MOCKS[sel];
+  const out = document.getElementById('p2-output');
+  const statusEl = document.getElementById('p2-status');
+  out.textContent = '// Sending request to Persistent API...';
+
+  // Try live server first (if running on 3006)
+  try {
+    const liveMap = {
+      get_products: { path: '/products', method: 'GET' },
+      filter_audio: { path: '/products?category=Audio', method: 'GET' },
+      get_cart: { path: '/cart', method: 'GET' },
+      get_orders: { path: '/orders', method: 'GET' }
+    };
+    const reqInfo = liveMap[sel];
+    if (reqInfo) {
+      const res = await fetch('http://localhost:3006' + reqInfo.path);
+      const json = await res.json();
+      statusEl.textContent = res.status + ' ' + res.statusText + ' (Live Server :3006)';
+      statusEl.className = 'status-pill s' + res.status;
+      out.textContent = JSON.stringify(json, null, 2);
+      return;
+    }
+  } catch (e) {
+    // Fall back to mock
+  }
+
+  setTimeout(() => {
+    statusEl.textContent = mock.statusText + ' (Simulated Run)';
+    statusEl.className = 'status-pill s' + mock.status;
+    out.textContent = JSON.stringify(mock.data, null, 2);
+  }, 120);
+}
+
+function copyCode(id) {
+  const code = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    alert('Code copied to clipboard!');
+  });
+}
+
+function switchPart1Tab(tab) {
+  const tabs = document.querySelectorAll('#part1 .tab-btn');
+  tabs.forEach(t => t.classList.remove('active'));
+  const codeEl = document.getElementById('part1-code');
+  const fileEl = document.getElementById('part1-filename');
+
+  if (tab === 'server') {
+    tabs[0].classList.add('active');
+    fileEl.textContent = 'server.js';
+    codeEl.textContent = `// Lab Task #07 - Part 1: Student Management System (In-Memory API)
+// Native Node.js node:http implementation
+const http = require('node:http');
+
+// Modules: Student, Teacher, Attendance, Marks
+let students = [
+  { id: 1, name: 'Haseeb Jalil', rollNo: '241908', department: 'Computer Science', semester: '5th' },
+  { id: 2, name: 'Ayesha Khan', rollNo: '241912', department: 'Computer Science', semester: '5th' },
+  { id: 3, name: 'Bilal Ahmed', rollNo: '241855', department: 'Software Engineering', semester: '6th' }
+];
+
+let teachers = [
+  { id: 1, name: 'Hafiz Obaid Ullah', department: 'Computer Science', designation: 'Assistant Professor' },
+  { id: 2, name: 'Dr. Farhan Tariq', department: 'Software Engineering', designation: 'Associate Professor' }
+];
+
+let attendance = [
+  { id: 1, studentId: 1, course: 'Full Stack Web Dev', date: '2026-10-20', status: 'Present' }
+];
+
+let marks = [
+  { id: 1, studentId: 1, subject: 'Full Stack Web Dev', examType: 'Midterm', score: 92, totalMarks: 100, grade: 'A' }
+];
+
+// Handles:
+// GET /students, GET /students/:id, POST /students, PUT /students/:id, PATCH /students/:id, DELETE /students/:id
+// GET /teachers, GET /teachers/:id, POST /teachers, PUT /teachers/:id, PATCH /teachers/:id, DELETE /teachers/:id
+// GET /attendance, GET /attendance/:id, POST /attendance, PUT /attendance/:id, PATCH /attendance/:id, DELETE /attendance/:id
+// GET /marks, GET /marks/:id, POST /marks, PUT /marks/:id, PATCH /marks/:id, DELETE /marks/:id
+// Query filtering (?department=..., ?studentId=..., ?subject=...)`;
+  } else if (tab === 'test') {
+    tabs[1].classList.add('active');
+    fileEl.textContent = 'test.js';
+    codeEl.textContent = `// Lab 7 - Part 1: Automated Integration Test Suite (35 Assertions)
+const http = require('node:http');
+const { server } = require('./server.js');
+
+// Executes 35 assertions across all 4 modules:
+// - Health check
+// - Student CRUD (GET, POST, PATCH, PUT, DELETE, filters)
+// - Teacher CRUD (GET, POST, PATCH, DELETE)
+// - Attendance CRUD (GET, POST, PATCH, DELETE, filters)
+// - Marks CRUD (GET, POST, PATCH, DELETE, grade auto-computation)
+// - Validation & edge cases (400 on empty name, 404 on invalid ID)`;
+  } else if (tab === 'readme') {
+    tabs[2].classList.add('active');
+    fileEl.textContent = 'README.md';
+    codeEl.textContent = `# Lab 07 — Part 1: Student Management System (In-Memory REST API)
+Student: Haseeb Jalil | Reg: 241908 | BSCS V-A
+Instructor: Hafiz Obaid Ullah
+
+## Quick Start
+node server.js   # http://localhost:3004
+node test.js     # Run 35 test assertions
+
+## Endpoints:
+- /students   (GET, POST)
+- /students/:id (GET, PUT, PATCH, DELETE)
+- /teachers   (GET, POST, GET/:id, PUT/:id, PATCH/:id, DELETE/:id)
+- /attendance (GET, POST, GET/:id, PUT/:id, PATCH/:id, DELETE/:id)
+- /marks      (GET, POST, GET/:id, PUT/:id, PATCH/:id, DELETE/:id)`;
+  }
+}
+
+function switchPart2Tab(tab) {
+  const tabs = document.querySelectorAll('#part2 .tab-btn');
+  tabs.forEach(t => t.classList.remove('active'));
+  const codeEl = document.getElementById('part2-code');
+  const fileEl = document.getElementById('part2-filename');
+
+  if (tab === 'store') {
+    tabs[0].classList.add('active');
+    fileEl.textContent = 'store.js';
+    codeEl.textContent = `// Lab 7 - Part 2: Persistent Store using atomic file writes
+// Atomic temp-file + rename, recursive mkdir, serialized write queue
+const fs = require('node:fs/promises');
+const path = require('node:path');
+const { randomUUID } = require('node:crypto');
+
+function createStore(file, initialData = []) {
+  let writeQueue = Promise.resolve();
+
+  async function loadFromFile() {
+    try {
+      return JSON.parse(await fs.readFile(file, 'utf8'));
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        await fs.mkdir(path.dirname(file), { recursive: true });
+        await fs.writeFile(file, JSON.stringify(initialData, null, 2), 'utf8');
+        return initialData;
+      }
+      throw error;
+    }
+  }
+
+  function edit(change) {
+    const operation = writeQueue.then(async () => {
+      const current = await loadFromFile();
+      const result = await change(current);
+      if (result && result.changed) {
+        const toSave = result.data !== undefined ? result.data : current;
+        await fs.mkdir(path.dirname(file), { recursive: true });
+        const temp = \`\${file}.\${randomUUID()}.tmp\`;
+        try {
+          await fs.writeFile(temp, JSON.stringify(toSave, null, 2), 'utf8');
+          await fs.rename(temp, file);
+        } catch (error) {
+          await fs.rm(temp, { force: true }).catch(() => {});
+          throw error;
+        }
+      }
+      return result ? result.value : null;
+    });
+    writeQueue = operation.then(() => undefined, () => undefined);
+    return operation;
+  }
+
+  return { list, edit, filePath: file };
+}`;
+  } else if (tab === 'app') {
+    tabs[1].classList.add('active');
+    fileEl.textContent = 'app.js';
+    codeEl.textContent = `// Lab 7 - Part 2: Persistent REST Router for E-Commerce Store
+// Powered by productsStore, usersStore, cartStore, ordersStore, reviewsStore
+
+// Handled Routes:
+// /products       (GET with category/price/search filters, POST)
+// /products/:id   (GET, PUT, PATCH, DELETE)
+// /users          (GET sanitized list, POST /register, POST /login)
+// /cart           (GET enriched with subtotal & free shipping, POST add, PATCH qty, DELETE)
+// /orders         (GET, POST checkout with atomic stock decrement & cart clearance)
+// /reviews        (GET filter by product, POST with rating recalculation)`;
+  } else if (tab === 'test') {
+    tabs[2].classList.add('active');
+    fileEl.textContent = 'test.js';
+    codeEl.textContent = `// Lab 7 - Part 2: Automated Integration Tests (29 Assertions)
+// Tests:
+// - Atomic persistence on disk
+// - Products CRUD and category filters
+// - User registration & login with password sanitization
+// - Cart total & free shipping calculations
+// - Order placement: stock decrement and cart clearance
+// - Product review submission and aggregate rating recalculation`;
+  } else if (tab === 'readme') {
+    tabs[3].classList.add('active');
+    fileEl.textContent = 'README.md';
+    codeEl.textContent = `# Lab 07 — Part 2: Persistent E-Commerce REST API
+Student: Haseeb Jalil | Reg: 241908 | BSCS V-A
+Instructor: Hafiz Obaid Ullah
+
+## Quick Start
+node server.js   # http://localhost:3006
+node test.js     # Run 29 test assertions
+
+## Persistence:
+- data/products.json
+- data/users.json
+- data/cart.json
+- data/orders.json
+- data/reviews.json`;
+  }
+}
+
+// Initial triggers
+simulatePart1();
+simulatePart2();
+</script>
+</body>
+</html>

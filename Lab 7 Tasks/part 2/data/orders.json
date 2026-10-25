@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1001,
+    "orderNumber": "ORD-2026-1001",
+    "customer": {
+      "name": "Sarah Jenkins",
+      "email": "sarah.j@example.com",
+      "phone": "+92 300 1234567",
+      "address": "Sector E-9, PAF Complex",
+      "city": "Islamabad",
+      "zip": "44000"
+    },
+    "paymentMethod": "Credit Card",
+    "items": [
+      {
+        "productId": 3,
+        "name": "Trailblazer Backpack",
+        "price": 89,
+        "quantity": 1,
+        "total": 89
+      }
+    ],
+    "subtotal": 89,
+    "shipping": 0,
+    "tax": 4.45,
+    "total": 93.45,
+    "status": "Delivered",
+    "createdAt": "2026-10-23T11:20:00.000Z"
+  }
+]

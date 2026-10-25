@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Checkout | hasbeejay's Marketplace</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/tailwind.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body id="top">
+    <nav class="navbar navbar-expand flex-wrap site-nav sticky-top py-3">
+      <div class="container">
+        <a class="navbar-brand brand" href="ecom.html">
+          <span class="brand-dot tw-inline-block tw-rounded-full"></span>hasbeejay's Marketplace
+        </a>
+        <ul class="navbar-nav ms-auto align-items-center gap-lg-1">
+          <li class="nav-item"><a class="nav-link" href="ecom.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="ecom.html#products">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="ecom.html#reviews">Reviews</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="cart.html">Cart <span class="badge rounded-pill text-bg-dark">3</span></a>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="login.html">Log in</a></li>
+          <li class="nav-item ms-2"><a class="btn btn-brand btn-sm px-3" href="signup.html">Sign up</a></li>
+        </ul>
+      </div>
+    </nav>
+    <main class="container py-5">
+      <h1 class="section-title mb-4">Checkout</h1>
+      <form action="success.html" method="get" class="row g-4">
+        <div class="col-lg-7">
+          <section class="bg-white rounded-4 p-4 shadow-sm mb-4">
+            <h2 class="h5 fw-bold mb-3">Shipping details</h2>
+            <div class="row g-3">
+              <div class="col-12">
+                <label for="name" class="form-label">Full name</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+              </div>
+              <div class="col-md-6">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+              </div>
+              <div class="col-md-6">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="tel" class="form-control" id="phone" name="phone" required>
+              </div>
+              <div class="col-12">
+                <label for="address" class="form-label">Street address</label>
+                <input type="text" class="form-control" id="address" name="address" required>
+              </div>
+              <div class="col-md-6">
+                <label for="city" class="form-label">City</label>
+                <input type="text" class="form-control" id="city" name="city" required>
+              </div>
+              <div class="col-md-6">
+                <label for="zip" class="form-label">Postal code</label>
+                <input type="text" class="form-control" id="zip" name="zip" required>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-white rounded-4 p-4 shadow-sm">
+            <h2 class="h5 fw-bold mb-3">Payment</h2>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" name="payment" id="pay-card" value="card" checked>
+              <label class="form-check-label" for="pay-card">Credit or debit card</label>
+            </div>
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="radio" name="payment" id="pay-cod" value="cod">
+              <label class="form-check-label" for="pay-cod">Cash on delivery</label>
+            </div>
+            <div class="row g-3">
+              <div class="col-12">
+                <label for="card" class="form-label">Card number</label>
+                <input type="text" class="form-control" id="card" name="card" inputmode="numeric" pattern="[0-9 ]{13,19}" placeholder="1234 5678 9012 3456">
+              </div>
+              <div class="col-6">
+                <label for="expiry" class="form-label">Expiry</label>
+                <input type="text" class="form-control" id="expiry" name="expiry" pattern="[0-9]{2}/[0-9]{2}" placeholder="MM/YY">
+              </div>
+              <div class="col-6">
+                <label for="cvc" class="form-label">CVC</label>
+                <input type="text" class="form-control" id="cvc" name="cvc" pattern="[0-9]{3,4}" placeholder="123">
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="col-lg-5">
+          <aside class="summary-card bg-white rounded-4 p-4 shadow-sm">
+            <h2 class="h5 fw-bold mb-3">Your order</h2>
+            <ul class="list-unstyled mb-3">          <li class="d-flex justify-content-between py-2 border-bottom">
+                <span>🎧 Aurora Wireless Headphones <span class="text-secondary">&times; 1</span></span>
+                <span>$129</span>
+              </li>
+
+              <li class="d-flex justify-content-between py-2 border-bottom">
+                <span>🎒 Trailblazer Backpack <span class="text-secondary">&times; 2</span></span>
+                <span>$178</span>
+              </li>
+
+              <li class="d-flex justify-content-between py-2 border-bottom">
+                <span>☕ Ceramic Pour-Over Set <span class="text-secondary">&times; 1</span></span>
+                <span>$54</span>
+              </li>
+            </ul>
+            <dl class="row mb-0">
+              <dt class="col-6 fw-normal text-secondary">Shipping</dt><dd class="col-6 text-end">Free</dd>
+              <dt class="col-6 fw-normal text-secondary">Tax (8%)</dt><dd class="col-6 text-end">$28.88</dd>
+              <dt class="col-6 pt-2">Total</dt><dd class="col-6 text-end pt-2 fw-bold">$389.88</dd>
+            </dl>
+            <button type="submit" class="btn btn-brand btn-lg w-100 mt-4">Place order</button>
+            <a class="btn btn-link w-100 mt-2" href="cart.html">Back to cart</a>
+          </aside>
+        </div>
+      </form>
+    </main>
+    <footer class="site-footer mt-5 py-5">
+      <div class="container">
+        <div class="row g-4">
+          <div class="col-md-5">
+            <p class="h5 mb-2">hasbeejay's Marketplace</p>
+            <p class="mb-0 opacity-75">Small-batch goods for desks, kitchens and trails, shipped in three days or less.</p>
+          </div>
+          <div class="col-6 col-md-3">
+            <p class="fw-semibold mb-2">Shop</p>
+            <ul class="list-unstyled mb-0">
+              <li><a href="ecom.html#products">All products</a></li>
+              <li><a href="ecom.html#reviews">Customer reviews</a></li>
+              <li><a href="cart.html">Your cart</a></li>
+            </ul>
+          </div>
+          <div class="col-6 col-md-4">
+            <p class="fw-semibold mb-2">Account</p>
+            <ul class="list-unstyled mb-0">
+              <li><a href="login.html">Log in</a></li>
+              <li><a href="signup.html">Create an account</a></li>
+              <li><a href="checkout.html">Checkout</a></li>
+            </ul>
+          </div>
+        </div>
+        <hr class="border-light opacity-25 my-4">
+        <p class="small mb-0 opacity-75">&copy; 2026 hasbeejay's Marketplace. Built with Bootstrap and Tailwind CSS.</p>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "productId": 1,
+    "userName": "Hamza Tariq",
+    "rating": 5,
+    "comment": "The active noise cancellation is remarkable for deep work sessions in the university library. Battery lasts all week!",
+    "date": "2026-10-21"
+  },
+  {
+    "id": 2,
+    "productId": 2,
+    "userName": "Amina Bilal",
+    "rating": 5,
+    "comment": "Superb quality natural linen. Perfectly complements my study desk setup.",
+    "date": "2026-10-22"
+  },
+  {
+    "id": 3,
+    "productId": 3,
+    "userName": "Danish Ali",
+    "rating": 5,
+    "comment": "Took it hiking up the Margalla Hills. Lightweight, water-resistant, and held my laptop and flask comfortably.",
+    "date": "2026-10-23"
+  }
+]
