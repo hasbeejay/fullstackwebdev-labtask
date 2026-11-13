@@ -157,6 +157,24 @@ const LABS = [
     status: 'Completed',
     colors: ['#4facfe', '#0072ff'],
   },
+  {
+    id: 8,
+    title: 'NestJS E-Commerce Store Backend',
+    description: 'Task 8 extends the marketplace with a modular NestJS REST API for products, user accounts, carts, and order checkout.',
+    repo: 'https://github.com/hasbeejay/fullstackwebdev-labtask/tree/main/Lab%208%20Tasks',
+    objectives: [
+      'Create NestJS controllers, services, and models for the marketplace',
+      'Provide product listing and product detail endpoints',
+      'Implement registration, login, cart management, and order checkout APIs',
+      'Validate request payloads and return meaningful HTTP errors'
+    ],
+    outcome: 'A modular NestJS backend for the e-commerce storefront with REST endpoints for products, authentication, cart operations, and order management.',
+    tech: ['NestJS', 'TypeScript', 'REST API', 'Class Validator'],
+    liveUrl: 'Lab 8 Tasks/Ecom Store with Backend/ecom.html',
+    date: '',
+    status: 'Completed',
+    colors: ['#36cfc9', '#116466'],
+  },
 ];
 
 /* ==========================================================
